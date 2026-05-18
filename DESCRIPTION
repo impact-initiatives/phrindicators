@@ -6,12 +6,10 @@ Authors@R:
            family = "Rahman",
            role = c("aut", "cre"),
            email = "saeed.rahman0@gmail.com")
-Description: Provides a suite of R6-based data classes, validation utilities,
-    quality-control tests, and visualisation helpers for public health survey
-    data.  Core functionality covers food security (FSL/FCS/HDDS/LCSI/RCSI),
-    nutrition (MUAC, z-scores, IYCF), mortality, WASH, and demographics,
-    together with standardised output schemas and a collection of ggplot2-based
-    plot functions.
+Description: Provides add_* indicator-construction helpers for public health
+    survey data, together with core validation, error-handling, and language
+    utilities. Core functionality covers food security (FSL/FCS/HDDS/LCSI/RCSI),
+    nutrition (MUAC, z-scores, IYCF), mortality, WASH, and demographics.
 License: MIT + file LICENSE
 Depends:
     R (>= 4.1.0)
@@ -26,7 +24,6 @@ Imports:
     openxlsx,
     pps,
     purrr,
-    R6,
     readr,
     readxl,
     rlang,
