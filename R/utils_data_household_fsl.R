@@ -239,11 +239,11 @@ add_hhs <- function(
   phrutils::phr_try({
 
     # Use ensure_value for all *_val parameters
-    yes_answer <- ensure_value(yes_answer, "yes")
-    no_answer <- ensure_value(no_answer, "no")
-    rarely_answer <- ensure_value(rarely_answer, "rarely")
-    sometimes_answer <- ensure_value(sometimes_answer, "sometimes")
-    often_answer <- ensure_value(often_answer, "often")
+    yes_answer <- phrutils::ensure_value(yes_answer, "yes")
+    no_answer <- phrutils::ensure_value(no_answer, "no")
+    rarely_answer <- phrutils::ensure_value(rarely_answer, "rarely")
+    sometimes_answer <- phrutils::ensure_value(sometimes_answer, "sometimes")
+    often_answer <- phrutils::ensure_value(often_answer, "often")
 
 
     # Validate dataset
@@ -652,10 +652,10 @@ add_lcsi <- function(.dataset,
   phrutils::phr_try({
 
     # Use ensure_value for all *_val parameters
-    yes_val <- ensure_value(yes_val, "yes")
-    no_val <- ensure_value(no_val, "no_had_no_need")
-    exhausted_val <- ensure_value(exhausted_val, "no_exhausted")
-    not_applicable_val <- ensure_value(not_applicable_val, "not_applicable")
+    yes_val <- phrutils::ensure_value(yes_val, "yes")
+    no_val <- phrutils::ensure_value(no_val, "no_had_no_need")
+    exhausted_val <- phrutils::ensure_value(exhausted_val, "no_exhausted")
+    not_applicable_val <- phrutils::ensure_value(not_applicable_val, "not_applicable")
 
     phrutils::phr_message(origin, "Starting LCSI calculation...")
 
@@ -982,8 +982,8 @@ add_hdds <- function(.dataset,
   phrutils::phr_try({
 
     # Use ensure_value for all *_val parameters
-    yes_val <- ensure_value(yes_val, "yes")
-    no_val <- ensure_value(no_val, "no")
+    yes_val <- phrutils::ensure_value(yes_val, "yes")
+    no_val <- phrutils::ensure_value(no_val, "no")
 
 
     # Validate dataset
@@ -1211,20 +1211,20 @@ add_fcm_phase <- function(
   phrutils::phr_try({
 
     # Use ensure_value for all *_val parameters
-    fcs_acceptable_val <- ensure_value(fcs_acceptable_val, "Acceptable")
-    fcs_borderline_val <- ensure_value(fcs_borderline_val, "Borderline")
-    fcs_poor_val <- ensure_value(fcs_poor_val, "Poor")
-    rcsi_low_val <- ensure_value(rcsi_low_val, "Low")
-    rcsi_medium_val <- ensure_value(rcsi_medium_val, "Medium")
-    rcsi_high_val <- ensure_value(rcsi_high_val, "High")
-    hdds_low_val <- ensure_value(hdds_low_val, "Low")
-    hdds_medium_val <- ensure_value(hdds_medium_val, "Medium")
-    hdds_high_val <- ensure_value(hdds_high_val, "High")
-    hhs_none_val <- ensure_value(hhs_none_val, "None")
-    hhs_little_val <- ensure_value(hhs_little_val, "Little")
-    hhs_moderate_val <- ensure_value(hhs_moderate_val, "Moderate")
-    hhs_severe_val <- ensure_value(hhs_severe_val, "Severe")
-    hhs_very_severe_val <- ensure_value(hhs_very_severe_val, "Very Severe")
+    fcs_acceptable_val <- phrutils::ensure_value(fcs_acceptable_val, "Acceptable")
+    fcs_borderline_val <- phrutils::ensure_value(fcs_borderline_val, "Borderline")
+    fcs_poor_val <- phrutils::ensure_value(fcs_poor_val, "Poor")
+    rcsi_low_val <- phrutils::ensure_value(rcsi_low_val, "Low")
+    rcsi_medium_val <- phrutils::ensure_value(rcsi_medium_val, "Medium")
+    rcsi_high_val <- phrutils::ensure_value(rcsi_high_val, "High")
+    hdds_low_val <- phrutils::ensure_value(hdds_low_val, "Low")
+    hdds_medium_val <- phrutils::ensure_value(hdds_medium_val, "Medium")
+    hdds_high_val <- phrutils::ensure_value(hdds_high_val, "High")
+    hhs_none_val <- phrutils::ensure_value(hhs_none_val, "None")
+    hhs_little_val <- phrutils::ensure_value(hhs_little_val, "Little")
+    hhs_moderate_val <- phrutils::ensure_value(hhs_moderate_val, "Moderate")
+    hhs_severe_val <- phrutils::ensure_value(hhs_severe_val, "Severe")
+    hhs_very_severe_val <- phrutils::ensure_value(hhs_very_severe_val, "Very Severe")
 
 
     # 1. EMBEDDED LOOKUP TABLES
@@ -1640,16 +1640,16 @@ add_fclcm_phase <- function(
   phrutils::phr_try({
 
     # Use ensure_value for all *_val parameters
-    p1_val <- ensure_value(p1_val, "P1")
-    p2_val <- ensure_value(p2_val, "P2")
-    p3_val <- ensure_value(p3_val, "P3")
-    p4_val <- ensure_value(p4_val, "P4")
-    p5_val <- ensure_value(p5_val, "P5")
-    lcsi_none_val <- ensure_value(lcsi_none_val, "None")
-    lcsi_stress_val <- ensure_value(lcsi_stress_val, "Stress")
-    lcsi_crisis_val <- ensure_value(lcsi_crisis_val, "Crisis")
-    lcsi_emergency_val <- ensure_value(lcsi_emergency_val, "Emergency")
-    lcsi_exhaustion_val <- ensure_value(lcsi_exhaustion_val, "Exhaustion")
+    p1_val <- phrutils::ensure_value(p1_val, "P1")
+    p2_val <- phrutils::ensure_value(p2_val, "P2")
+    p3_val <- phrutils::ensure_value(p3_val, "P3")
+    p4_val <- phrutils::ensure_value(p4_val, "P4")
+    p5_val <- phrutils::ensure_value(p5_val, "P5")
+    lcsi_none_val <- phrutils::ensure_value(lcsi_none_val, "None")
+    lcsi_stress_val <- phrutils::ensure_value(lcsi_stress_val, "Stress")
+    lcsi_crisis_val <- phrutils::ensure_value(lcsi_crisis_val, "Crisis")
+    lcsi_emergency_val <- phrutils::ensure_value(lcsi_emergency_val, "Emergency")
+    lcsi_exhaustion_val <- phrutils::ensure_value(lcsi_exhaustion_val, "Exhaustion")
 
     # 1. EMBEDDED LOOKUP TABLES
     lookup_fclcm_4 <- dplyr::tribble(

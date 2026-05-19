@@ -89,30 +89,30 @@ add_standardized_deaths <- function(
 ) {
   origin <- "add_standardized_deaths"
 
-  phr_try({
+  phrutils::phr_try({
 
     # Use ensure_value for all *_val and *_vals parameters
-    male_val <- ensure_value(male_val, "Male")
-    female_val <- ensure_value(female_val, "Female")
-    non_trauma_vals <- ensure_value(non_trauma_vals, "non_trauma")
-    trauma_vals <- ensure_value(trauma_vals, "trauma")
-    other_vals <- ensure_value(other_vals, "other")
-    current_location_residence_vals <- ensure_value(current_location_residence_vals, "current")
-    migration_vals <- ensure_value(migration_vals, "migration")
-    last_location_residence_vals <- ensure_value(last_location_residence_vals, "last")
+    male_val <- phrutils::ensure_value(male_val, "Male")
+    female_val <- phrutils::ensure_value(female_val, "Female")
+    non_trauma_vals <- phrutils::ensure_value(non_trauma_vals, "non_trauma")
+    trauma_vals <- phrutils::ensure_value(trauma_vals, "trauma")
+    other_vals <- phrutils::ensure_value(other_vals, "other")
+    current_location_residence_vals <- phrutils::ensure_value(current_location_residence_vals, "current")
+    migration_vals <- phrutils::ensure_value(migration_vals, "migration")
+    last_location_residence_vals <- phrutils::ensure_value(last_location_residence_vals, "last")
 
     # Validate the dataset
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
     # Validate mandatory input columns
@@ -125,11 +125,11 @@ add_standardized_deaths <- function(
     if (!is.null(date_of_birth_col)) { required_columns <- c(required_columns, date_of_birth_col) }
 
     if (length(required_columns) > 0) {
-      phr_validate_columns(
+      phrutils::phr_validate_columns(
         .dataset,
         required_columns,
         origin = origin,
-        hint = phr_txt("Ensure that the necessary columns exist in the dataset."),
+        hint = ("Ensure that the necessary columns exist in the dataset."),
         soft = FALSE
       )
     }
@@ -160,9 +160,9 @@ add_standardized_deaths <- function(
 
     for (col in columns_to_create) {
       if (col %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt(glue::glue("The column `{col}` already exists and will be overwritten."))
+          message = (glue::glue("The column `{col}` already exists and will be overwritten."))
         )
       }
     }
@@ -290,14 +290,14 @@ add_standardized_deaths <- function(
         )
     }
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Standardized death calculations successfully added to the dataset.")
+      message = ("Standardized death calculations successfully added to the dataset.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure input column names, values, and data validity for the dataset."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure input column names, values, and data validity for the dataset."))
 }
 
 #' @title Add Person-Time Calculations to Dataset
@@ -383,33 +383,33 @@ add_persontime <- function(
 ) {
   origin <- "add_persontime"
 
-  phr_try({
+  phrutils::phr_try({
 
     # Use ensure_value for all *_val parameters
-    male_val <- ensure_value(male_val, "Male")
-    female_val <- ensure_value(female_val, "Female")
+    male_val <- phrutils::ensure_value(male_val, "Male")
+    female_val <- phrutils::ensure_value(female_val, "Female")
 
     # Step 1: Validate Dataset
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
     # Step 2: Validate and Convert Input Columns
     required_columns <- c(recall_date_col, survey_date_col)
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       required_columns,
       origin = origin,
-      hint = phr_txt("Ensure mandatory columns for recall date and survey date exist."),
+      hint = ("Ensure mandatory columns for recall date and survey date exist."),
       soft = FALSE
     )
 
@@ -450,16 +450,16 @@ add_persontime <- function(
       )
 
     # Ensure entry_date and exit_date are valid
-    phr_assert(
+    phrutils::phr_assert(
       all(!is.na(.dataset$entry_date)),  # Ensure there are valid entry dates
       origin = origin,
-      phr_txt("No valid entry dates found. Ensure recall_date_col, date_joined_col, or dob_col is available and valid.")
+      ("No valid entry dates found. Ensure recall_date_col, date_joined_col, or dob_col is available and valid.")
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       all(!is.na(.dataset$exit_date)),  # Ensure there are valid exit dates
       origin = origin,
-      phr_txt("No valid exit dates found. Ensure survey_date_col, date_of_death_col, or date_left_col is available and valid.")
+      ("No valid exit dates found. Ensure survey_date_col, date_of_death_col, or date_left_col is available and valid.")
     )
 
     # Step 5: Calculate Person Time
@@ -471,10 +471,10 @@ add_persontime <- function(
       )
 
     # Ensure person time is valid
-    phr_assert(
+    phrutils::phr_assert(
       all(!is.na(.dataset$person_time)),
       origin = origin,
-      phr_txt("No valid person time could be calculated. Check date columns and their values.")
+      ("No valid person time could be calculated. Check date columns and their values.")
     )
 
     # Step 6: Add Optional Columns
@@ -512,13 +512,13 @@ add_persontime <- function(
         )
     }
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Person-time calculations successfully added to the dataset.")
+      message = ("Person-time calculations successfully added to the dataset.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure required columns are present and contain valid data to calculate person-time."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure required columns are present and contain valid data to calculate person-time."))
 }
 
