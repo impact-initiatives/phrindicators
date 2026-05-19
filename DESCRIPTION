@@ -26,6 +26,5 @@ Suggests:
 Encoding: UTF-8
 RoxygenNote: 7.3.3
 Config/testthat/edition: 3
-
 Remotes:
     impact-initiatives/phrutils
