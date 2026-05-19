@@ -52,47 +52,47 @@ add_maternal_muac <- function(
 ) {
   origin <- "add_maternal_muac"
 
-  phr_try({
+  phrutils::phr_try({
 
 
     # Validate dataset
 
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
 
     # Validate input columns
 
     required_columns <- c(age_years_col, muac_col)
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       required_columns,
       origin = origin,
-      hint = phr_txt("Ensure the specified columns for age and MUAC exist in the dataset."),
+      hint = ("Ensure the specified columns for age and MUAC exist in the dataset."),
       soft = FALSE
     )
 
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[muac_col]],
       origin = origin,
-      hint = phr_txt("The `muac_col` column must contain numeric values."),
+      hint = ("The `muac_col` column must contain numeric values."),
       soft = TRUE
     )
 
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[age_years_col]],
       origin = origin,
-      hint = phr_txt("The `age_years_col` column must contain numeric values."),
+      hint = ("The `age_years_col` column must contain numeric values."),
       soft = TRUE
     )
 
@@ -105,9 +105,9 @@ add_maternal_muac <- function(
     if (muac_is_cm) {
       # Add or overwrite millimeter column
       if ("woman_muac_mm" %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt("The column `woman_muac_mm` already exists and will be overwritten.")
+          message = ("The column `woman_muac_mm` already exists and will be overwritten.")
         )
       }
       .dataset <- .dataset |>
@@ -117,9 +117,9 @@ add_maternal_muac <- function(
     } else if (muac_is_mm) {
       # Add or overwrite centimeter column
       if ("woman_muac_cm" %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt("The column `woman_muac_cm` already exists and will be overwritten.")
+          message = ("The column `woman_muac_cm` already exists and will be overwritten.")
         )
       }
       .dataset <- .dataset |>
@@ -127,9 +127,9 @@ add_maternal_muac <- function(
           woman_muac_cm = .data[[muac_col]] / 10
         )
     } else {
-      phr_warning(
+      phrutils::phr_warning(
         origin = origin,
-        message = phr_txt("MUAC units could not be definitively identified as centimeters or millimeters.")
+        message = ("MUAC units could not be definitively identified as centimeters or millimeters.")
       )
     }
 
@@ -140,9 +140,9 @@ add_maternal_muac <- function(
 
     for (col in output_columns) {
       if (col %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt(glue::glue("Variable `{col}` already exists and will be overwritten."))
+          message = (glue::glue("Variable `{col}` already exists and will be overwritten."))
         )
       }
     }
@@ -171,12 +171,12 @@ add_maternal_muac <- function(
         )
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Maternal nutritional status based on MUAC successfully categorized.")
+      message = ("Maternal nutritional status based on MUAC successfully categorized.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure input columns exist, contain valid numeric data, and the MUAC values are within realistic thresholds."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure input columns exist, contain valid numeric data, and the MUAC values are within realistic thresholds."))
 }

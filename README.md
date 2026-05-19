@@ -1,17 +1,15 @@
 # phr — Public Health Resources
 
-**phr** now focuses on:
+**phr** now focuses on `add_*` indicator-construction functions.
 
-- `add_*` indicator-construction functions
-- core helper utilities used by those functions:
-  - `utils_errors`
-  - `utils_validators`
-  - `utils_language`
+Core validation, error-handling, and related helper utilities are provided by
+[`phrutils`](https://github.com/impact-initiatives/phrutils).
 
 ## Installation
 
 ```r
 # install.packages("remotes")
+remotes::install_github("impact-initiatives/phrutils")
 remotes::install_github("SaeedR1987/phr_indicators")
 library(phr)
 ```
@@ -33,7 +31,7 @@ See function-level documentation in R, for example:
 ?add_fcs
 ?add_muac
 ?add_standardized_deaths
-?phr_validate_columns
+?phrutils::phr_validate_columns
 ```
 
 ## License

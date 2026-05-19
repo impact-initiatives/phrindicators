@@ -40,7 +40,7 @@ The function adds or overwrites the following columns to the dataset:
 * **sam_muac**: Severe Acute Malnutrition (1 = SAM, 0 = not SAM).
 * **mam_muac**: Moderate Acute Malnutrition (1 = MAM, 0 = not MAM).
 * **gam_muac**: Global Acute Malnutrition (1 = GAM, 0 = not GAM).
-* **nut_muac_cat**: Categorical MUAC classification (`"Normal"`, `"MAM"`, `"SAM"`) wrapped in `phr_txt()`.
+* **nut_muac_cat**: Categorical MUAC classification (`"Normal"`, `"MAM"`, `"SAM"`) provided as plain labeled values.
   This is derived from `sam_muac` and `mam_muac` after edema and age exclusions.
 * **flag_muac_extreme**: Flag for extreme MUAC values (1 = less than 5 cm or greater than 20 cm, 0 = otherwise).
 * **sam_muac_noflag**: Same as `sam_muac`, but `NA` if `flag_muac_extreme == 1`.

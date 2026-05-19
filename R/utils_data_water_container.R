@@ -31,39 +31,39 @@ add_lppd_correction_factor <- function(
 ) {
   origin <- "add_lppd_correction_factor"
 
-  phr_try({
+  phrutils::phr_try({
 
 
     # Validate dataset
 
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
 
     # Validate input column
 
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       num_days_collect_col,
       origin = origin,
-      hint = phr_txt("Ensure the specified `num_days_collect_col` exists in the dataset."),
+      hint = ("Ensure the specified `num_days_collect_col` exists in the dataset."),
       soft = FALSE
     )
 
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[num_days_collect_col]],
       origin = origin,
-      hint = phr_txt("The `num_days_collect_col` column must contain numeric values."),
+      hint = ("The `num_days_collect_col` column must contain numeric values."),
       soft = TRUE
     )
 
@@ -73,9 +73,9 @@ add_lppd_correction_factor <- function(
     output_column <- "lppd_correction_factor"
 
     if (output_column %in% names(.dataset)) {
-      phr_warning(
+      phrutils::phr_warning(
         origin = origin,
-        message = phr_txt(glue::glue("The column `{output_column}` already exists and will be overwritten."))
+        message = (glue::glue("The column `{output_column}` already exists and will be overwritten."))
       )
     }
 
@@ -95,14 +95,14 @@ add_lppd_correction_factor <- function(
         )
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("LPPD correction factor successfully calculated.")
+      message = ("LPPD correction factor successfully calculated.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure `num_days_collect_col` exists and contains valid numeric values within the range 0-7."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure `num_days_collect_col` exists and contains valid numeric values within the range 0-7."))
 }
 
 #' @title Add Total Daily Liters Collected
@@ -156,64 +156,64 @@ add_total_daily_liters <- function(
 ) {
   origin <- "add_total_daily_liters"
 
-  phr_try({
+  phrutils::phr_try({
 
 
     # Validate dataset
 
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
 
     # Validate input columns
 
     required_columns <- c(wash_container_size_liters_col, wash_container_num_journeys_col)
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       required_columns,
       origin = origin,
-      hint = phr_txt("Ensure the specified columns for container size and number of journeys exist in the dataset."),
+      hint = ("Ensure the specified columns for container size and number of journeys exist in the dataset."),
       soft = FALSE
     )
 
     # Check if the required columns contain numeric values
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[wash_container_size_liters_col]],
       origin = origin,
-      hint = phr_txt("The `wash_container_size_liters_col` column must contain numeric values."),
+      hint = ("The `wash_container_size_liters_col` column must contain numeric values."),
       soft = TRUE
     )
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[wash_container_num_journeys_col]],
       origin = origin,
-      hint = phr_txt("The `wash_container_num_journeys_col` column must contain numeric values."),
+      hint = ("The `wash_container_num_journeys_col` column must contain numeric values."),
       soft = TRUE
     )
 
     # If correction_factor_col is provided, validate it
     if (!is.null(correction_factor_col)) {
-      phr_validate_columns(
+      phrutils::phr_validate_columns(
         .dataset,
         correction_factor_col,
         origin = origin,
-        hint = phr_txt("Ensure the specified correction factor column exists in the dataset."),
+        hint = ("Ensure the specified correction factor column exists in the dataset."),
         soft = FALSE
       )
 
-      phr_validate_all_numeric(
+      phrutils::phr_validate_all_numeric(
         .dataset[[correction_factor_col]],
         origin = origin,
-        hint = phr_txt("The `correction_factor_col` column must contain numeric values."),
+        hint = ("The `correction_factor_col` column must contain numeric values."),
         soft = TRUE
       )
     }
@@ -224,9 +224,9 @@ add_total_daily_liters <- function(
     output_column <- "wash_container_total_litres"
 
     if (output_column %in% names(.dataset)) {
-      phr_warning(
+      phrutils::phr_warning(
         origin = origin,
-        message = phr_txt(glue::glue("The column `{output_column}` already exists and will be overwritten."))
+        message = (glue::glue("The column `{output_column}` already exists and will be overwritten."))
       )
     }
 
@@ -254,12 +254,12 @@ add_total_daily_liters <- function(
         )
     }
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Total daily liters successfully calculated.")
+      message = ("Total daily liters successfully calculated.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure all input columns exist and contain valid numeric data."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure all input columns exist and contain valid numeric data."))
 }

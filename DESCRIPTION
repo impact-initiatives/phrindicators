@@ -7,9 +7,9 @@ Authors@R:
            role = c("aut", "cre"),
            email = "saeed.rahman0@gmail.com")
 Description: Provides add_* indicator-construction helpers for public health
-    survey data, together with core validation, error-handling, and language
-    utilities. Core functionality covers food security (FSL/FCS/HDDS/LCSI/RCSI),
-    nutrition (MUAC, z-scores, IYCF), mortality, WASH, and demographics.
+    survey data. Core functionality covers food security (FSL/FCS/HDDS/LCSI/RCSI),
+    nutrition (MUAC, z-scores, IYCF), mortality, WASH, and demographics,
+    while validation and error-handling utilities are supplied by phrutils.
 License: MIT + file LICENSE
 Depends:
     R (>= 4.1.0)
@@ -22,6 +22,7 @@ Imports:
     lubridate,
     officer,
     openxlsx,
+    phrutils,
     pps,
     purrr,
     readr,
@@ -50,3 +51,6 @@ Suggests:
 Encoding: UTF-8
 RoxygenNote: 7.3.3
 Config/testthat/edition: 3
+
+Remotes:
+    impact-initiatives/phrutils
