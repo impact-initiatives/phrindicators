@@ -103,7 +103,7 @@ test_that("add_fcs() — works across 500 diverse FCS combinations", {
   # Check edge cases produce expected ranges
   expect_equal(out$fsl_fcs_score[1], 0)  # All zeros = score 0
   expect_true(out$fsl_fcs_score[2] > 100)  # Max values = high score
-  expect_equal(out$fsl_fcs_cat[1], factor("⧫Poor⧫", levels = c("⧫Poor⧫", "⧫Borderline⧫", "⧫Acceptable⧫")))
+  expect_equal(out$fsl_fcs_cat[1], factor("Poor", levels = c("Poor", "Borderline", "Acceptable")))
 })
 
 test_that("add_fcs() — dataset with NA produces NA scores appropriately", {
