@@ -172,7 +172,7 @@ exported <- protocol$export_protocol()
 ## Complete Example
 
 ```r
-library(phr)
+library(phrindicators)
 
 # 1. Create protocol
 protocol <- Protocol$new(

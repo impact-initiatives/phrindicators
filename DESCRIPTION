@@ -1,5 +1,5 @@
-Package: phr
-Title: Public Health Resource Analysis Tools
+Package: phrindicators
+Title: Public Health Indicator Construction Tools
 Version: 0.1.0
 Authors@R:
     person(given = "Saeed",
@@ -14,40 +14,15 @@ License: MIT + file LICENSE
 Depends:
     R (>= 4.1.0)
 Imports:
-    digest,
     dplyr,
-    flextable,
-    ggplot2,
     glue,
-    lubridate,
-    officer,
-    openxlsx,
     phrutils,
-    pps,
     purrr,
-    readr,
-    readxl,
     rlang,
-    scales,
-    srvyr,
-    survey,
-    xml2,
     tibble,
-    tidyr,
     zscorer
 Suggests:
-    GGally,
-    ggalluvial,
-    ggnewscale,
-    ggridges,
-    ggradar,
-    mockery,
-    rsvg,
-    shiny,
-    stringr,
-    testthat (>= 3.0.0),
-    treemapify,
-    withr
+    testthat (>= 3.0.0)
 Encoding: UTF-8
 RoxygenNote: 7.3.3
 Config/testthat/edition: 3

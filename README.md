@@ -1,6 +1,6 @@
-# phr — Public Health Resources
+# phrindicators — Public Health Indicators
 
-**phr** now focuses on `add_*` indicator-construction functions.
+**phrindicators** focuses on `add_*` indicator-construction functions.
 
 Core validation, error-handling, and related helper utilities are provided by
 [`phrutils`](https://github.com/impact-initiatives/phrutils).
@@ -11,7 +11,7 @@ Core validation, error-handling, and related helper utilities are provided by
 # install.packages("remotes")
 remotes::install_github("impact-initiatives/phrutils")
 remotes::install_github("SaeedR1987/phr_indicators")
-library(phr)
+library(phrindicators)
 ```
 
 ## Scope
