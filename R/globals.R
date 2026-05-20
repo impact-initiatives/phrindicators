@@ -182,6 +182,30 @@ utils::globalVariables(c(
   "num_interview_per_enum_per_day",
   "num_days",
   "n_psu",
-  "cluster_size"
+  "cluster_size",
+
+  # ----- Additional NSE symbols from R CMD check -----
+  # Household FSL / phase columns
+  "fc_phase",
+  "lcsi",
+  "hhs",
+  "rcsi",
+  "fcs",
+  "hdds",
+  "cell",
+  "fsl_fc_phase",
+  "fsl_fclcm_phase",
+  # WASH / health category columns
+  "wash_jmp_ladder_sanitation_cat",
+  "health_foregone_care_cat",
+  # Helper/intermediate columns
+  "temp_num_days_col",
+  ".sex_std",
+  # NSE helper functions/symbols flagged by check
+  ":=",
+  "all_of",
+  "c_across",
+  "sd",
+  "hh_roster_link_check"
 
 ))
