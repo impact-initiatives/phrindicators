@@ -22,6 +22,7 @@ Imports:
     tibble,
     zscorer
 Suggests:
+    lubridate,
     testthat (>= 3.0.0)
 Encoding: UTF-8
 RoxygenNote: 7.3.3
