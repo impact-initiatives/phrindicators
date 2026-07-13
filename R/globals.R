@@ -205,7 +205,6 @@ utils::globalVariables(c(
   ":=",
   "all_of",
   "c_across",
-  "sd",
-  "hh_roster_link_check"
+  "sd"
 
 ))
