@@ -103,6 +103,59 @@ utils::globalVariables(c(
   # add_sanitation_jmp_ladder
   "wash_jmp_ladder_sanitation_cat",
 
+  # ----- utils_data_water_container.R -----
+  # Total litres column (cross-mutate reference)
+  "wash_container_total_litres",
+
+  # ----- utils_data_individual_woman.R -----
+  # Intermediate MUAC classification column (intra-mutate reference)
+  "muac_for_classification",
+
+  # ----- utils_data_household_fsl.R (additional) -----
+  # LCSI NA count column (intra-mutate reference)
+  "lcsi_count_na",
+
+  # ----- class_protocol.R / utils_sample_drawing.R / utils_protocol.R -----
+  # Sampling output columns
+  "sampled_psu",
+  "allocated_sample",
+  "Final_HH_Sample_Size",
+  "General_HH_Sample_Size",
+  "Ind_Sample_Size",
+  "Ind_HH_Sample_Size",
+  "Mort_Ind_Sample_Size",
+  "Mort_PT_Sample_Size",
+  "Mort_HH_Sample_Size",
+  # Field plan output columns (written into existing strata table columns)
+  "num_interview_per_enum_per_day",
+  "num_days",
+  "n_psu",
+  "cluster_size",
+
+  # ----- Additional NSE symbols from R CMD check -----
+  # Household FSL / phase columns
+  "fc_phase",
+  "lcsi",
+  "hhs",
+  "rcsi",
+  "fcs",
+  "hdds",
+  "cell",
+  "fsl_fc_phase",
+  "fsl_fclcm_phase",
+  # WASH / health category columns
+  "wash_jmp_ladder_sanitation_cat",
+  "health_foregone_care_cat",
+  # Helper/intermediate columns
+  "temp_num_days_col",
+  ".sex_std",
+  # NSE helper functions/symbols flagged by check
+  ":=",
+  "all_of",
+  "c_across",
+  "sd"
+  "cluster_size"
+
   # add_foregone_care
   "health_foregone_care_cat",
 
