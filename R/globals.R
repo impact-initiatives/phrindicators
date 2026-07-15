@@ -182,6 +182,7 @@ utils::globalVariables(c(
   "num_interview_per_enum_per_day",
   "num_days",
   "n_psu",
+<<<<<<< HEAD
   "cluster_size",
 
   # ----- Additional NSE symbols from R CMD check -----
@@ -206,5 +207,8 @@ utils::globalVariables(c(
   "all_of",
   "c_across",
   "sd"
+=======
+  "cluster_size"
+>>>>>>> parent of f41340c (fix: address R CMD check globals, imports, and unused resources)
 
 ))
