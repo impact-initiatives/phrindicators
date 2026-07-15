@@ -10,7 +10,7 @@ Core validation, error-handling, and related helper utilities are provided by
 ```r
 # install.packages("remotes")
 remotes::install_github("impact-initiatives/phrutils")
-remotes::install_github("SaeedR1987/phr_indicators")
+remotes::install_github("impact-initiatives/phr_indicators")
 library(phrindicators)
 ```
 
