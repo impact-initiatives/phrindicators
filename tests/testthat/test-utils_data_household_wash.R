@@ -832,9 +832,9 @@ test_that("add_sanitation_facility_shared() — categorical input works correctl
     not_shared_values = c("not_shared")
   )
 
-  expect_equal(out$wash_sanitation_facility_shared_cat[1], "⧫yes⧫")
-  expect_equal(out$wash_sanitation_facility_shared_cat[2], "⧫no⧫")
-  expect_equal(out$wash_sanitation_facility_shared_cat[3], "⧫yes⧫")
+  expect_equal(out$wash_sanitation_facility_shared_cat[1], "yes")
+  expect_equal(out$wash_sanitation_facility_shared_cat[2], "no")
+  expect_equal(out$wash_sanitation_facility_shared_cat[3], "yes")
 })
 
 test_that("add_sanitation_facility_shared() — numeric takes priority over categorical", {

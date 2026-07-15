@@ -77,43 +77,43 @@ add_health_barriers <- function(
 
   origin <- "add_health_barriers"
 
-  phr_try({
+  phrutils::phr_try({
 
     # Use ensure_value for all *_val parameters
-    physical_access_barriers_val <- ensure_value(physical_access_barriers_val, "physical")
-    financial_access_barriers_val <- ensure_value(financial_access_barriers_val, "financial")
-    safety_access_barriers_val <- ensure_value(safety_access_barriers_val, "safety")
-    quality_barriers_val <- ensure_value(quality_barriers_val, "quality")
-    healthcare_seeking_barriers_val <- ensure_value(healthcare_seeking_barriers_val, "healthcare_seeking")
-    availability_barriers_val <- ensure_value(availability_barriers_val, "availability")
-    other_barriers_val <- ensure_value(other_barriers_val, "other")
-    no_barriers_val <- ensure_value(no_barriers_val, "none")
-    did_not_need_val <- ensure_value(did_not_need_val, "did_not_need")
+    physical_access_barriers_val <- phrutils::ensure_value(physical_access_barriers_val, "physical")
+    financial_access_barriers_val <- phrutils::ensure_value(financial_access_barriers_val, "financial")
+    safety_access_barriers_val <- phrutils::ensure_value(safety_access_barriers_val, "safety")
+    quality_barriers_val <- phrutils::ensure_value(quality_barriers_val, "quality")
+    healthcare_seeking_barriers_val <- phrutils::ensure_value(healthcare_seeking_barriers_val, "healthcare_seeking")
+    availability_barriers_val <- phrutils::ensure_value(availability_barriers_val, "availability")
+    other_barriers_val <- phrutils::ensure_value(other_barriers_val, "other")
+    no_barriers_val <- phrutils::ensure_value(no_barriers_val, "none")
+    did_not_need_val <- phrutils::ensure_value(did_not_need_val, "did_not_need")
 
 
     # Validate dataset
 
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
 
     # Validate health barriers column
 
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       health_barriers_col,
       origin = origin,
-      hint = phr_txt("Ensure the health barriers column exists in the dataset."),
+      hint = ("Ensure the health barriers column exists in the dataset."),
       soft = FALSE
     )
 
@@ -134,9 +134,9 @@ add_health_barriers <- function(
 
     for (col in output_columns) {
       if (col %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt(glue::glue("Variable `{col}` already exists and will be overwritten."))
+          message = (glue::glue("Variable `{col}` already exists and will be overwritten."))
         )
       }
     }
@@ -201,14 +201,14 @@ add_health_barriers <- function(
         )
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Health barrier indicators successfully computed.")
+      message = ("Health barrier indicators successfully computed.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure all input columns exist and the health barriers column contains valid, well-formatted data."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure all input columns exist and the health barriers column contains valid, well-formatted data."))
 }
 
 #' @title Add Healthcare Access Within One Hour
@@ -269,27 +269,27 @@ add_healthcare_access_one_hour <- function(
 
   origin <- "add_healthcare_access_one_hour"
 
-  phr_try({
+  phrutils::phr_try({
 
     # Use ensure_value for *_val parameters
-    num_minutes_val <- ensure_value(num_minutes_val, "num_minutes")
-    range_val <- ensure_value(range_val, "range")
-    less_than_one_hour_range_val <- ensure_value(less_than_one_hour_range_val, c("<1_hour", "less_than_1_hour"))
-    one_hour_or_more_range_val <- ensure_value(one_hour_or_more_range_val, c(">=1_hour", "1_hour_or_more"))
+    num_minutes_val <- phrutils::ensure_value(num_minutes_val, "num_minutes")
+    range_val <- phrutils::ensure_value(range_val, "range")
+    less_than_one_hour_range_val <- phrutils::ensure_value(less_than_one_hour_range_val, c("<1_hour", "less_than_1_hour"))
+    one_hour_or_more_range_val <- phrutils::ensure_value(one_hour_or_more_range_val, c(">=1_hour", "1_hour_or_more"))
 
     # Validate dataset
 
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
     # Validate input columns
@@ -299,17 +299,17 @@ add_healthcare_access_one_hour <- function(
       health_care_travel_time_minutes_col,
       health_care_travel_time_range_col
     )
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       required_columns,
       origin = origin,
-      hint = phr_txt("Ensure the required travel time columns exist in the dataset."),
+      hint = ("Ensure the required travel time columns exist in the dataset."),
       soft = FALSE
     )
 
     # Validate health_care_travel_time column
 
-    phr_validate_choice(
+    phrutils::phr_validate_choice(
       x = .dataset[[health_care_travel_time_col]],
       choices = c(num_minutes_val, range_val, NA_character_),
       origin = origin,
@@ -318,17 +318,17 @@ add_healthcare_access_one_hour <- function(
 
     # Validate health_care_travel_time_minutes column
 
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[health_care_travel_time_minutes_col]],
       origin = origin,
-      hint = phr_txt("The `health_care_travel_time_minutes_col` column must contain numeric values."),
+      hint = ("The `health_care_travel_time_minutes_col` column must contain numeric values."),
       soft = TRUE
     )
 
     # Validate ranges from health_care_travel_time_range_col
 
     valid_ranges <- c(less_than_one_hour_range_val, one_hour_or_more_range_val, NA_character_)
-    phr_validate_choice(
+    phrutils::phr_validate_choice(
       x = .dataset[[health_care_travel_time_range_col]],
       choices = valid_ranges,
       origin = origin,
@@ -340,9 +340,9 @@ add_healthcare_access_one_hour <- function(
     output_column <- "health_healthcare_access_one_hour"
 
     if (output_column %in% names(.dataset)) {
-      phr_warning(
+      phrutils::phr_warning(
         origin = origin,
-        message = phr_txt(glue::glue("Variable `{output_column}` already exists and will be overwritten."))
+        message = (glue::glue("Variable `{output_column}` already exists and will be overwritten."))
       )
     }
 
@@ -354,33 +354,33 @@ add_healthcare_access_one_hour <- function(
           # Use numeric minutes if available
           .data[[health_care_travel_time_col]] == num_minutes_val &
             !is.na(.data[[health_care_travel_time_minutes_col]]) &
-            .data[[health_care_travel_time_minutes_col]] < 60 ~ phr_txt("yes"),
+            .data[[health_care_travel_time_minutes_col]] < 60 ~ ("yes"),
           .data[[health_care_travel_time_col]] == num_minutes_val &
             !is.na(.data[[health_care_travel_time_minutes_col]]) &
-            .data[[health_care_travel_time_minutes_col]] >= 60 ~ phr_txt("no"),
+            .data[[health_care_travel_time_minutes_col]] >= 60 ~ ("no"),
 
           # Use range-based travel time if numeric minutes are unavailable
           .data[[health_care_travel_time_col]] == range_val &
-            .data[[health_care_travel_time_range_col]] %in% less_than_one_hour_range_val ~ phr_txt("yes"),
+            .data[[health_care_travel_time_range_col]] %in% less_than_one_hour_range_val ~ ("yes"),
           .data[[health_care_travel_time_col]] == range_val &
-            .data[[health_care_travel_time_range_col]] %in% one_hour_or_more_range_val ~ phr_txt("no"),
+            .data[[health_care_travel_time_range_col]] %in% one_hour_or_more_range_val ~ ("no"),
 
           # Mark as `dont_know` if unable to determine
           is.na(.data[[health_care_travel_time_minutes_col]]) &
-            is.na(.data[[health_care_travel_time_range_col]]) ~ phr_txt("dont_know"),
+            is.na(.data[[health_care_travel_time_range_col]]) ~ ("dont_know"),
 
           # Default for undefined cases
           TRUE ~ NA_character_
         )
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Healthcare access within one hour successfully calculated.")
+      message = ("Healthcare access within one hour successfully calculated.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure input columns have valid data, and values align with the ranges and expected inputs provided."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure input columns have valid data, and values align with the ranges and expected inputs provided."))
 }
 

@@ -2,11 +2,11 @@
 
 ## Introduction
 
-The public_health_resources package uses a comprehensive schema system to define, validate, and standardize survey data. This document provides an overview of the different schema types used in the system, their structure, interactions, and practical usage.
+The phrindicators package uses a comprehensive schema system to define, validate, and standardize survey data. This document provides an overview of the different schema types used in the system, their structure, interactions, and practical usage.
 
 ## Schema Types
 
-The public_health_resources schema system consists of four main schema types:
+The phrindicators schema system consists of four main schema types:
 
 1. **Variable Schema** - Defines variable types, validation rules, and value mappings
 2. **Dependency Schema** - Defines logical quality check rules between variables
@@ -1016,4 +1016,4 @@ For questions or issues:
 - Review the detailed documentation for each schema type
 - Check template files in `resources/` folder
 - Examine test files in `tests/testthat/test-*_schema.R`
-- Refer to the public_health_resources package documentation
+- Refer to the phrindicators package documentation

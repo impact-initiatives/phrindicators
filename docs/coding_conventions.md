@@ -1,8 +1,8 @@
-# Coding Conventions in public_health_resources
+# Coding Conventions in phrindicators
 
 ## Purpose
 
-This document defines the **expected coding standard** for contributors to `public_health_resources` (`phr`).  
+This document defines the **expected coding standard** for contributors to `phrindicators`.
 When adding or changing code, follow these rules unless there is a clear, documented reason not to.
 
 ---

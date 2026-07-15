@@ -32,39 +32,39 @@ add_age_cat <- function(
 ) {
   origin <- "add_age_cat"
 
-  phr_try({
+  phrutils::phr_try({
 
 
     # Validate dataset
 
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
 
     # Validate input column
 
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       age_years_col,
       origin = origin,
-      hint = phr_txt("Ensure the specified `age_years_col` exists in the dataset."),
+      hint = ("Ensure the specified `age_years_col` exists in the dataset."),
       soft = FALSE
     )
 
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[age_years_col]],
       origin = origin,
-      hint = phr_txt("The `age_years_col` column must contain numeric values."),
+      hint = ("The `age_years_col` column must contain numeric values."),
       soft = TRUE
     )
 
@@ -74,9 +74,9 @@ add_age_cat <- function(
     output_column <- "age_cat"
 
     if (output_column %in% names(.dataset)) {
-      phr_warning(
+      phrutils::phr_warning(
         origin = origin,
-        message = phr_txt(glue::glue("The column `{output_column}` already exists and will be overwritten."))
+        message = (glue::glue("The column `{output_column}` already exists and will be overwritten."))
       )
     }
 
@@ -94,14 +94,14 @@ add_age_cat <- function(
         )
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Age categories successfully calculated.")
+      message = ("Age categories successfully calculated.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure `age_years_col` exists and contains valid numeric data."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure `age_years_col` exists and contains valid numeric data."))
 }
 
 #' @title Add Age Categories in Months
@@ -147,46 +147,46 @@ add_age_months_cat <- function(
 ) {
   origin <- "add_age_months_cat"
 
-  phr_try({
+  phrutils::phr_try({
 
 
     # Validate dataset
 
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
 
     # Validate input column
 
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       age_months_col,
       origin = origin,
-      hint = phr_txt("Ensure the specified `age_months_col` exists in the dataset."),
+      hint = ("Ensure the specified `age_months_col` exists in the dataset."),
       soft = FALSE
     )
 
     # Check if all values in the specified column are NA
-    phr_assert(
+    phrutils::phr_assert(
       !all(is.na(.dataset[[age_months_col]])),
       origin = origin,
-      phr_txt(paste("The column", age_months_col, "contains only NA values. Ensure it contains valid numeric data."))
+      (paste("The column", age_months_col, "contains only NA values. Ensure it contains valid numeric data."))
     )
 
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[age_months_col]],
       origin = origin,
-      hint = phr_txt("The `age_months_col` column must contain numeric values."),
+      hint = ("The `age_months_col` column must contain numeric values."),
       soft = TRUE
     )
 
@@ -197,9 +197,9 @@ add_age_months_cat <- function(
 
     for (output_column in output_columns) {
       if (output_column %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt(glue::glue("The column `{output_column}` already exists and will be overwritten."))
+          message = (glue::glue("The column `{output_column}` already exists and will be overwritten."))
         )
       }
     }
@@ -233,14 +233,14 @@ add_age_months_cat <- function(
         )
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Age categories in months successfully calculated.")
+      message = ("Age categories in months successfully calculated.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure `age_months_col` exists and contains valid numeric data."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure `age_months_col` exists and contains valid numeric data."))
 }
 
 #' @title Add Standardized Age Calculations to a Dataset
@@ -328,30 +328,30 @@ add_standardized_age <- function(
 
   origin <- "add_standardized_age"
 
-  phr_try({
+  phrutils::phr_try({
 
     # Validate the dataset
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
     # Validate mandatory and optional columns
     mandatory_cols <- c(age_years_col)
 
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       mandatory_cols,
       origin = origin,
-      hint = phr_txt("Ensure the age years column exists in the dataset."),
+      hint = ("Ensure the age years column exists in the dataset."),
       soft = FALSE
     )
 
@@ -397,11 +397,11 @@ add_standardized_age <- function(
     )
 
     if (length(optional_cols) > 0) {
-      phr_validate_columns(
+      phrutils::phr_validate_columns(
         .dataset,
         optional_cols,
         origin = origin,
-        hint = phr_txt("Ensure optional columns for age, birth, death, and recall dates exist if provided."),
+        hint = ("Ensure optional columns for age, birth, death, and recall dates exist if provided."),
         soft = TRUE
       )
     }
@@ -421,7 +421,7 @@ add_standardized_age <- function(
     if (length(cols_to_convert) > 0) {
       .dataset <- .dataset |>
         dplyr::mutate(
-          dplyr::across(all_of(cols_to_convert), ~ phr_convert_date(.x))
+          dplyr::across(all_of(cols_to_convert), ~ phrutils::phr_convert_date(.x))
         )
     }
 
@@ -429,9 +429,9 @@ add_standardized_age <- function(
     output_cols <- c("calc_date_birth_final", "calc_date_death_final", "calc_age_years", "calc_age_months", "calc_age_days", "roster_birth")
     for (col in output_cols) {
       if (col %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt(glue::glue("Variable {col} already exists and will be overwritten."))
+          message = (glue::glue("Variable {col} already exists and will be overwritten."))
         )
       }
     }
@@ -584,9 +584,9 @@ add_standardized_age <- function(
 
     # Calculate `roster_birth` column if `calc_date_birth_final` is valid and `date_recall_col` is provided
     if ((!"calc_date_birth_final" %in% names(.dataset) && is.null(date_birth_final_col)) || is.null(date_recall_col)) {
-      phr_message(
+      phrutils::phr_message(
         origin = origin,
-        message = phr_txt("roster_birth calculation skipped as required birth or recall date information is missing.")
+        message = ("roster_birth calculation skipped as required birth or recall date information is missing.")
       )
     } else {
       .dataset <- .dataset |>
@@ -600,14 +600,14 @@ add_standardized_age <- function(
         )
     }
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Standardized age columns and roster_birth added successfully.")
+      message = ("Standardized age columns and roster_birth added successfully.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure input data and columns are valid."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure input data and columns are valid."))
 }
 
 
@@ -664,34 +664,34 @@ add_standardized_roster_demographics <- function(
 
   origin <- "add_standardized_roster_demographics"
 
-  phr_try({
+  phrutils::phr_try({
 
     # Validate dataset
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
     # Validate age column
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       age_years_col,
       origin = origin,
-      hint = phr_txt("Ensure age_years_col exists. Run add_standardized_age first."),
+      hint = ("Ensure age_years_col exists. Run add_standardized_age first."),
       soft = FALSE
     )
 
     # Use ensure_value for defaults
-    male_val <- ensure_value(male_val, c("m", "male", "1", "M", "Male"))
-    female_val <- ensure_value(female_val, c("f", "female", "2", "F", "Female"))
+    male_val <- phrutils::ensure_value(male_val, c("m", "male", "1", "M", "Male"))
+    female_val <- phrutils::ensure_value(female_val, c("f", "female", "2", "F", "Female"))
 
     # Warn about overwriting existing columns
     output_cols <- c(
@@ -702,9 +702,9 @@ add_standardized_roster_demographics <- function(
 
     for (col in output_cols) {
       if (col %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt(glue::glue("Column `{col}` already exists and will be overwritten."))
+          message = (glue::glue("Column `{col}` already exists and will be overwritten."))
         )
       }
     }
@@ -768,9 +768,9 @@ add_standardized_roster_demographics <- function(
 
     } else {
       # If no sex column, create columns with 0
-      phr_warning(
+      phrutils::phr_warning(
         origin = origin,
-        message = phr_txt("Sex column not provided or not found. Sex-based columns will be set to 0.")
+        message = ("Sex column not provided or not found. Sex-based columns will be set to 0.")
       )
 
       .dataset <- .dataset |>
@@ -781,13 +781,13 @@ add_standardized_roster_demographics <- function(
         )
     }
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Standardized roster demographic columns added successfully.")
+      message = ("Standardized roster demographic columns added successfully.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure age and sex columns are valid."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure age and sex columns are valid."))
 }
 

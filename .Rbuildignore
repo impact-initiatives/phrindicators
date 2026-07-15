@@ -13,3 +13,5 @@ $run_dev.*
 ^resources$
 ^docs$
 ^LICENSE\.md$
+^\.positai$
+^\.claude$

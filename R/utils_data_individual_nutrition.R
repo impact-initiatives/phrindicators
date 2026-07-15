@@ -81,28 +81,28 @@ add_ecfies <- function(
 
   origin <- "add_ecfies"
 
-  phr_try({
+  phrutils::phr_try({
 
     # Use ensure_value for all *_val parameters
-    yes_val <- ensure_value(yes_val, "yes")
-    no_val <- ensure_value(no_val, "no")
-    dont_know_val <- ensure_value(dont_know_val, "dont_know")
-    prefer_not_to_answer_val <- ensure_value(prefer_not_to_answer_val, "prefer_not_to_answer")
+    yes_val <- phrutils::ensure_value(yes_val, "yes")
+    no_val <- phrutils::ensure_value(no_val, "no")
+    dont_know_val <- phrutils::ensure_value(dont_know_val, "dont_know")
+    prefer_not_to_answer_val <- phrutils::ensure_value(prefer_not_to_answer_val, "prefer_not_to_answer")
 
 
     # Validate dataset
 
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
 
@@ -119,11 +119,11 @@ add_ecfies <- function(
       nut_ecfies_so8_col
     )
 
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       ecfies_columns,
       origin = origin,
-      hint = phr_txt("Ensure all EC-FIES columns (1-8) exist in the dataset."),
+      hint = ("Ensure all EC-FIES columns (1-8) exist in the dataset."),
       soft = FALSE
     )
 
@@ -133,7 +133,7 @@ add_ecfies <- function(
     valid_values <- c(yes_val, no_val, dont_know_val, prefer_not_to_answer_val, NA_character_)
 
     for (col in ecfies_columns) {
-      phr_validate_choice(
+      phrutils::phr_validate_choice(
         x = .dataset[[col]],
         choices = valid_values,
         origin = origin,
@@ -148,9 +148,9 @@ add_ecfies <- function(
 
     for (col in output_columns) {
       if (col %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt(glue::glue("Variable `{col}` already exists and will be overwritten."))
+          message = (glue::glue("Variable `{col}` already exists and will be overwritten."))
         )
       }
     }
@@ -169,10 +169,10 @@ add_ecfies <- function(
 
         # Assign food insecurity category
         nut_ecfies_cat = dplyr::case_when(
-          nut_ecfies_score == 0 ~ phr_txt("No Food Insecurity"),
-          nut_ecfies_score >= 1 & nut_ecfies_score <= 3 ~ phr_txt("Mild Food Insecurity"),
-          nut_ecfies_score >= 4 & nut_ecfies_score <= 6 ~ phr_txt("Moderate Food Insecurity"),
-          nut_ecfies_score >= 7 & nut_ecfies_score <= 8 ~ phr_txt("Severe Food Insecurity"),
+          nut_ecfies_score == 0 ~ ("No Food Insecurity"),
+          nut_ecfies_score >= 1 & nut_ecfies_score <= 3 ~ ("Mild Food Insecurity"),
+          nut_ecfies_score >= 4 & nut_ecfies_score <= 6 ~ ("Moderate Food Insecurity"),
+          nut_ecfies_score >= 7 & nut_ecfies_score <= 8 ~ ("Severe Food Insecurity"),
           TRUE ~ NA_character_
         ),
 
@@ -180,23 +180,23 @@ add_ecfies <- function(
         nut_ecfies_cat = factor(
           nut_ecfies_cat,
           levels = c(
-            phr_txt("No Food Insecurity"),
-            phr_txt("Mild Food Insecurity"),
-            phr_txt("Moderate Food Insecurity"),
-            phr_txt("Severe Food Insecurity")
+            ("No Food Insecurity"),
+            ("Mild Food Insecurity"),
+            ("Moderate Food Insecurity"),
+            ("Severe Food Insecurity")
           ),
           ordered = TRUE
         )
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("EC-FIES score and categorization successfully computed.")
+      message = ("EC-FIES score and categorization successfully computed.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure input columns exist, contain valid data, and scoring values are correctly specified."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure input columns exist, contain valid data, and scoring values are correctly specified."))
 }
 
 #' @title Add MUAC-Based SAM, MAM, GAM Classifications & Flag Extreme MUAC Values
@@ -213,7 +213,7 @@ add_ecfies <- function(
 #' * **sam_muac**: Severe Acute Malnutrition (1 = SAM, 0 = not SAM).
 #' * **mam_muac**: Moderate Acute Malnutrition (1 = MAM, 0 = not MAM).
 #' * **gam_muac**: Global Acute Malnutrition (1 = GAM, 0 = not GAM).
-#' * **nut_muac_cat**: Categorical MUAC classification (`"Normal"`, `"MAM"`, `"SAM"`) wrapped in `phr_txt()`.
+#' * **nut_muac_cat**: Categorical MUAC classification (`"Normal"`, `"MAM"`, `"SAM"`) provided as plain labeled values.
 #'   This is derived from `sam_muac` and `mam_muac` after edema and age exclusions.
 #' * **flag_muac_extreme**: Flag for extreme MUAC values (1 = less than 5 cm or greater than 20 cm, 0 = otherwise).
 #' * **sam_muac_noflag**: Same as `sam_muac`, but `NA` if `flag_muac_extreme == 1`.
@@ -282,43 +282,43 @@ add_muac <- function(
 ) {
   origin <- "add_muac"
 
-  phr_try({
+  phrutils::phr_try({
 
     # Use ensure_value for *_val parameter
-    edema_confirm_val <- ensure_value(edema_confirm_val, "yes")
+    edema_confirm_val <- phrutils::ensure_value(edema_confirm_val, "yes")
 
 
     # Validate dataset
 
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
 
     # Validate input columns
 
     required_columns <- c(nut_muac_cm_col, edema_confirm_col, child_age_months_col)
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       required_columns,
       origin = origin,
-      hint = phr_txt("Ensure the required columns for MUAC calculation exist in the dataset."),
+      hint = ("Ensure the required columns for MUAC calculation exist in the dataset."),
       soft = FALSE
     )
 
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[nut_muac_cm_col]],
       origin = origin,
-      hint = phr_txt("The `nut_muac_cm_col` column must contain numeric values."),
+      hint = ("The `nut_muac_cm_col` column must contain numeric values."),
       soft = TRUE
     )
 
@@ -331,9 +331,9 @@ add_muac <- function(
     if (muac_is_cm) {
       # Add or overwrite millimeter column (convert centimeters to millimeters)
       if ("nut_muac_mm" %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt("The column `nut_muac_mm` already exists and will be overwritten.")
+          message = ("The column `nut_muac_mm` already exists and will be overwritten.")
         )
       }
       .dataset <- .dataset |>
@@ -341,16 +341,16 @@ add_muac <- function(
           nut_muac_mm = .data[[nut_muac_cm_col]] * 10
         )
 
-      phr_message(
+      phrutils::phr_message(
         origin = origin,
-        message = phr_txt("MUAC values detected as centimeters. Converted and added `nut_muac_mm` column.")
+        message = ("MUAC values detected as centimeters. Converted and added `nut_muac_mm` column.")
       )
     } else if (muac_is_mm) {
       # Add or overwrite centimeter column (convert millimeters to centimeters)
       if ("nut_muac_cm" %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt("The column `nut_muac_cm` already exists and will be overwritten.")
+          message = ("The column `nut_muac_cm` already exists and will be overwritten.")
         )
       }
       .dataset <- .dataset |>
@@ -359,14 +359,14 @@ add_muac <- function(
           nut_muac_mm = as.numeric(.data[[nut_muac_cm_col]])
         )
 
-      phr_message(
+      phrutils::phr_message(
         origin = origin,
-        message = phr_txt("MUAC values detected as millimeters. Converted and added (or overwritten) `nut_muac_cm` column.")
+        message = ("MUAC values detected as millimeters. Converted and added (or overwritten) `nut_muac_cm` column.")
       )
     } else {
-      phr_warning(
+      phrutils::phr_warning(
         origin = origin,
-        message = phr_txt("MUAC values could not be clearly identified as centimeters or millimeters. No additional unit columns created.")
+        message = ("MUAC values could not be clearly identified as centimeters or millimeters. No additional unit columns created.")
       )
       # Ensure required downstream columns exist
       if (!"nut_muac_mm" %in% names(.dataset)) {
@@ -390,9 +390,9 @@ add_muac <- function(
 
     for (col in output_columns) {
       if (col %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt(glue::glue("Variable `{col}` already exists and will be overwritten."))
+          message = (glue::glue("Variable `{col}` already exists and will be overwritten."))
         )
       }
     }
@@ -438,13 +438,13 @@ add_muac <- function(
         # Categorize MUAC after edema + age exclusions have been applied
         nut_muac_cat = dplyr::case_when(
           is.na(sam_muac) | is.na(mam_muac) ~ NA_character_,
-          sam_muac == 1 ~ phr_txt("SAM"),
-          mam_muac == 1 ~ phr_txt("MAM"),
-          TRUE ~ phr_txt("Normal")
+          sam_muac == 1 ~ ("SAM"),
+          mam_muac == 1 ~ ("MAM"),
+          TRUE ~ ("Normal")
         ),
         nut_muac_cat = factor(
           nut_muac_cat,
-          levels = c(phr_txt("SAM"), phr_txt("MAM"), phr_txt("Normal")),
+          levels = c(("SAM"), ("MAM"), ("Normal")),
           ordered = TRUE
         ),
 
@@ -473,14 +473,14 @@ add_muac <- function(
 
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("MUAC-based SAM, MAM, GAM classifications and extreme value flags successfully calculated.")
+      message = ("MUAC-based SAM, MAM, GAM classifications and extreme value flags successfully calculated.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure input columns exist and contain valid numeric or categorical data."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure input columns exist and contain valid numeric or categorical data."))
 }
 
 #' @title Add MFA-Z-Based Classifications and Flags
@@ -555,45 +555,45 @@ add_mfaz <- function(
 ) {
   origin <- "add_mfaz"
 
-  phr_try({
+  phrutils::phr_try({
 
     # Use ensure_value for *_val parameters
-    male_sex_val <- ensure_value(male_sex_val, "Male")
-    female_sex_val <- ensure_value(female_sex_val, "Female")
-    edema_confirm_val <- ensure_value(edema_confirm_val, "yes")
+    male_sex_val <- phrutils::ensure_value(male_sex_val, "Male")
+    female_sex_val <- phrutils::ensure_value(female_sex_val, "Female")
+    edema_confirm_val <- phrutils::ensure_value(edema_confirm_val, "yes")
 
 
     # Validate dataset
 
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
 
     # Validate input columns
 
     required_columns <- c(nut_muac_cm_col, edema_confirm_col, child_age_months_col, child_sex_col)
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       required_columns,
       origin = origin,
-      hint = phr_txt("Ensure the required columns for MFA-Z calculation exist in the dataset."),
+      hint = ("Ensure the required columns for MFA-Z calculation exist in the dataset."),
       soft = FALSE
     )
 
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[nut_muac_cm_col]],
       origin = origin,
-      hint = phr_txt("The `nut_muac_cm_col` column must contain numeric values for MFA-Z calculation."),
+      hint = ("The `nut_muac_cm_col` column must contain numeric values for MFA-Z calculation."),
       soft = TRUE
     )
 
@@ -609,9 +609,9 @@ add_mfaz <- function(
 
     for (col in output_columns) {
       if (col %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt(glue::glue("Variable `{col}` already exists and will be overwritten."))
+          message = (glue::glue("Variable `{col}` already exists and will be overwritten."))
         )
       }
     }
@@ -621,9 +621,9 @@ add_mfaz <- function(
 
     temp_sex_col <- "temp_sex_for_zscorer"
     if (temp_sex_col %in% names(.dataset)) {
-      phr_warning(
+      phrutils::phr_warning(
         origin = origin,
-        message = phr_txt(glue::glue("The temporary column `{temp_sex_col}` already exists and will be overwritten for zscorer compatibility."))
+        message = (glue::glue("The temporary column `{temp_sex_col}` already exists and will be overwritten for zscorer compatibility."))
       )
     }
 
@@ -727,14 +727,14 @@ add_mfaz <- function(
 
         nut_mfaz_cat = dplyr::case_when(
           is.na(severe_mfaz) | is.na(moderate_mfaz) ~ NA_character_,
-          severe_mfaz == 1 ~ phr_txt("SAM"),
-          moderate_mfaz == 1 ~ phr_txt("MAM"),
-          TRUE ~ phr_txt("Normal")
+          severe_mfaz == 1 ~ ("SAM"),
+          moderate_mfaz == 1 ~ ("MAM"),
+          TRUE ~ ("Normal")
         ),
 
         nut_mfaz_cat = factor(
           nut_mfaz_cat,
-          levels = c(phr_txt("SAM"), phr_txt("MAM"), phr_txt("Normal")),
+          levels = c(("SAM"), ("MAM"), ("Normal")),
           ordered = TRUE
         ),
 
@@ -746,7 +746,7 @@ add_mfaz <- function(
 
         nut_mfaz_cat_noflag = factor(
           nut_mfaz_cat_noflag,
-          levels = c(phr_txt("SAM"), phr_txt("MAM"), phr_txt("Normal")),
+          levels = c(("SAM"), ("MAM"), ("Normal")),
           ordered = TRUE
         )
       )
@@ -757,14 +757,14 @@ add_mfaz <- function(
     .dataset <- .dataset |>
       dplyr::select(-all_of(temp_sex_col))
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("MFA-Z-based classifications and flags were successfully calculated.")
+      message = ("MFA-Z-based classifications and flags were successfully calculated.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure input columns exist and contain valid numeric or categorical data."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure input columns exist and contain valid numeric or categorical data."))
 }
 
 
@@ -806,28 +806,28 @@ add_standardized_nutrition_demographics <- function(
 
   origin <- "add_standardized_nutrition_demographics"
 
-  phr_try({
+  phrutils::phr_try({
 
     # Validate dataset
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
     # Validate age column
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       age_years_col,
       origin = origin,
-      hint = phr_txt("Ensure age_years_col exists. Run add_standardized_age first."),
+      hint = ("Ensure age_years_col exists. Run add_standardized_age first."),
       soft = FALSE
     )
 
@@ -838,9 +838,9 @@ add_standardized_nutrition_demographics <- function(
 
     for (col in output_cols) {
       if (col %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt(glue::glue("Column `{col}` already exists and will be overwritten."))
+          message = (glue::glue("Column `{col}` already exists and will be overwritten."))
         )
       }
     }
@@ -864,12 +864,12 @@ add_standardized_nutrition_demographics <- function(
         )
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Standardized nutrition demographic columns added successfully.")
+      message = ("Standardized nutrition demographic columns added successfully.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure age column is valid."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure age column is valid."))
 }

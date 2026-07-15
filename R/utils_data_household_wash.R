@@ -97,39 +97,39 @@ add_hwise <- function(
 
   origin <- "add_hwise"
 
-  phr_try(
+  phrutils::phr_try(
 
     expr = {
 
       # Use ensure_value for all *_val parameters
-      never_val <- ensure_value(never_val, "never")
-      rarely_val <- ensure_value(rarely_val, "rarely")
-      sometimes_val <- ensure_value(sometimes_val, "sometimes")
-      often_val <- ensure_value(often_val, "often")
-      always_val <- ensure_value(always_val, "always")
+      never_val <- phrutils::ensure_value(never_val, "never")
+      rarely_val <- phrutils::ensure_value(rarely_val, "rarely")
+      sometimes_val <- phrutils::ensure_value(sometimes_val, "sometimes")
+      often_val <- phrutils::ensure_value(often_val, "often")
+      always_val <- phrutils::ensure_value(always_val, "always")
 
       # Validate dataset
 
-      phr_validate_dataframe(
+      phrutils::phr_validate_dataframe(
         .dataset,
         origin = origin,
-        hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+        hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
         soft = FALSE
       )
 
-      phr_assert(
+      phrutils::phr_assert(
         nrow(.dataset) > 0,
         origin = origin,
-        phr_txt("Dataset is empty.")
+        ("Dataset is empty.")
       )
 
       # Required columns for wash_hwise-4
       hwise4_cols <- c(wash_hwise_worry_col, wash_hwise_plans_col, wash_hwise_hands_col, wash_hwise_drink_col)
-      phr_validate_columns(
+      phrutils::phr_validate_columns(
         .dataset,
         hwise4_cols,
         origin = origin,
-        hint = phr_txt("Ensure all required wash_hwise-4 variables are present."),
+        hint = ("Ensure all required wash_hwise-4 variables are present."),
         soft = FALSE
       )
 
@@ -137,7 +137,7 @@ add_hwise <- function(
       valid_responses <- c(never_val, rarely_val, sometimes_val, often_val, always_val)
 
       for (col in hwise4_cols) {
-        phr_validate_choice(
+        phrutils::phr_validate_choice(
           x = .dataset[[col]],
           choices = c(valid_responses, NA_character_),
           origin = origin,
@@ -154,16 +154,16 @@ add_hwise <- function(
       hwise12_cols <- hwise12_cols[!is.null(hwise12_cols)]
 
       if (length(hwise12_cols) > 0) {
-        phr_validate_columns(
+        phrutils::phr_validate_columns(
           .dataset,
           hwise12_cols,
           origin = origin,
-          hint = phr_txt("Ensure all required wash_hwise-12 variables are present if calculating wash_hwise-12."),
+          hint = ("Ensure all required wash_hwise-12 variables are present if calculating wash_hwise-12."),
           soft = FALSE
         )
 
         for (col in hwise12_cols) {
-          phr_validate_choice(
+          phrutils::phr_validate_choice(
             x = .dataset[[col]],
             choices = c(valid_responses, NA_character_),
             origin = origin,
@@ -182,9 +182,9 @@ add_hwise <- function(
 
       for (var in overwrite_vars) {
         if (var %in% names(.dataset)) {
-          phr_warning(
+          phrutils::phr_warning(
             origin = origin,
-            message = phr_txt(glue::glue("Variable {var} already exists and will be overwritten."))
+            message = (glue::glue("Variable {var} already exists and will be overwritten."))
           )
         }
       }
@@ -210,16 +210,16 @@ add_hwise <- function(
         dplyr::mutate(
           wash_hwise4_score = sum(dplyr::c_across(dplyr::all_of(paste0(hwise4_cols, "_score"))), na.rm = FALSE),
           wash_hwise4_severity_cat = dplyr::case_when(
-            wash_hwise4_score >= 0 & wash_hwise4_score <= 3 ~ phr_txt("No-to-marginal"),
-            wash_hwise4_score >= 4 & wash_hwise4_score <= 6 ~ phr_txt("Low"),
-            wash_hwise4_score >= 7 & wash_hwise4_score <= 8 ~ phr_txt("Moderate"),
-            wash_hwise4_score >= 9 & wash_hwise4_score <= 10 ~ phr_txt("High"),
-            wash_hwise4_score >= 11 ~ phr_txt("Very High"),
+            wash_hwise4_score >= 0 & wash_hwise4_score <= 3 ~ ("No-to-marginal"),
+            wash_hwise4_score >= 4 & wash_hwise4_score <= 6 ~ ("Low"),
+            wash_hwise4_score >= 7 & wash_hwise4_score <= 8 ~ ("Moderate"),
+            wash_hwise4_score >= 9 & wash_hwise4_score <= 10 ~ ("High"),
+            wash_hwise4_score >= 11 ~ ("Very High"),
             TRUE ~ NA_character_
           ),
           wash_hwise4_cat = dplyr::case_when(
-            wash_hwise4_score >= 0 & wash_hwise4_score <= 3 ~ phr_txt("Water Secure"),
-            wash_hwise4_score >= 4 & wash_hwise4_score <= 12 ~ phr_txt("Water Insecure"),
+            wash_hwise4_score >= 0 & wash_hwise4_score <= 3 ~ ("Water Secure"),
+            wash_hwise4_score >= 4 & wash_hwise4_score <= 12 ~ ("Water Insecure"),
             TRUE ~ NA_character_
           )
         ) |>
@@ -248,19 +248,19 @@ add_hwise <- function(
           dplyr::mutate(
             wash_hwise12_score = sum(c_across(ends_with("_score")), na.rm = FALSE),
             wash_hwise12_severity_cat = dplyr::case_when(
-              wash_hwise12_score >= 0 & wash_hwise12_score <= 2 ~ phr_txt("No-to-marginal"),
-              wash_hwise12_score >= 3 & wash_hwise12_score <= 11 ~ phr_txt("Low"),
-              wash_hwise12_score >= 12 & wash_hwise12_score <= 23 ~ phr_txt("Moderate"),
-              wash_hwise12_score >= 24 & wash_hwise12_score <= 36 ~ phr_txt("High"),
+              wash_hwise12_score >= 0 & wash_hwise12_score <= 2 ~ ("No-to-marginal"),
+              wash_hwise12_score >= 3 & wash_hwise12_score <= 11 ~ ("Low"),
+              wash_hwise12_score >= 12 & wash_hwise12_score <= 23 ~ ("Moderate"),
+              wash_hwise12_score >= 24 & wash_hwise12_score <= 36 ~ ("High"),
               TRUE ~ NA_character_
             )
           ) |>
           dplyr::ungroup()
       }
 
-      phr_message(
+      phrutils::phr_message(
         origin = origin,
-        message = phr_txt("wash_hwise-4 and wash_hwise-12 (if applicable) calculations completed successfully.")
+        message = ("wash_hwise-4 and wash_hwise-12 (if applicable) calculations completed successfully.")
       )
 
       return(.dataset)
@@ -268,7 +268,7 @@ add_hwise <- function(
 
     on_error = "abort",
     origin = origin,
-    hint = phr_txt("Ensure all input columns exist and contain valid response values.")
+    hint = ("Ensure all input columns exist and contain valid response values.")
   )
 }
 
@@ -321,20 +321,20 @@ add_liters_per_person_per_day <- function(
 
   origin <- "add_liters_per_person_per_day"
 
-  phr_try(
+  phrutils::phr_try(
     expr = {
       # Validate dataset
-      phr_validate_dataframe(
+      phrutils::phr_validate_dataframe(
         .dataset,
         origin = origin,
-        hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+        hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
         soft = FALSE
       )
 
-      phr_assert(
+      phrutils::phr_assert(
         nrow(.dataset) > 0,
         origin = origin,
-        phr_txt("Dataset is empty.")
+        ("Dataset is empty.")
       )
 
       # Adjust num_days_column if NULL
@@ -346,20 +346,20 @@ add_liters_per_person_per_day <- function(
 
       # Required columns
       required_cols <- c(total_liters_col, household_size_col, num_days_col)
-      phr_validate_columns(
+      phrutils::phr_validate_columns(
         .dataset,
         required_cols,
         origin = origin,
-        hint = phr_txt("Ensure all required columns are present in the dataset."),
+        hint = ("Ensure all required columns are present in the dataset."),
         soft = FALSE
       )
 
       # Validate column contents
       for (col in required_cols) {
-        phr_assert(
+        phrutils::phr_assert(
           is.numeric(.dataset[[col]]) & all(.dataset[[col]] >= 0, na.rm = TRUE),
           origin = origin,
-          phr_txt(glue::glue("Column `{col}` must be numeric and contain non-negative values."))
+          (glue::glue("Column `{col}` must be numeric and contain non-negative values."))
         )
       }
 
@@ -390,10 +390,10 @@ add_liters_per_person_per_day <- function(
 
           # Categorize liters per person per day
           wash_lppd_cat = dplyr::case_when(
-            liters_pppd < 3 ~ phr_txt("Less than 3 LPPD"),
-            liters_pppd >= 3 & liters_pppd < 7.5 ~ phr_txt("3-7.5 LPPD"),
-            liters_pppd >= 7.5 & liters_pppd < 15 ~ phr_txt("7.5- <15 LPPD"),
-            liters_pppd >= 15 ~ phr_txt("Greater than 15 LPPD"),
+            liters_pppd < 3 ~ ("Less than 3 LPPD"),
+            liters_pppd >= 3 & liters_pppd < 7.5 ~ ("3-7.5 LPPD"),
+            liters_pppd >= 7.5 & liters_pppd < 15 ~ ("7.5- <15 LPPD"),
+            liters_pppd >= 15 ~ ("Greater than 15 LPPD"),
             TRUE ~ NA_character_
           )
         )
@@ -404,9 +404,9 @@ add_liters_per_person_per_day <- function(
           dplyr::select(-temp_num_days_col)
       }
 
-      phr_message(
+      phrutils::phr_message(
         origin = origin,
-        message = phr_txt("Liters per person per day and related metrics added successfully.")
+        message = ("Liters per person per day and related metrics added successfully.")
       )
 
       return(.dataset)
@@ -414,7 +414,7 @@ add_liters_per_person_per_day <- function(
 
     on_error = "abort",
     origin = origin,
-    hint = phr_txt("Ensure all input columns exist, are numeric, and do not contain negative values.")
+    hint = ("Ensure all input columns exist, are numeric, and do not contain negative values.")
   )
 }
 
@@ -517,32 +517,32 @@ add_drinking_water_source_cat <- function(
 
   origin <- "add_drinking_water_source_cat"
 
-  phr_try({
+  phrutils::phr_try({
 
 
     # Validate dataset
 
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
 
     # Validate column
 
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       drinking_water_source_col,
       origin = origin,
-      hint = phr_txt("Drinking water source column must exist in the dataset."),
+      hint = ("Drinking water source column must exist in the dataset."),
       soft = FALSE
     )
 
@@ -555,7 +555,7 @@ add_drinking_water_source_cat <- function(
     #   drinking_water_source_cat_surface_water_val,
     #   drinking_water_source_cat_undefined_val
     # )
-    phr_validate_choice(
+    phrutils::phr_validate_choice(
       x = .dataset[[drinking_water_source_col]],
       choices = c(
         drinking_water_source_cat_improved_val,
@@ -574,9 +574,9 @@ add_drinking_water_source_cat <- function(
     output_column <- "wash_drinking_water_source_cat"
 
     if (output_column %in% names(.dataset)) {
-      phr_warning(
+      phrutils::phr_warning(
         origin = origin,
-        message = phr_txt(glue::glue("Variable {output_column} already exists and will be overwritten."))
+        message = (glue::glue("Variable {output_column} already exists and will be overwritten."))
       )
     }
 
@@ -586,22 +586,22 @@ add_drinking_water_source_cat <- function(
     .dataset <- .dataset |>
       dplyr::mutate(
         wash_drinking_water_source_cat = dplyr::case_when(
-          .data[[drinking_water_source_col]] %in% drinking_water_source_cat_surface_water_val ~ phr_txt("Surface Water"),
-          .data[[drinking_water_source_col]] %in% drinking_water_source_cat_unimproved_val ~ phr_txt("Unimproved"),
-          .data[[drinking_water_source_col]] %in% drinking_water_source_cat_improved_val ~ phr_txt("Improved"),
-          .data[[drinking_water_source_col]] %in% drinking_water_source_cat_undefined_val ~ phr_txt("Undefined"),
+          .data[[drinking_water_source_col]] %in% drinking_water_source_cat_surface_water_val ~ ("Surface Water"),
+          .data[[drinking_water_source_col]] %in% drinking_water_source_cat_unimproved_val ~ ("Unimproved"),
+          .data[[drinking_water_source_col]] %in% drinking_water_source_cat_improved_val ~ ("Improved"),
+          .data[[drinking_water_source_col]] %in% drinking_water_source_cat_undefined_val ~ ("Undefined"),
           TRUE ~ NA_character_
         )
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Drinking water source categories recoded successfully into wash_drinking_water_source_cat.")
+      message = ("Drinking water source categories recoded successfully into wash_drinking_water_source_cat.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure the drinking water source column exists and contains valid response values."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure the drinking water source column exists and contains valid response values."))
 }
 
 # Water Time Less 30min ####
@@ -656,25 +656,25 @@ add_drinking_water_time_cat <- function(
 ) {
   origin <- "add_drinking_water_time_cat"
 
-  phr_try(
+  phrutils::phr_try(
     expr = {
       # Use ensure_value for all *_val parameters
-      under_30min_val <- ensure_value(under_30min_val, "under_30min")
-      more_than_30min_val <- ensure_value(more_than_30min_val, "more_than_30min")
-      undefined_val <- ensure_value(undefined_val, c("dnk", "pnta"))
-      premises_val <- ensure_value(premises_val, "on_premises")
+      under_30min_val <- phrutils::ensure_value(under_30min_val, "under_30min")
+      more_than_30min_val <- phrutils::ensure_value(more_than_30min_val, "more_than_30min")
+      undefined_val <- phrutils::ensure_value(undefined_val, c("dnk", "pnta"))
+      premises_val <- phrutils::ensure_value(premises_val, "on_premises")
 
       # Validate dataset
-      phr_validate_dataframe(
+      phrutils::phr_validate_dataframe(
         .dataset,
         origin = origin,
-        hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`.")
+        hint = ("Ensure you pass a valid data frame or tibble to `.dataset`.")
       )
 
-      phr_assert(
+      phrutils::phr_assert(
         nrow(.dataset) > 0,
         origin = origin,
-        phr_txt("Dataset is empty.")
+        ("Dataset is empty.")
       )
 
       # Validate input columns
@@ -682,22 +682,22 @@ add_drinking_water_time_cat <- function(
       has_categorical_col <- categorical_time_col %in% names(.dataset)
 
       if (has_numeric_col) {
-        phr_assert(
+        phrutils::phr_assert(
           is.numeric(.dataset[[number_minutes_col]]) | all(is.na(.dataset[[number_minutes_col]])),
           origin = origin,
-          phr_txt(glue::glue("Column {number_minutes_col} must be numeric."))
+          (glue::glue("Column {number_minutes_col} must be numeric."))
         )
       }
 
       if (has_categorical_col) {
-        phr_validate_columns(
+        phrutils::phr_validate_columns(
           .dataset,
           categorical_time_col,
           origin = origin,
-          hint = phr_txt("Ensure the categorical time column exists if minutes are not provided.")
+          hint = ("Ensure the categorical time column exists if minutes are not provided.")
         )
 
-        phr_validate_choice(
+        phrutils::phr_validate_choice(
           x = .dataset[[categorical_time_col]],
           choices = c(under_30min_val, more_than_30min_val, undefined_val, premises_val, NA_character_),
           origin = origin,
@@ -706,19 +706,19 @@ add_drinking_water_time_cat <- function(
       }
 
       if (!has_numeric_col && !has_categorical_col) {
-        phr_error(
+        phrutils::phr_error(
           message = "Both number_minutes_col and categorical_time_col are missing. At least one is required.",
           origin = origin,
-          hint = phr_txt("Ensure one of the valid input columns exists in the dataset.")
+          hint = ("Ensure one of the valid input columns exists in the dataset.")
         )
       }
 
       # Overwrite warnings for output column
       output_col <- "wash_drinking_water_time_cat"
       if (output_col %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt(glue::glue("Column {output_col} already exists and will be overwritten."))
+          message = (glue::glue("Column {output_col} already exists and will be overwritten."))
         )
       }
 
@@ -761,16 +761,16 @@ add_drinking_water_time_cat <- function(
         )
       } else {
         # Scenario 4: Neither column available (fallback error)
-        phr_error(
+        phrutils::phr_error(
           message = "Neither number_minutes_col nor categorical_time_col are available.",
           origin = origin,
-          hint = phr_txt("This should not happen if validation passed. Check column availability.")
+          hint = ("This should not happen if validation passed. Check column availability.")
         )
       }
 
-      phr_message(
+      phrutils::phr_message(
         origin = origin,
-        message = phr_txt("Drinking water time category successfully added as wash_drinking_water_time_cat.")
+        message = ("Drinking water time category successfully added as wash_drinking_water_time_cat.")
       )
       return(.dataset)
     },
@@ -820,47 +820,47 @@ add_any_water_treatment <- function(
     no_values = c("none")
 ) {
   origin <- "add_any_water_treatment"
-  phr_try(
+  phrutils::phr_try(
     expr = {
       # Validate dataset
-      phr_validate_dataframe(
+      phrutils::phr_validate_dataframe(
         .dataset,
         origin = origin,
-        hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`.")
+        hint = ("Ensure you pass a valid data frame or tibble to `.dataset`.")
       )
-      phr_assert(
+      phrutils::phr_assert(
         nrow(.dataset) > 0,
         origin = origin,
-        phr_txt("Dataset is empty.")
+        ("Dataset is empty.")
       )
 
       # Validate column exists
-      phr_validate_columns(
+      phrutils::phr_validate_columns(
         .dataset,
         water_treatment_col,
         origin = origin,
-        hint = phr_txt("The water treatment column must exist in the dataset."),
+        hint = ("The water treatment column must exist in the dataset."),
         soft = FALSE
       )
 
       # Validate yes/no vectors not empty
-      phr_assert(
+      phrutils::phr_assert(
         length(yes_values) > 0 & is.character(yes_values),
         origin = origin,
-        phr_txt("Argument `yes_values` must be a non-empty character vector.")
+        ("Argument `yes_values` must be a non-empty character vector.")
       )
-      phr_assert(
+      phrutils::phr_assert(
         length(no_values) > 0 & is.character(no_values),
         origin = origin,
-        phr_txt("Argument `no_values` must be a non-empty character vector.")
+        ("Argument `no_values` must be a non-empty character vector.")
       )
 
       # Warn if output already exists
       output_col <- "wash_any_water_treatment"
       if (output_col %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt(glue::glue("Column {output_col} already exists and will be overwritten."))
+          message = (glue::glue("Column {output_col} already exists and will be overwritten."))
         )
       }
 
@@ -874,15 +874,15 @@ add_any_water_treatment <- function(
         )
       )
 
-      phr_message(
+      phrutils::phr_message(
         origin = origin,
-        message = phr_txt("Any water treatment indicator (yes/no/NA) calculation completed successfully.")
+        message = ("Any water treatment indicator (yes/no/NA) calculation completed successfully.")
       )
       return(.dataset)
     },
     on_error = "abort",
     origin = origin,
-    hint = phr_txt("Ensure the input column exists and values are appropriate for classification.")
+    hint = ("Ensure the input column exists and values are appropriate for classification.")
   )
 }
 
@@ -951,32 +951,32 @@ add_sanitation_facility_cat <- function(
 ) {
   origin <- "add_sanitation_facility_cat"
 
-  phr_try({
+  phrutils::phr_try({
 
 
     # Validate dataset
 
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
 
     # Validate column
 
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       sanitation_facility_col,
       origin = origin,
-      hint = phr_txt("Sanitation facility column must exist in the dataset."),
+      hint = ("Sanitation facility column must exist in the dataset."),
       soft = FALSE
     )
 
@@ -989,7 +989,7 @@ add_sanitation_facility_cat <- function(
       open_defecation_val,
       undefined_val
     )
-    phr_validate_choice(
+    phrutils::phr_validate_choice(
       x = .dataset[[sanitation_facility_col]],
       choices = c(allowed_values, NA_character_),
       origin = origin,
@@ -1002,9 +1002,9 @@ add_sanitation_facility_cat <- function(
     output_column <- "wash_sanitation_facility_cat"
 
     if (output_column %in% names(.dataset)) {
-      phr_warning(
+      phrutils::phr_warning(
         origin = origin,
-        message = phr_txt(glue::glue("Variable {output_column} already exists and will be overwritten."))
+        message = (glue::glue("Variable {output_column} already exists and will be overwritten."))
       )
     }
 
@@ -1014,23 +1014,23 @@ add_sanitation_facility_cat <- function(
     .dataset <- .dataset |>
       dplyr::mutate(
         wash_sanitation_facility_cat = dplyr::case_when(
-          .data[[sanitation_facility_col]] %in% open_defecation_val ~ phr_txt("Open Defecation"),
-          .data[[sanitation_facility_col]] %in% unimproved_facilities_val ~ phr_txt("Unimproved"),
-          .data[[sanitation_facility_col]] %in% improved_facilities_val ~ phr_txt("Improved"),
-          .data[[sanitation_facility_col]] %in% undefined_val ~ phr_txt("Undefined"),
+          .data[[sanitation_facility_col]] %in% open_defecation_val ~ ("Open Defecation"),
+          .data[[sanitation_facility_col]] %in% unimproved_facilities_val ~ ("Unimproved"),
+          .data[[sanitation_facility_col]] %in% improved_facilities_val ~ ("Improved"),
+          .data[[sanitation_facility_col]] %in% undefined_val ~ ("Undefined"),
 
           TRUE ~ NA_character_
         )
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Sanitation facility categories recoded successfully into wash_sanitation_facility_cat.")
+      message = ("Sanitation facility categories recoded successfully into wash_sanitation_facility_cat.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure the sanitation facility column exists and contains valid response values."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure the sanitation facility column exists and contains valid response values."))
 }
 
 # Shared Sanitation Facility ####
@@ -1102,62 +1102,62 @@ add_sanitation_facility_shared <- function(
 
   origin <- "add_sanitation_facility_shared"
 
-  phr_try({
+  phrutils::phr_try({
 
     # Use ensure_value for *_values parameters
-    shared_values <- ensure_value(shared_values, "shared")
-    not_shared_values <- ensure_value(not_shared_values, "not_shared")
+    shared_values <- phrutils::ensure_value(shared_values, "shared")
+    not_shared_values <- phrutils::ensure_value(not_shared_values, "not_shared")
 
     # Validate dataset
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
     # Validation of inputs
-    phr_assert(
+    phrutils::phr_assert(
       !is.null(num_households_col) || (!is.null(shared_response_col) && !is.null(shared_values) && !is.null(not_shared_values)),
       origin = origin,
-      phr_txt("You must provide either `num_households_col` for numerical evaluation OR `shared_response_col` with `shared_values` and `not_shared_values` for categorical evaluation.")
+      ("You must provide either `num_households_col` for numerical evaluation OR `shared_response_col` with `shared_values` and `not_shared_values` for categorical evaluation.")
     )
 
     # Validate `num_households_col` if provided
     if (!is.null(num_households_col)) {
-      phr_validate_columns(
+      phrutils::phr_validate_columns(
         .dataset,
         num_households_col,
         origin = origin,
-        hint = phr_txt("Ensure the column for number of households exists in the dataset."),
+        hint = ("Ensure the column for number of households exists in the dataset."),
         soft = FALSE
       )
 
-      phr_validate_all_numeric(
+      phrutils::phr_validate_all_numeric(
         .dataset[[num_households_col]],
         origin = origin,
-        hint = phr_txt("The `num_households_col` must contain numeric values."),
+        hint = ("The `num_households_col` must contain numeric values."),
         soft = TRUE
       )
     }
 
     # Validate `shared_response_col` if provided
     if (!is.null(shared_response_col)) {
-      phr_validate_columns(
+      phrutils::phr_validate_columns(
         .dataset,
         shared_response_col,
         origin = origin,
-        hint = phr_txt("Ensure the column for shared sanitation responses exists in the dataset."),
+        hint = ("Ensure the column for shared sanitation responses exists in the dataset."),
         soft = FALSE
       )
 
-      phr_validate_choice(
+      phrutils::phr_validate_choice(
         x = .dataset[[shared_response_col]],
         choices = c(shared_values, not_shared_values, NA_character_),
         origin = origin,
@@ -1169,9 +1169,9 @@ add_sanitation_facility_shared <- function(
     output_column <- "wash_sanitation_facility_shared_cat"
 
     if (output_column %in% names(.dataset)) {
-      phr_warning(
+      phrutils::phr_warning(
         origin = origin,
-        message = phr_txt(glue::glue("Variable {output_column} already exists and will be overwritten."))
+        message = (glue::glue("Variable {output_column} already exists and will be overwritten."))
       )
     }
 
@@ -1206,8 +1206,8 @@ add_sanitation_facility_shared <- function(
       .dataset <- .dataset |>
         dplyr::mutate(
           wash_sanitation_facility_shared_cat = dplyr::case_when(
-            !is.na(.data[[shared_response_col]]) & .data[[shared_response_col]] %in% shared_values ~ phr_txt("yes"),
-            !is.na(.data[[shared_response_col]]) & .data[[shared_response_col]] %in% not_shared_values ~ phr_txt("no"),
+            !is.na(.data[[shared_response_col]]) & .data[[shared_response_col]] %in% shared_values ~ ("yes"),
+            !is.na(.data[[shared_response_col]]) & .data[[shared_response_col]] %in% not_shared_values ~ ("no"),
             TRUE ~ NA_character_
           )
         )
@@ -1216,14 +1216,14 @@ add_sanitation_facility_shared <- function(
       stop("Invalid input: No valid columns for computation.")
     }
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Shared sanitation facility indicator computed successfully.")
+      message = ("Shared sanitation facility indicator computed successfully.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure input columns and values exist and align with specifications."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure input columns and values exist and align with specifications."))
 }
 
 # JMP Water Service Ladder ####
@@ -1270,58 +1270,58 @@ add_drinking_water_jmp_ladder <- function(
 ) {
   origin <- "add_drinking_water_jmp_ladder"
 
-  phr_try({
+  phrutils::phr_try({
 
     # Validate dataset
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
     # Validate required columns
     required_columns <- c(drinking_water_source_cat_col, drinking_water_time_col)
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       required_columns,
       origin = origin,
-      hint = phr_txt("Ensure the drinking water source and collection time columns are present."),
+      hint = ("Ensure the drinking water source and collection time columns are present."),
       soft = FALSE
     )
 
     # Overwrite warnings for any existing output column
     output_column <- "wash_jmp_ladder_drinking_water_cat"
     if (output_column %in% names(.dataset)) {
-      phr_warning(
+      phrutils::phr_warning(
         origin = origin,
-        message = phr_txt(glue::glue("Variable {output_column} already exists and will be overwritten."))
+        message = (glue::glue("Variable {output_column} already exists and will be overwritten."))
       )
     }
 
     # Use ensure_value for all the variables
-    drinking_water_source_cat_improved_val <- ensure_value(drinking_water_source_cat_improved_val, "Improved")
-    drinking_water_source_cat_unimproved_val <- ensure_value(drinking_water_source_cat_unimproved_val, "Unimproved")
-    drinking_water_source_cat_surface_water_val <- ensure_value(drinking_water_source_cat_surface_water_val, "Surface Water")
-    drinking_water_time_under_30min_val <- ensure_value(drinking_water_time_under_30min_val, "1")
-    drinking_water_time_over_30min_val <- ensure_value(drinking_water_time_over_30min_val, "0")
+    drinking_water_source_cat_improved_val <- phrutils::ensure_value(drinking_water_source_cat_improved_val, "Improved")
+    drinking_water_source_cat_unimproved_val <- phrutils::ensure_value(drinking_water_source_cat_unimproved_val, "Unimproved")
+    drinking_water_source_cat_surface_water_val <- phrutils::ensure_value(drinking_water_source_cat_surface_water_val, "Surface Water")
+    drinking_water_time_under_30min_val <- phrutils::ensure_value(drinking_water_time_under_30min_val, "1")
+    drinking_water_time_over_30min_val <- phrutils::ensure_value(drinking_water_time_over_30min_val, "0")
 
     # JMP ladder categorization
     .dataset <- .dataset |>
       dplyr::mutate(
         wash_jmp_ladder_drinking_water_cat = dplyr::case_when(
-          as.character(.data[[drinking_water_source_cat_col]]) == drinking_water_source_cat_surface_water_val ~ phr_txt("Surface Water"),
-          as.character(.data[[drinking_water_source_cat_col]]) == drinking_water_source_cat_unimproved_val ~ phr_txt("Unimproved"),
+          as.character(.data[[drinking_water_source_cat_col]]) == drinking_water_source_cat_surface_water_val ~ ("Surface Water"),
+          as.character(.data[[drinking_water_source_cat_col]]) == drinking_water_source_cat_unimproved_val ~ ("Unimproved"),
           as.character(.data[[drinking_water_source_cat_col]]) == drinking_water_source_cat_improved_val &
-            as.character(.data[[drinking_water_time_col]]) == drinking_water_time_over_30min_val ~ phr_txt("Limited"),
+            as.character(.data[[drinking_water_time_col]]) == drinking_water_time_over_30min_val ~ ("Limited"),
           as.character(.data[[drinking_water_source_cat_col]]) == drinking_water_source_cat_improved_val &
-            as.character(.data[[drinking_water_time_col]]) == drinking_water_time_under_30min_val ~ phr_txt("Basic"),
+            as.character(.data[[drinking_water_time_col]]) == drinking_water_time_under_30min_val ~ ("Basic"),
           TRUE ~ NA_character_
         )
       )
@@ -1332,23 +1332,23 @@ add_drinking_water_jmp_ladder <- function(
         wash_jmp_ladder_drinking_water_cat = factor(
           wash_jmp_ladder_drinking_water_cat,
           levels = c(
-            phr_txt("Basic"),
-            phr_txt("Limited"),
-            phr_txt("Unimproved"),
-            phr_txt("Surface Water")
+            ("Basic"),
+            ("Limited"),
+            ("Unimproved"),
+            ("Surface Water")
           ),
           ordered = TRUE
         )
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("JMP ladder categories for drinking water computed successfully.")
+      message = ("JMP ladder categories for drinking water computed successfully.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure input columns exist and provide valid categorical values."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure input columns exist and provide valid categorical values."))
 }
 
 # JMP Sanitation Service Ladder ####
@@ -1383,28 +1383,28 @@ add_sanitation_jmp_ladder <- function(
 ) {
   origin <- "add_sanitation_jmp_ladder"
 
-  phr_try({
+  phrutils::phr_try({
     # Validate dataset
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame or tibble to `.dataset`."),
+      hint = ("Ensure you pass a valid data frame or tibble to `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
     # Validate required columns
     required_columns <- c(sanitation_facility_cat_col, shared_sanitation_col)
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       required_columns,
       origin = origin,
-      hint = phr_txt("Ensure the sanitation facility and shared sanitation columns are present."),
+      hint = ("Ensure the sanitation facility and shared sanitation columns are present."),
       soft = FALSE
     )
 
@@ -1415,7 +1415,7 @@ add_sanitation_jmp_ladder <- function(
       sanitation_facility_open_defecation_val,
       NA_character_
     )
-    phr_validate_choice(
+    phrutils::phr_validate_choice(
       x = .dataset[[sanitation_facility_cat_col]],
       choices = valid_sanitation_categories,
       origin = origin,
@@ -1424,7 +1424,7 @@ add_sanitation_jmp_ladder <- function(
 
     # Validate categories in shared sanitation column
     valid_shared_categories <- c(shared_sanitation_yes_val, shared_sanitation_no_val, NA_character_)
-    phr_validate_choice(
+    phrutils::phr_validate_choice(
       x = .dataset[[shared_sanitation_col]],
       choices = valid_shared_categories,
       origin = origin,
@@ -1434,29 +1434,29 @@ add_sanitation_jmp_ladder <- function(
     # Overwrite warnings for any existing output column
     output_column <- "wash_jmp_ladder_sanitation_cat"
     if (output_column %in% names(.dataset)) {
-      phr_warning(
+      phrutils::phr_warning(
         origin = origin,
-        message = phr_txt(glue::glue("Variable {output_column} already exists and will be overwritten."))
+        message = (glue::glue("Variable {output_column} already exists and will be overwritten."))
       )
     }
 
     # Use ensure_value to provide defaults
-    sanitation_facility_improved_val <- ensure_value(sanitation_facility_improved_val, "improved")
-    sanitation_facility_unimproved_val <- ensure_value(sanitation_facility_unimproved_val, "unimproved")
-    sanitation_facility_open_defecation_val <- ensure_value(sanitation_facility_open_defecation_val, "open_defecation")
-    shared_sanitation_yes_val <- ensure_value(shared_sanitation_yes_val, "yes")
-    shared_sanitation_no_val <- ensure_value(shared_sanitation_no_val, "no")
+    sanitation_facility_improved_val <- phrutils::ensure_value(sanitation_facility_improved_val, "improved")
+    sanitation_facility_unimproved_val <- phrutils::ensure_value(sanitation_facility_unimproved_val, "unimproved")
+    sanitation_facility_open_defecation_val <- phrutils::ensure_value(sanitation_facility_open_defecation_val, "open_defecation")
+    shared_sanitation_yes_val <- phrutils::ensure_value(shared_sanitation_yes_val, "yes")
+    shared_sanitation_no_val <- phrutils::ensure_value(shared_sanitation_no_val, "no")
 
     # Recoding to JMP ladder categories
     .dataset <- .dataset |>
       dplyr::mutate(
         wash_jmp_ladder_sanitation_cat = dplyr::case_when(
-          as.character(.data[[sanitation_facility_cat_col]]) == sanitation_facility_open_defecation_val ~ phr_txt("Open Defecation"),
-          as.character(.data[[sanitation_facility_cat_col]]) == sanitation_facility_unimproved_val ~ phr_txt("Unimproved"),
+          as.character(.data[[sanitation_facility_cat_col]]) == sanitation_facility_open_defecation_val ~ ("Open Defecation"),
+          as.character(.data[[sanitation_facility_cat_col]]) == sanitation_facility_unimproved_val ~ ("Unimproved"),
           as.character(.data[[sanitation_facility_cat_col]]) == sanitation_facility_improved_val &
-            as.character(.data[[shared_sanitation_col]]) == shared_sanitation_yes_val ~ phr_txt("Limited"),
+            as.character(.data[[shared_sanitation_col]]) == shared_sanitation_yes_val ~ ("Limited"),
           as.character(.data[[sanitation_facility_cat_col]]) == sanitation_facility_improved_val &
-            as.character(.data[[shared_sanitation_col]]) == shared_sanitation_no_val ~ phr_txt("Basic"),
+            as.character(.data[[shared_sanitation_col]]) == shared_sanitation_no_val ~ ("Basic"),
           TRUE ~ NA_character_
         )
       )
@@ -1467,23 +1467,23 @@ add_sanitation_jmp_ladder <- function(
         wash_jmp_ladder_sanitation_cat = factor(
           wash_jmp_ladder_sanitation_cat,
           levels = c(
-            phr_txt("Basic"),
-            phr_txt("Limited"),
-            phr_txt("Unimproved"),
-            phr_txt("Open Defecation")
+            ("Basic"),
+            ("Limited"),
+            ("Unimproved"),
+            ("Open Defecation")
           ),
           ordered = TRUE
         )
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("JMP ladder categories for sanitation facilities computed successfully.")
+      message = ("JMP ladder categories for sanitation facilities computed successfully.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure input columns exist and contain valid categorical values."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure input columns exist and contain valid categorical values."))
 }
 
 # Square Meters Per Person ####
@@ -1555,42 +1555,42 @@ add_sqm_per_person <- function(
 
   origin <- "add_sqm_per_person"
 
-  phr_try({
+  phrutils::phr_try({
 
 
     # Validate dataset
 
-    phr_validate_dataframe(
+    phrutils::phr_validate_dataframe(
       .dataset,
       origin = origin,
-      hint = phr_txt("Ensure you pass a valid data frame as `.dataset`."),
+      hint = ("Ensure you pass a valid data frame as `.dataset`."),
       soft = FALSE
     )
 
-    phr_assert(
+    phrutils::phr_assert(
       nrow(.dataset) > 0,
       origin = origin,
-      phr_txt("Dataset is empty.")
+      ("Dataset is empty.")
     )
 
 
     # Validate input columns
 
     required_columns <- c(shelter_shape_col, household_size_col, measure_confirm_col)
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       required_columns,
       origin = origin,
-      hint = phr_txt("Ensure the shape, household size, and measurement confirmation columns exist in the dataset."),
+      hint = ("Ensure the shape, household size, and measurement confirmation columns exist in the dataset."),
       soft = FALSE
     )
 
     shape_dependent_columns <- c(shelter_length_col, shelter_width_col, shelter_diameter_col)
-    phr_validate_columns(
+    phrutils::phr_validate_columns(
       .dataset,
       shape_dependent_columns,
       origin = origin,
-      hint = phr_txt("Ensure the shelter length, width, and diameter columns exist in the dataset."),
+      hint = ("Ensure the shelter length, width, and diameter columns exist in the dataset."),
       soft = FALSE
     )
 
@@ -1598,7 +1598,7 @@ add_sqm_per_person <- function(
     # Validate shape categories
 
     valid_shapes <- c(rectangle_val, circle_val, NA_character_)
-    phr_validate_choice(
+    phrutils::phr_validate_choice(
       x = .dataset[[shelter_shape_col]],
       choices = valid_shapes,
       origin = origin,
@@ -1608,17 +1608,17 @@ add_sqm_per_person <- function(
 
     # Validate household size column
 
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[household_size_col]],
       origin = origin,
-      hint = phr_txt("Household size column must contain numeric values."),
+      hint = ("Household size column must contain numeric values."),
       soft = TRUE
     )
 
 
     # Validate measuring confirmation column
 
-    phr_validate_choice(
+    phrutils::phr_validate_choice(
       x = .dataset[[measure_confirm_col]],
       choices = c(measure_confirm_yes_val, "no", "dont_know", NA_character_),
       origin = origin,
@@ -1628,22 +1628,22 @@ add_sqm_per_person <- function(
 
     # Validate numeric columns
 
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[shelter_length_col]],
       origin = origin,
-      hint = phr_txt("Length column must contain numeric values."),
+      hint = ("Length column must contain numeric values."),
       soft = TRUE
     )
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[shelter_width_col]],
       origin = origin,
-      hint = phr_txt("Width column must contain numeric values."),
+      hint = ("Width column must contain numeric values."),
       soft = TRUE
     )
-    phr_validate_all_numeric(
+    phrutils::phr_validate_all_numeric(
       .dataset[[shelter_diameter_col]],
       origin = origin,
-      hint = phr_txt("Diameter column must contain numeric values."),
+      hint = ("Diameter column must contain numeric values."),
       soft = TRUE
     )
 
@@ -1654,9 +1654,9 @@ add_sqm_per_person <- function(
 
     for (col in output_columns) {
       if (col %in% names(.dataset)) {
-        phr_warning(
+        phrutils::phr_warning(
           origin = origin,
-          message = phr_txt(glue::glue("Variable `{col}` already exists and will be overwritten."))
+          message = (glue::glue("Variable `{col}` already exists and will be overwritten."))
         )
       }
     }
@@ -1693,30 +1693,30 @@ add_sqm_per_person <- function(
         ),
         # Categorize square meters per person
         sqm_per_person_cat = dplyr::case_when(
-          sqm_per_person < 3.5 ~ phr_txt("<3.5 sqm per person"),
-          sqm_per_person >= 3.5 & sqm_per_person < 4.5 ~ phr_txt("3.5 - < 4.5 sqm per person"),
-          sqm_per_person >= 4.5 & sqm_per_person < 5.5 ~ phr_txt("4.5 - < 5.5 sqm per person"),
-          sqm_per_person >= 5.5 ~ phr_txt(">= 5.5 sqm per person"),
+          sqm_per_person < 3.5 ~ ("<3.5 sqm per person"),
+          sqm_per_person >= 3.5 & sqm_per_person < 4.5 ~ ("3.5 - < 4.5 sqm per person"),
+          sqm_per_person >= 4.5 & sqm_per_person < 5.5 ~ ("4.5 - < 5.5 sqm per person"),
+          sqm_per_person >= 5.5 ~ (">= 5.5 sqm per person"),
           TRUE ~ NA_character_
         ) |>
           factor(
             levels = c(
-              phr_txt("<3.5 sqm per person"),
-              phr_txt("3.5 - < 4.5 sqm per person"),
-              phr_txt("4.5 - < 5.5 sqm per person"),
-              phr_txt(">= 5.5 sqm per person")
+              ("<3.5 sqm per person"),
+              ("3.5 - < 4.5 sqm per person"),
+              ("4.5 - < 5.5 sqm per person"),
+              (">= 5.5 sqm per person")
             ),
             ordered = TRUE
           )
       )
 
-    phr_message(
+    phrutils::phr_message(
       origin = origin,
-      message = phr_txt("Shelter area, square meters per person, and categorization successfully computed.")
+      message = ("Shelter area, square meters per person, and categorization successfully computed.")
     )
 
     return(.dataset)
 
-  }, on_error = "abort", origin = origin, hint = phr_txt("Ensure input columns exist and values align with specifications."))
+  }, on_error = "abort", origin = origin, hint = ("Ensure input columns exist and values align with specifications."))
 }
 

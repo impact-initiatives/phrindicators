@@ -1,6 +1,6 @@
-# phr Package Documentation
+# phrindicators Package Documentation
 
-Welcome to the **phr** (Public Health Resources) package documentation. This documentation is organized into two main sections: **Data Structures** and **Processes**.
+Welcome to the **phrindicators** (Public Health Indicators) package documentation. This documentation is organized into two main sections: **Data Structures** and **Processes**.
 
 For installation instructions and a package overview, see the [root README](../README.md).
 
@@ -8,7 +8,7 @@ For installation instructions and a package overview, see the [root README](../R
 
 ### Data_Structures/
 
-Documentation for the R6 classes that form the foundation of the phr package.
+Documentation for the R6 classes that form the foundation of the phrindicators package.
 
 #### Analytics_Classes/ *(new)*
 - **[analytics_classes_overview.md](Data_Structures/Analytics_Classes/analytics_classes_overview.md)** - Overview of the unified DataAnalytics class hierarchy
@@ -59,7 +59,7 @@ Documentation for the R6 classes that form the foundation of the phr package.
 
 ### Processes/
 
-Documentation for the major processes and workflows in the public_health_resources package.
+Documentation for the major processes and workflows in the phrindicators package.
 
 #### error_handling/
 - **[error_handling.md](Processes/error_handling/error_handling.md)** - Error handling patterns and practices
@@ -96,7 +96,7 @@ Start with the overview documents for each class hierarchy:
 
 ### 2. Understanding Schemas
 
-Schemas are central to public_health_resources's functionality:
+Schemas are central to phrindicators's functionality:
 1. Read [schema_overview.md](Data_Structures/schema_overview.md) for a comprehensive introduction
 2. Read [indicator_schema.md](Data_Structures/indicator_schema.md) for indicator calculations
 3. Read [variable_value_mapping_guide.md](Data_Structures/variable_value_mapping_guide.md) for value mapping
@@ -146,7 +146,7 @@ analytics_clean$run_outputs()
 ## Key Concepts
 
 ### R6 Classes
-phr uses R6 object-oriented programming with inheritance hierarchies for Data, Analytics, Log, Tool, and Protocol classes.
+phrindicators uses R6 object-oriented programming with inheritance hierarchies for Data, Analytics, Log, Tool, and Protocol classes.
 
 ### DataAnalytics (unified)
 The `DataAnalytics` hierarchy combines quality checks and quantitative analysis into a single object per domain.  Each subclass ships with default schemas for its sector.
@@ -190,8 +190,8 @@ The package uses documented coding and naming standards. See [coding_conventions
 
 For package-level documentation, see:
 - Function reference: Use `?function_name` in R
-- Package vignettes: `browseVignettes("phr")`
-- GitHub repository: https://github.com/SaeedR1987/public_health_resources
+- Package vignettes: `browseVignettes("phrindicators")`
+- GitHub repository: https://github.com/SaeedR1987/phr_indicators
 
 ## Contributing to Documentation
 
