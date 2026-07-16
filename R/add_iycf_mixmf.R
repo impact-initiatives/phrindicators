@@ -9,6 +9,9 @@
 #' @param iycf_6b Character: Column name for infant formula (1 = yes)
 #' @param iycf_6c Character: Column name for milk from animals (1 = yes)
 #' @param age_months Character: Column name for child's age in months
+#' @param yes_val Character: Value representing "yes" in categorical columns
+#' @param no_val Character: Value representing "no" in categorical columns
+#' @param dnk_val Character: Value representing "don't know" in categorical columns (recoded to NA)
 #'
 #' @return Data frame with added column: iycf_mixmf (1 = mixed milk feeding, 0 = not, NA = ineligible)
 #' @export
@@ -16,7 +19,10 @@ add_iycf_mixmf <- function(.dataset,
                             iycf_4 = "iycf_4",
                             iycf_6b = "iycf_6b",
                             iycf_6c = "iycf_6c",
-                            age_months = "age_months") {
+                            age_months = "age_months",
+                            yes_val = "yes",
+                            no_val = "no",
+                            dnk_val = "dnk") {
 
   origin <- "add_iycf_mixmf"
 
@@ -36,10 +42,10 @@ add_iycf_mixmf <- function(.dataset,
         phrutils::phr_warning(origin, "Variable iycf_mixmf already exists and will be overwritten.")
       }
 
-      # Convert to numeric
-      .dataset[[iycf_4]] <- as.numeric(.dataset[[iycf_4]])
-      .dataset[[iycf_6b]] <- as.numeric(.dataset[[iycf_6b]])
-      .dataset[[iycf_6c]] <- as.numeric(.dataset[[iycf_6c]])
+      # Recode categorical variables to numeric
+      .dataset[[iycf_4]] <- iycf_recode_yesno(.dataset[[iycf_4]], yes_val, no_val, dnk_val)
+      .dataset[[iycf_6b]] <- iycf_recode_yesno(.dataset[[iycf_6b]], yes_val, no_val, dnk_val)
+      .dataset[[iycf_6c]] <- iycf_recode_yesno(.dataset[[iycf_6c]], yes_val, no_val, dnk_val)
       .dataset[[age_months]] <- as.numeric(.dataset[[age_months]])
 
       # Calculate indicator

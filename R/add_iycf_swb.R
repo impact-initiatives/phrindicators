@@ -13,6 +13,9 @@
 #' @param iycf_6g Character: Column name for tea/coffee with sugar (1 = yes)
 #' @param iycf_6h_swt Character: Column name for other sweetened liquids (1 = yes)
 #' @param iycf_6j_swt Character: Column name for other sweetened drinks (1 = yes)
+#' @param yes_val Character: Value representing "yes" in categorical columns
+#' @param no_val Character: Value representing "no" in categorical columns
+#' @param dnk_val Character: Value representing "don't know" in categorical columns (recoded to NA)
 #'
 #' @return Data frame with added column: iycf_swb (1 = consumed sweet beverages, 0 = not, NA = ineligible)
 #' @export
@@ -24,7 +27,10 @@ add_iycf_swb <- function(.dataset,
                           iycf_6f = "iycf_6f",
                           iycf_6g = "iycf_6g",
                           iycf_6h_swt = "iycf_6h_swt",
-                          iycf_6j_swt = "iycf_6j_swt") {
+                          iycf_6j_swt = "iycf_6j_swt",
+                          yes_val = "yes",
+                          no_val = "no",
+                          dnk_val = "dnk") {
 
   origin <- "add_iycf_swb"
 
@@ -45,10 +51,13 @@ add_iycf_swb <- function(.dataset,
         phrutils::phr_warning(origin, "Variable iycf_swb already exists and will be overwritten.")
       }
 
-      # Convert to numeric
-      for (v in required_vars) {
-        .dataset[[v]] <- as.numeric(.dataset[[v]])
+      # Recode categorical variables to numeric
+      categorical_vars <- c(iycf_6c_swt, iycf_6d_swt, iycf_6e, iycf_6f,
+                            iycf_6g, iycf_6h_swt, iycf_6j_swt)
+      for (v in categorical_vars) {
+        .dataset[[v]] <- iycf_recode_yesno(.dataset[[v]], yes_val, no_val, dnk_val)
       }
+      .dataset[[age_months]] <- as.numeric(.dataset[[age_months]])
 
       # Calculate indicator
       .dataset <- .dataset |>

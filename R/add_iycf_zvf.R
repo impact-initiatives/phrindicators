@@ -12,6 +12,9 @@
 #' @param iycf_7f Character: Column name for other vegetables (1 = yes, 2 = no)
 #' @param iycf_7g Character: Column name for vitamin A rich fruits (1 = yes, 2 = no)
 #' @param iycf_7h Character: Column name for other fruits (1 = yes, 2 = no)
+#' @param yes_val Character: Value representing "yes" in categorical columns
+#' @param no_val Character: Value representing "no" in categorical columns
+#' @param dnk_val Character: Value representing "don't know" in categorical columns (recoded to NA)
 #'
 #' @return Data frame with added column: iycf_zvf (1 = zero veg/fruit, 0 = consumed veg/fruit, NA = ineligible)
 #' @export
@@ -21,7 +24,10 @@ add_iycf_zvf <- function(.dataset,
                           iycf_7e = "iycf_7e",
                           iycf_7f = "iycf_7f",
                           iycf_7g = "iycf_7g",
-                          iycf_7h = "iycf_7h") {
+                          iycf_7h = "iycf_7h",
+                          yes_val = "yes",
+                          no_val = "no",
+                          dnk_val = "dnk") {
 
   origin <- "add_iycf_zvf"
 
@@ -41,10 +47,12 @@ add_iycf_zvf <- function(.dataset,
         phrutils::phr_warning(origin, "Variable iycf_zvf already exists and will be overwritten.")
       }
 
-      # Convert to numeric
-      for (v in required_vars) {
-        .dataset[[v]] <- as.numeric(.dataset[[v]])
+      # Recode categorical variables to numeric
+      categorical_vars <- c(iycf_7c, iycf_7e, iycf_7f, iycf_7g, iycf_7h)
+      for (v in categorical_vars) {
+        .dataset[[v]] <- iycf_recode_yesno(.dataset[[v]], yes_val, no_val, dnk_val)
       }
+      .dataset[[age_months]] <- as.numeric(.dataset[[age_months]])
 
       # Calculate indicator - zvf components check if each food was NOT consumed (value == 2)
       .dataset <- .dataset |>

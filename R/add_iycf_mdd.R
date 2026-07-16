@@ -25,6 +25,9 @@
 #' @param iycf_7m Character: Column name for insects/grubs
 #' @param iycf_7n Character: Column name for legumes/nuts/seeds
 #' @param iycf_7o Character: Column name for cheese/other dairy
+#' @param yes_val Character: Value representing "yes" in categorical columns
+#' @param no_val Character: Value representing "no" in categorical columns
+#' @param dnk_val Character: Value representing "don't know" in categorical columns (recoded to NA)
 #'
 #' @return Data frame with added columns: iycf_mdd_score, iycf_mdd_cat
 #' @export
@@ -48,7 +51,10 @@ add_iycf_mdd <- function(.dataset,
                           iycf_7l = "iycf_7l",
                           iycf_7m = "iycf_7m",
                           iycf_7n = "iycf_7n",
-                          iycf_7o = "iycf_7o") {
+                          iycf_7o = "iycf_7o",
+                          yes_val = "yes",
+                          no_val = "no",
+                          dnk_val = "dnk") {
 
   origin <- "add_iycf_mdd"
 
@@ -73,10 +79,12 @@ add_iycf_mdd <- function(.dataset,
         }
       }
 
-      # Convert to numeric
-      for (v in mdd_vars) {
-        .dataset[[v]] <- as.numeric(.dataset[[v]])
+      # Recode categorical variables to numeric
+      categorical_vars <- setdiff(mdd_vars, age_months)
+      for (v in categorical_vars) {
+        .dataset[[v]] <- iycf_recode_yesno(.dataset[[v]], yes_val, no_val, dnk_val)
       }
+      .dataset[[age_months]] <- as.numeric(.dataset[[age_months]])
 
       # Calculate 8 food groups
       .dataset <- .dataset |>

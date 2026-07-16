@@ -11,6 +11,9 @@
 #' @param iycf_7k Character: Column name for fish/seafood (1 = yes)
 #' @param iycf_7l Character: Column name for eggs (1 = yes)
 #' @param iycf_7m Character: Column name for insects/grubs (1 = yes)
+#' @param yes_val Character: Value representing "yes" in categorical columns
+#' @param no_val Character: Value representing "no" in categorical columns
+#' @param dnk_val Character: Value representing "don't know" in categorical columns (recoded to NA)
 #'
 #' @return Data frame with added column: iycf_eff (1 = consumed eggs/flesh foods, 0 = not, NA = ineligible)
 #' @export
@@ -20,7 +23,10 @@ add_iycf_eff <- function(.dataset,
                           iycf_7j = "iycf_7j",
                           iycf_7k = "iycf_7k",
                           iycf_7l = "iycf_7l",
-                          iycf_7m = "iycf_7m") {
+                          iycf_7m = "iycf_7m",
+                          yes_val = "yes",
+                          no_val = "no",
+                          dnk_val = "dnk") {
 
   origin <- "add_iycf_eff"
 
@@ -40,10 +46,12 @@ add_iycf_eff <- function(.dataset,
         phrutils::phr_warning(origin, "Variable iycf_eff already exists and will be overwritten.")
       }
 
-      # Convert to numeric
-      for (v in required_vars) {
-        .dataset[[v]] <- as.numeric(.dataset[[v]])
+      # Recode categorical variables to numeric
+      categorical_vars <- c(iycf_7i, iycf_7j, iycf_7k, iycf_7l, iycf_7m)
+      for (v in categorical_vars) {
+        .dataset[[v]] <- iycf_recode_yesno(.dataset[[v]], yes_val, no_val, dnk_val)
       }
+      .dataset[[age_months]] <- as.numeric(.dataset[[age_months]])
 
       # Calculate indicator
       .dataset <- .dataset |>

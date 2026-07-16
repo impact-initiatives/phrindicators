@@ -6,12 +6,18 @@
 #' @param .dataset Data frame containing IYCF component variables
 #' @param iycf_4 Character: Column name for currently breastfeeding (1 = yes)
 #' @param age_months Character: Column name for child's age in months
+#' @param yes_val Character: Value representing "yes" in categorical columns
+#' @param no_val Character: Value representing "no" in categorical columns
+#' @param dnk_val Character: Value representing "don't know" in categorical columns (recoded to NA)
 #'
 #' @return Data frame with added column: iycf_cbf (1 = continued breastfeeding, 0 = not, NA = ineligible)
 #' @export
 add_iycf_cbf <- function(.dataset,
                           iycf_4 = "iycf_4",
-                          age_months = "age_months") {
+                          age_months = "age_months",
+                          yes_val = "yes",
+                          no_val = "no",
+                          dnk_val = "dnk") {
 
   origin <- "add_iycf_cbf"
 
@@ -31,8 +37,8 @@ add_iycf_cbf <- function(.dataset,
         phrutils::phr_warning(origin, "Variable iycf_cbf already exists and will be overwritten.")
       }
 
-      # Convert to numeric
-      .dataset[[iycf_4]] <- as.numeric(.dataset[[iycf_4]])
+      # Recode categorical variables to numeric
+      .dataset[[iycf_4]] <- iycf_recode_yesno(.dataset[[iycf_4]], yes_val, no_val, dnk_val)
       .dataset[[age_months]] <- as.numeric(.dataset[[age_months]])
 
       # Calculate indicator

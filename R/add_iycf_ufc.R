@@ -8,13 +8,19 @@
 #' @param age_months Character: Column name for child's age in months
 #' @param iycf_7p Character: Column name for sweet foods (1 = yes)
 #' @param iycf_7q Character: Column name for fried/salty snacks (1 = yes)
+#' @param yes_val Character: Value representing "yes" in categorical columns
+#' @param no_val Character: Value representing "no" in categorical columns
+#' @param dnk_val Character: Value representing "don't know" in categorical columns (recoded to NA)
 #'
 #' @return Data frame with added column: iycf_ufc (1 = consumed unhealthy foods, 0 = not, NA = ineligible)
 #' @export
 add_iycf_ufc <- function(.dataset,
                           age_months = "age_months",
                           iycf_7p = "iycf_7p",
-                          iycf_7q = "iycf_7q") {
+                          iycf_7q = "iycf_7q",
+                          yes_val = "yes",
+                          no_val = "no",
+                          dnk_val = "dnk") {
 
   origin <- "add_iycf_ufc"
 
@@ -34,10 +40,10 @@ add_iycf_ufc <- function(.dataset,
         phrutils::phr_warning(origin, "Variable iycf_ufc already exists and will be overwritten.")
       }
 
-      # Convert to numeric
-      for (v in required_vars) {
-        .dataset[[v]] <- as.numeric(.dataset[[v]])
-      }
+      # Recode categorical variables to numeric
+      .dataset[[iycf_7p]] <- iycf_recode_yesno(.dataset[[iycf_7p]], yes_val, no_val, dnk_val)
+      .dataset[[iycf_7q]] <- iycf_recode_yesno(.dataset[[iycf_7q]], yes_val, no_val, dnk_val)
+      .dataset[[age_months]] <- as.numeric(.dataset[[age_months]])
 
       # Calculate indicator
       .dataset <- .dataset |>

@@ -11,6 +11,9 @@
 #' @param iycf_6c_num Character: Column name for number of times milk was given
 #' @param iycf_6d_num Character: Column name for number of times yogurt drink was given
 #' @param iycf_7a_num Character: Column name for number of times yogurt food was given
+#' @param yes_val Character: Value representing "yes" in categorical columns
+#' @param no_val Character: Value representing "no" in categorical columns
+#' @param dnk_val Character: Value representing "don't know" in categorical columns (recoded to NA)
 #'
 #' @return Data frame with added column: iycf_mmff (1 = meets MMFF, 0 = not, NA = ineligible)
 #' @export
@@ -20,7 +23,10 @@ add_iycf_mmff <- function(.dataset,
                            iycf_6b_num = "iycf_6b_num",
                            iycf_6c_num = "iycf_6c_num",
                            iycf_6d_num = "iycf_6d_num",
-                           iycf_7a_num = "iycf_7a_num") {
+                           iycf_7a_num = "iycf_7a_num",
+                           yes_val = "yes",
+                           no_val = "no",
+                           dnk_val = "dnk") {
 
   origin <- "add_iycf_mmff"
 
@@ -40,10 +46,13 @@ add_iycf_mmff <- function(.dataset,
         phrutils::phr_warning(origin, "Variable iycf_mmff already exists and will be overwritten.")
       }
 
-      # Convert to numeric
-      for (v in mmff_vars) {
-        .dataset[[v]] <- as.numeric(.dataset[[v]])
-      }
+      # Recode iycf_4 (categorical yes/no) and convert numeric columns
+      .dataset[[iycf_4]] <- iycf_recode_yesno(.dataset[[iycf_4]], yes_val, no_val, dnk_val)
+      .dataset[[age_months]] <- as.numeric(.dataset[[age_months]])
+      .dataset[[iycf_6b_num]] <- as.numeric(.dataset[[iycf_6b_num]])
+      .dataset[[iycf_6c_num]] <- as.numeric(.dataset[[iycf_6c_num]])
+      .dataset[[iycf_6d_num]] <- as.numeric(.dataset[[iycf_6d_num]])
+      .dataset[[iycf_7a_num]] <- as.numeric(.dataset[[iycf_7a_num]])
 
       # Calculate indicator
       .dataset <- .dataset |>

@@ -13,6 +13,9 @@
 #' @param iycf_mdd_cat Character: Column name for MDD category (1 = meets MDD)
 #' @param iycf_mmf Character: Column name for MMF indicator (1 = meets MMF)
 #' @param iycf_mmff Character: Column name for MMFF indicator (1 = meets MMFF)
+#' @param yes_val Character: Value representing "yes" in categorical columns
+#' @param no_val Character: Value representing "no" in categorical columns
+#' @param dnk_val Character: Value representing "don't know" in categorical columns (recoded to NA)
 #'
 #' @return Data frame with added column: iycf_mad (1 = meets MAD, 0 = not, NA = ineligible)
 #' @export
@@ -21,7 +24,10 @@ add_iycf_mad <- function(.dataset,
                           iycf_4 = "iycf_4",
                           iycf_mdd_cat = "iycf_mdd_cat",
                           iycf_mmf = "iycf_mmf",
-                          iycf_mmff = "iycf_mmff") {
+                          iycf_mmff = "iycf_mmff",
+                          yes_val = "yes",
+                          no_val = "no",
+                          dnk_val = "dnk") {
 
   origin <- "add_iycf_mad"
 
@@ -41,10 +47,12 @@ add_iycf_mad <- function(.dataset,
         phrutils::phr_warning(origin, "Variable iycf_mad already exists and will be overwritten.")
       }
 
-      # Convert to numeric
-      for (v in required_vars) {
-        .dataset[[v]] <- as.numeric(.dataset[[v]])
-      }
+      # Recode iycf_4 (categorical yes/no); other columns are pre-computed numeric indicators
+      .dataset[[iycf_4]] <- iycf_recode_yesno(.dataset[[iycf_4]], yes_val, no_val, dnk_val)
+      .dataset[[age_months]] <- as.numeric(.dataset[[age_months]])
+      .dataset[[iycf_mdd_cat]] <- as.numeric(.dataset[[iycf_mdd_cat]])
+      .dataset[[iycf_mmf]] <- as.numeric(.dataset[[iycf_mmf]])
+      .dataset[[iycf_mmff]] <- as.numeric(.dataset[[iycf_mmff]])
 
       # Calculate indicator
       .dataset <- .dataset |>

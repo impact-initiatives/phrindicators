@@ -35,6 +35,9 @@
 #' @param iycf_7p Character: Column name for food group p (optional, checked if present)
 #' @param iycf_7q Character: Column name for food group q (optional, checked if present)
 #' @param iycf_7r Character: Column name for food group r (optional, checked if present)
+#' @param yes_val Character: Value representing "yes" in categorical columns
+#' @param no_val Character: Value representing "no" in categorical columns
+#' @param dnk_val Character: Value representing "don't know" in categorical columns (recoded to NA)
 #'
 #' @return Data frame with added column: iycf_ebf (1 = exclusively breastfed, 0 = not, NA = ineligible)
 #' @export
@@ -68,7 +71,10 @@ add_iycf_ebf <- function(.dataset,
                           iycf_7o = "iycf_7o",
                           iycf_7p = "iycf_7p",
                           iycf_7q = "iycf_7q",
-                          iycf_7r = "iycf_7r") {
+                          iycf_7r = "iycf_7r",
+                          yes_val = "yes",
+                          no_val = "no",
+                          dnk_val = "dnk") {
 
   origin <- "add_iycf_ebf"
 
@@ -127,10 +133,10 @@ add_iycf_ebf <- function(.dataset,
         phrutils::phr_warning(origin, "Variable iycf_ebf already exists and will be overwritten.")
       }
 
-      # Convert to numeric
-      all_vars <- c(iycf_4, ebf_foods_present, ebf_liquids_present)
-      for (v in all_vars) {
-        .dataset[[v]] <- as.numeric(.dataset[[v]])
+      # Recode categorical variables to numeric
+      .dataset[[iycf_4]] <- iycf_recode_yesno(.dataset[[iycf_4]], yes_val, no_val, dnk_val)
+      for (v in c(ebf_foods_present, ebf_liquids_present)) {
+        .dataset[[v]] <- iycf_recode_yesno(.dataset[[v]], yes_val, no_val, dnk_val)
       }
       .dataset[[age_months]] <- as.numeric(.dataset[[age_months]])
 
