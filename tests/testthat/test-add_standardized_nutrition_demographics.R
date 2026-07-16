@@ -7,11 +7,10 @@ test_that("add_standardized_nutrition_demographics creates canonical columns", {
     calc_age_years = c(0.8, 1.5, 2.5, 4, 6, 1.2)
   )
 
-  result <- add_standardized_nutrition_demographics(
+  result <- suppressMessages(add_standardized_nutrition_demographics(
     .dataset = df,
     age_years_col = "calc_age_years"
-  )
-
+  ))
   # Check all canonical columns exist
   expect_true("nutrition_child_under2" %in% names(result))
   expect_true("nutrition_child_2to5" %in% names(result))
@@ -34,11 +33,10 @@ test_that("add_standardized_nutrition_demographics handles NA values", {
     calc_age_years = c(0.8, NA, 4, 6)
   )
 
-  result <- add_standardized_nutrition_demographics(
+  result <- suppressMessages(add_standardized_nutrition_demographics(
     .dataset = df,
     age_years_col = "calc_age_years"
-  )
-
+  ))
   # NA age should result in 0 for all indicators
   expect_equal(result$nutrition_child_under2, c(1, 0, 0, 0))
   expect_equal(result$nutrition_child_2to5, c(0, 0, 1, 0))

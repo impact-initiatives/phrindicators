@@ -10,7 +10,7 @@ test_that("add_iycf_mmff() counts dairy feeds for non-breastfed children 6-23 mo
     iycf_7a_num = c(0, 0, 1, 1)
   )
 
-  out <- add_iycf_mmff(df)
+  out <- suppressMessages(add_iycf_mmff(df))
 
   expect_equal(out$iycf_mmff, c(1, 0, 0, NA))
 })
@@ -18,7 +18,7 @@ test_that("add_iycf_mmff() counts dairy feeds for non-breastfed children 6-23 mo
 test_that("add_iycf_mmff() returns NA when a dairy count is missing", {
   df <- make_iycf_data(age_months = 10, iycf_4 = "no", iycf_6b_num = NA)
 
-  out <- add_iycf_mmff(df)
+  out <- suppressMessages(add_iycf_mmff(df))
 
   expect_true(is.na(out$iycf_mmff))
 })

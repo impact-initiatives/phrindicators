@@ -19,7 +19,7 @@ test_that("add_hdds() — standard use case works", {
     fsl_hdds_condiments = sample(c("yes","no"), 30, TRUE)
   )
 
-  out <- add_hdds(df)
+  out <- suppressMessages(add_hdds(df))
 
   expect_equal(nrow(out), 30)
 
@@ -87,7 +87,7 @@ test_that("add_hdds() — NA in any food group → HDDS score = NA", {
     fsl_hdds_condiments = c("yes", "yes")
   )
 
-  out <- add_hdds(df)
+  out <- suppressMessages(add_hdds(df))
 
   expect_true(!is.na(out$fsl_hdds_score[1]))
   expect_true(is.na(out$fsl_hdds_score[2]))
@@ -112,7 +112,7 @@ test_that("add_hdds() — category assignment is correct", {
     fsl_hdds_condiments = "no"
   )
 
-  out <- add_hdds(df)
+  out <- suppressMessages(add_hdds(df))
 
   expect_true(grepl("Low", out$fsl_hdds_cat[1], ignore.case = TRUE))
 })
@@ -135,7 +135,7 @@ test_that("add_hdds() — Medium and High category thresholds", {
     fsl_hdds_condiments = c("no",  "yes")
   )
 
-  out <- add_hdds(df)
+  out <- suppressMessages(add_hdds(df))
 
   expect_true(grepl("Low", out$fsl_hdds_cat[1], ignore.case = TRUE))
   expect_true(grepl("High",   out$fsl_hdds_cat[2], ignore.case = TRUE))

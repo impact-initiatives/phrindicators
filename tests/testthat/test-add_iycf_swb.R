@@ -7,7 +7,7 @@ test_that("add_iycf_swb() flags sweet beverage consumption for children 6-23 mon
     iycf_6f = c("no", "no", NA, "no")
   )
 
-  out <- add_iycf_swb(df)
+  out <- suppressMessages(add_iycf_swb(df))
 
   expect_equal(out$iycf_swb, c(1, 0, NA, NA))
 })

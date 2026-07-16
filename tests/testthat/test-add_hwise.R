@@ -9,14 +9,13 @@ test_that("add_hwise() — valid dataset creates HWISE-4 scores and categories",
     wash_hwise_drink = c("never", "rarely", "sometimes")
   )
 
-  out <- add_hwise(
+  out <- suppressMessages(add_hwise(
     .dataset = df,
     wash_hwise_worry_col = "wash_hwise_worry",
     wash_hwise_plans_col = "wash_hwise_plans",
     wash_hwise_hands_col = "wash_hwise_hands",
     wash_hwise_drink_col = "wash_hwise_drink"
-  )
-
+  ))
   expect_equal(nrow(out), 3)
   expect_true("wash_hwise4_score" %in% names(out))
   expect_true("wash_hwise4_severity_cat" %in% names(out))
@@ -33,7 +32,7 @@ test_that("add_hwise() — HWISE-4 score calculation is correct", {
     wash_hwise_drink = c("always", "never")
   )
 
-  out <- add_hwise(
+  out <- suppressMessages(add_hwise(
     .dataset = df,
     wash_hwise_worry_col = "wash_hwise_worry",
     wash_hwise_plans_col = "wash_hwise_plans",
@@ -44,8 +43,7 @@ test_that("add_hwise() — HWISE-4 score calculation is correct", {
     sometimes_val = "sometimes",
     often_val = "often",
     always_val = "always"
-  )
-
+  ))
   expect_equal(out$wash_hwise4_score[1], 12)  # 4 * 3
   expect_equal(out$wash_hwise4_score[2], 0)
 })
@@ -60,14 +58,13 @@ test_that("add_hwise() — HWISE-4 severity categories are correct", {
     wash_hwise_drink = c("never", "never", "never", "sometimes", "always")
   )
 
-  out <- add_hwise(
+  out <- suppressMessages(add_hwise(
     .dataset = df,
     wash_hwise_worry_col = "wash_hwise_worry",
     wash_hwise_plans_col = "wash_hwise_plans",
     wash_hwise_hands_col = "wash_hwise_hands",
     wash_hwise_drink_col = "wash_hwise_drink"
-  )
-
+  ))
   expect_true(grepl("No-to-marginal", out$wash_hwise4_severity_cat[1]))
   expect_true(grepl("Low", out$wash_hwise4_severity_cat[2]))
   expect_true(grepl("Moderate", out$wash_hwise4_severity_cat[3]))

@@ -6,7 +6,7 @@ test_that("add_iycf_cbf() applies the 12-23 month eligibility window", {
     iycf_4 = c("yes", "yes", "no", "yes", "yes")
   )
 
-  out <- add_iycf_cbf(df)
+  out <- suppressMessages(add_iycf_cbf(df))
 
   expect_equal(out$iycf_cbf, c(NA, 1, 0, NA, NA))
 })

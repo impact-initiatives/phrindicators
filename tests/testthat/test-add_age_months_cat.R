@@ -6,11 +6,10 @@ test_that("add_age_months_cat() — valid dataset creates age month categories",
     age_months = c(0, 5, 7, 12, 23, 40, 59)
   )
 
-  out <- add_age_months_cat(
+  out <- suppressMessages(add_age_months_cat(
     .dataset = df,
     age_months_col = "age_months"
-  )
-
+  ))
   expect_equal(nrow(out), 7)
   expect_true("age_months_cat" %in% names(out))
   expect_s3_class(out$age_months_cat, "factor")
@@ -32,11 +31,10 @@ test_that("add_age_months_cat() — roster_age_6_29m and roster_age_30_59m value
     age_months = c(0, 5, 6, 29, 30, 59, 60)
   )
 
-  out <- add_age_months_cat(
+  out <- suppressMessages(add_age_months_cat(
     .dataset = df,
     age_months_col = "age_months"
-  )
-
+  ))
   # Under 6 months → NA for both columns
   expect_true(is.na(out$roster_age_6_29m[1]))
   expect_true(is.na(out$roster_age_6_29m[2]))
@@ -67,11 +65,10 @@ test_that("add_age_months_cat() — NA values are handled correctly", {
     age_months = c(5, 10, NA, 25)
   )
 
-  out <- add_age_months_cat(
+  out <- suppressMessages(add_age_months_cat(
     .dataset = df,
     age_months_col = "age_months"
-  )
-
+  ))
   expect_equal(nrow(out), 4)
   expect_true(is.na(out$age_months_cat[3]))
   expect_false(is.na(out$age_months_cat[1]))
@@ -151,10 +148,9 @@ test_that("add_age_months_cat() — values outside range return NA", {
     age_months = c(60, 70, 100)
   )
 
-  out <- add_age_months_cat(
+  out <- suppressMessages(add_age_months_cat(
     .dataset = df,
     age_months_col = "age_months"
-  )
-
+  ))
   expect_true(all(is.na(out$age_months_cat)))
 })

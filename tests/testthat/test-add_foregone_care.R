@@ -7,7 +7,7 @@ test_that("add_foregone_care() — valid dataset creates foregone care category"
     received_care = c("dont know", "yes", "no", "dont know", "yes")
   )
 
-  out <- add_foregone_care(
+  out <- suppressMessages(add_foregone_care(
     .dataset = df,
     ind_illness_col = "health_need",
     ind_received_care_col = "received_care",
@@ -17,8 +17,7 @@ test_that("add_foregone_care() — valid dataset creates foregone care category"
     care_yes_val = "yes",
     care_no_val = "no",
     care_dontknow_val = "dont know"
-  )
-
+  ))
   expect_equal(nrow(out), 5)
   expect_true("health_foregone_care_cat" %in% names(out))
 })
@@ -31,7 +30,7 @@ test_that("add_foregone_care() — correct categorization logic", {
     care = c("dont know", "yes", "no", "no")
   )
 
-  out <- add_foregone_care(
+  out <- suppressMessages(add_foregone_care(
     .dataset = df,
     ind_illness_col = "illness",
     ind_received_care_col = "care",
@@ -41,8 +40,7 @@ test_that("add_foregone_care() — correct categorization logic", {
     care_yes_val = "yes",
     care_no_val = "no",
     care_dontknow_val = "dont know"
-  )
-
+  ))
   expect_true(grepl("No need", out$health_foregone_care_cat[1]))
   expect_true(grepl("Met need", out$health_foregone_care_cat[2]))
   expect_true(grepl("Foregone care", out$health_foregone_care_cat[3]))
@@ -57,7 +55,7 @@ test_that("add_foregone_care() — dont know values return NA", {
     care = c("yes", "dont know")
   )
 
-  out <- add_foregone_care(
+  out <- suppressMessages(add_foregone_care(
     .dataset = df,
     ind_illness_col = "illness",
     ind_received_care_col = "care",
@@ -67,8 +65,7 @@ test_that("add_foregone_care() — dont know values return NA", {
     care_yes_val = "yes",
     care_no_val = "no",
     care_dontknow_val = "dont know"
-  )
-
+  ))
   expect_true(is.na(out$health_foregone_care_cat[1]))
   expect_true(is.na(out$health_foregone_care_cat[2]))
 })
@@ -173,7 +170,7 @@ test_that("add_foregone_care() — NA values handled appropriately", {
     care = c("yes", "no", NA)
   )
 
-  out <- add_foregone_care(
+  out <- suppressMessages(add_foregone_care(
     .dataset = df,
     ind_illness_col = "illness",
     ind_received_care_col = "care",
@@ -183,8 +180,7 @@ test_that("add_foregone_care() — NA values handled appropriately", {
     care_yes_val = "yes",
     care_no_val = "no",
     care_dontknow_val = "dont know"
-  )
-
+  ))
   expect_equal(nrow(out), 3)
   expect_true(is.na(out$health_foregone_care_cat[2]))
   expect_true(!is.na(out$health_foregone_care_cat[3]))

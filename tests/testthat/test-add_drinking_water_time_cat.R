@@ -7,12 +7,11 @@ test_that("add_drinking_water_time_cat() — numeric minutes categorization work
     categorical_time = c(NA, NA, NA, NA)
   )
 
-  out <- add_drinking_water_time_cat(
+  out <- suppressMessages(add_drinking_water_time_cat(
     .dataset = df,
     number_minutes_col = "number_minutes",
     categorical_time_col = "categorical_time"
-  )
-
+  ))
   expect_equal(nrow(out), 4)
   expect_true("wash_drinking_water_time_cat" %in% names(out))
   expect_equal(out$wash_drinking_water_time_cat[1], 1)  # <= 30
@@ -29,14 +28,13 @@ test_that("add_drinking_water_time_cat() — categorical time works", {
     categorical_time = c("under_30min", "more_than_30min")
   )
 
-  out <- add_drinking_water_time_cat(
+  out <- suppressMessages(add_drinking_water_time_cat(
     .dataset = df,
     number_minutes_col = "number_minutes",
     categorical_time_col = "categorical_time",
     under_30min = "under_30min",
     more_than_30min = "more_than_30min"
-  )
-
+  ))
   expect_equal(out$wash_drinking_water_time_cat[1], 1)
   expect_equal(out$wash_drinking_water_time_cat[2], 0)
 })
@@ -49,14 +47,13 @@ test_that("add_drinking_water_time_cat() — numeric takes priority over categor
     categorical_time = c("more_than_30min")  # Conflicting but should be ignored
   )
 
-  out <- add_drinking_water_time_cat(
+  out <- suppressMessages(add_drinking_water_time_cat(
     .dataset = df,
     number_minutes_col = "number_minutes",
     categorical_time_col = "categorical_time",
     under_30min = "under_30min",
     more_than_30min = "more_than_30min"
-  )
-
+  ))
   # Should use numeric (20 minutes) not categorical
   expect_equal(out$wash_drinking_water_time_cat[1], 1)
 })
@@ -69,15 +66,14 @@ test_that("add_drinking_water_time_cat() — undefined values return NA", {
     categorical_time = c("dnk", "pnta")
   )
 
-  out <- add_drinking_water_time_cat(
+  out <- suppressMessages(add_drinking_water_time_cat(
     .dataset = df,
     number_minutes_col = "number_minutes",
     categorical_time_col = "categorical_time",
     under_30min = "under_30min",
     more_than_30min = "more_than_30min",
     undefined = c("dnk", "pnta")
-  )
-
+  ))
   expect_true(is.na(out$wash_drinking_water_time_cat[1]))
   expect_true(is.na(out$wash_drinking_water_time_cat[2]))
 })

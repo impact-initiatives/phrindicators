@@ -6,7 +6,7 @@ test_that("add_iycf_evbf() flags ever-breastfed children within the eligible age
     iycf_1 = c("yes", "no", "yes", "yes")
   )
 
-  out <- add_iycf_evbf(df)
+  out <- suppressMessages(add_iycf_evbf(df))
 
   expect_equal(out$iycf_evbf, c(1, 0, NA, NA))
 })

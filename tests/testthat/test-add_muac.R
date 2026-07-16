@@ -9,14 +9,13 @@ test_that("add_muac() — valid dataset with cm values works", {
     nut_edema_confirm = c("yes", NA, "no")
   )
 
-  out <- add_muac(
+  out <- suppressMessages(add_muac(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
     child_age_months_col = "child_age_months",
     edema_confirm_val = "yes"
-  )
-
+  ))
   expect_equal(nrow(out), 3)
   expect_true("sam_muac" %in% names(out))
   expect_true("mam_muac" %in% names(out))
@@ -35,14 +34,13 @@ test_that("add_muac() — SAM/MAM/GAM thresholds work correctly", {
   )
 
 
-  out <- add_muac(
+  out <- suppressMessages(add_muac(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
     child_age_months_col = "child_age_months",
     edema_confirm_val = "yes"
-  )
-
+  ))
   expect_equal(out$sam_muac[1], 1)  # < 11.5
   expect_equal(out$mam_muac[2], 1)  # >= 11.5 & < 12.5
   expect_equal(out$gam_muac[1], 1)  # < 12.5
@@ -60,14 +58,13 @@ test_that("add_muac() — edema confirmation affects SAM/GAM", {
     nut_edema_confirm = c("yes", "no")
   )
 
-  out <- add_muac(
+  out <- suppressMessages(add_muac(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
     child_age_months_col = "child_age_months",
     edema_confirm_val = "yes"
-  )
-
+  ))
   expect_equal(out$sam_muac[1], 1)  # edema confirmed
   expect_equal(out$sam_muac[2], 0)  # no edema
   expect_equal(out$gam_muac[1], 1)  # edema confirmed
@@ -84,14 +81,13 @@ test_that("add_muac() — children outside 6-59 months get NA", {
     nut_edema_confirm = c("no", "no", "no")
   )
 
-  out <- add_muac(
+  out <- suppressMessages(add_muac(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
     child_age_months_col = "child_age_months",
     edema_confirm_val = "yes"
-  )
-
+  ))
   expect_true(is.na(out$sam_muac[1]))   # age 5
   expect_false(is.na(out$sam_muac[2]))  # age 30
   expect_true(is.na(out$sam_muac[3]))   # age 60
@@ -107,14 +103,13 @@ test_that("add_muac() — extreme MUAC values are flagged", {
     nut_edema_confirm = c("no", "no", "no")
   )
 
-  out <- add_muac(
+  out <- suppressMessages(add_muac(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
     child_age_months_col = "child_age_months",
     edema_confirm_val = "yes"
-  )
-
+  ))
   expect_equal(out$flag_muac_extreme[1], 1)  # < 5
   expect_equal(out$flag_muac_extreme[2], 0)  # normal
   expect_equal(out$flag_muac_extreme[3], 1)  # > 20
@@ -130,14 +125,13 @@ test_that("add_muac() — detects mm and converts to cm", {
     nut_edema_confirm = c("no", "no", "no")
   )
 
-  out <- add_muac(
+  out <- suppressMessages(add_muac(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
     child_age_months_col = "child_age_months",
     edema_confirm_val = "yes"
-  )
-
+  ))
   expect_true("nut_muac_cm" %in% names(out))
   expect_equal(out$nut_muac_cm[1], 12.5)
 })

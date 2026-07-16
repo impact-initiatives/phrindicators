@@ -13,7 +13,7 @@ test_that("add_ecfies() — valid dataset computes score and category", {
     so8 = c("yes", "yes", "yes", "no", "prefer_not_to_answer")
   )
 
-  out <- add_ecfies(
+  out <- suppressMessages(add_ecfies(
     .dataset = df,
     nut_ecfies_so1_col = "so1",
     nut_ecfies_so2_col = "so2",
@@ -27,8 +27,7 @@ test_that("add_ecfies() — valid dataset computes score and category", {
     no_val = "no",
     dont_know_val = "dont_know",
     prefer_not_to_answer_val = "prefer_not_to_answer"
-  )
-
+  ))
   expect_equal(nrow(out), 5)
   expect_true("nut_ecfies_score" %in% names(out))
   expect_true("nut_ecfies_cat" %in% names(out))
@@ -49,7 +48,7 @@ test_that("add_ecfies() — score calculation is correct", {
     so8 = c("yes", "no")
   )
 
-  out <- add_ecfies(
+  out <- suppressMessages(add_ecfies(
     .dataset = df,
     nut_ecfies_so1_col = "so1",
     nut_ecfies_so2_col = "so2",
@@ -63,8 +62,7 @@ test_that("add_ecfies() — score calculation is correct", {
     no_val = "no",
     dont_know_val = "dont_know",
     prefer_not_to_answer_val = "prefer_not_to_answer"
-  )
-
+  ))
   expect_equal(out$nut_ecfies_score[1], 8)  # all yes
   expect_equal(out$nut_ecfies_score[2], 0)  # all no
 })
@@ -83,7 +81,7 @@ test_that("add_ecfies() — categorization thresholds work correctly", {
     so8 = c("no", "no", "no", "yes")
   )
 
-  out <- add_ecfies(
+  out <- suppressMessages(add_ecfies(
     .dataset = df,
     nut_ecfies_so1_col = "so1",
     nut_ecfies_so2_col = "so2",
@@ -97,8 +95,7 @@ test_that("add_ecfies() — categorization thresholds work correctly", {
     no_val = "no",
     dont_know_val = "dont_know",
     prefer_not_to_answer_val = "prefer_not_to_answer"
-  )
-
+  ))
   expect_true(grepl("No Food Insecurity", out$nut_ecfies_cat[1]))      # score 0
   expect_true(grepl("Mild Food Insecurity", out$nut_ecfies_cat[2]))    # score 3
   expect_true(grepl("Moderate Food Insecurity", out$nut_ecfies_cat[3])) # score 6

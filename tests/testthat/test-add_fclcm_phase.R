@@ -6,7 +6,7 @@ test_that("add_fclcm_phase works for standard 4-category LCSI", {
     fsl_lcsi_cat = c("None","Stress","Crisis","Emergency","None")
   )
 
-  out <- add_fclcm_phase(
+  out <- suppressMessages(add_fclcm_phase(
     .dataset = df,
     fc_phase_col = "fsl_fc_phase",
     lcsi_col = "fsl_lcsi_cat",
@@ -19,8 +19,7 @@ test_that("add_fclcm_phase works for standard 4-category LCSI", {
     lcsi_stress_val = "Stress",
     lcsi_crisis_val = "Crisis",
     lcsi_emergency_val = "Emergency"
-  )
-
+  ))
   expect_true(all(c("fsl_fclcm_cell", "fsl_fclcm_phase") %in% names(out)))
   expect_equal(nrow(out), 5)
 
@@ -44,7 +43,7 @@ test_that("add_fclcm_phase works for 5-category LCSI (with Exhaustion)", {
     fsl_lcsi_cat = c("Exhaustion","Exhaustion","None","Stress","Emergency")
   )
 
-  out <- add_fclcm_phase(df)
+  out <- suppressMessages(add_fclcm_phase(df))
 
   expect_true(all(c("fsl_fclcm_cell", "fsl_fclcm_phase") %in% names(out)))
   expect_equal(nrow(out), 5)
@@ -104,7 +103,7 @@ test_that("add_fclcm_phase works with NAs in lcsi_cat (ignored during lookup)", 
     fsl_lcsi_cat = c("None", NA, "Stress")
   )
 
-  out <- add_fclcm_phase(df)
+  out <- suppressMessages(add_fclcm_phase(df))
 
   expect_true(all(c("fsl_fclcm_cell","fsl_fclcm_phase") %in% names(out)))
 
@@ -124,7 +123,7 @@ test_that("add_fclcm_phase preserves additional columns", {
     fsl_lcsi_cat = c("None","Stress","Crisis")
   )
 
-  out <- add_fclcm_phase(df)
+  out <- suppressMessages(add_fclcm_phase(df))
 
   expect_true("id" %in% names(out))
   expect_equal(out$id, df$id)
@@ -144,7 +143,7 @@ test_that("add_fclcm_phase() — factor lcsi_col column is preserved as factor a
                           levels = c("None", "Stress", "Crisis", "Emergency"))
   )
 
-  out <- add_fclcm_phase(df)
+  out <- suppressMessages(add_fclcm_phase(df))
 
   expect_s3_class(out$fsl_lcsi_cat, "factor")
   expect_equal(levels(out$fsl_lcsi_cat), levels(df$fsl_lcsi_cat))

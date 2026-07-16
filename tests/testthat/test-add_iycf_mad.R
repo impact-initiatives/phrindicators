@@ -9,7 +9,7 @@ test_that("add_iycf_mad() combines MDD, MMF, and MMFF correctly", {
     iycf_mmff = c(0, 1, 1, 0, 1)
   )
 
-  out <- add_iycf_mad(df)
+  out <- suppressMessages(add_iycf_mad(df))
 
   expect_equal(out$iycf_mad, c(1, 0, 1, 0, NA))
 })
@@ -17,7 +17,7 @@ test_that("add_iycf_mad() combines MDD, MMF, and MMFF correctly", {
 test_that("add_iycf_mad() returns NA when prerequisite indicators are missing", {
   df <- make_iycf_data(age_months = 12, iycf_4 = "no", iycf_mdd_cat = 1, iycf_mmf = 1, iycf_mmff = NA)
 
-  out <- add_iycf_mad(df)
+  out <- suppressMessages(add_iycf_mad(df))
 
   expect_true(is.na(out$iycf_mad))
 })

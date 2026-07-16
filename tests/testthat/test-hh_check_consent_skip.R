@@ -18,7 +18,7 @@ test_that("hh_check_consent_skip() detects violations of skip-logic", {
     sensitive_info = c("value1", "value2", "value3")
   )
 
-  out <- hh_check_consent_skip(df, "consent", "sensitive_info")
+  out <- suppressWarnings(hh_check_consent_skip(df, "consent", "sensitive_info"))
 
   expect_true("sensitive_info" %in% names(out))
   expect_equal(out$sensitive_info, 2)
@@ -44,7 +44,7 @@ test_that("hh_check_consent_skip() treats empty strings as NA", {
     sensitive_info = c("value1", "")
   )
 
-  out <- hh_check_consent_skip(df, "consent", "sensitive_info")
+  out <- suppressWarnings(hh_check_consent_skip(df, "consent", "sensitive_info"))
 
   expect_equal(length(out), 0)
 })
@@ -55,7 +55,7 @@ test_that("hh_check_consent_skip() is case-insensitive for 'no'", {
     sensitive_info = c("value1", "value2", "value3")
   )
 
-  out <- hh_check_consent_skip(df, "consent", "sensitive_info")
+  out <- suppressWarnings(hh_check_consent_skip(df, "consent", "sensitive_info"))
 
   expect_equal(length(out$sensitive_info), 2)
 })
@@ -86,7 +86,7 @@ test_that("hh_check_consent_skip() returns empty list when all consent is yes", 
     sensitive_info = c("value1", "value2", "value3")
   )
 
-  out <- hh_check_consent_skip(df, "consent", "sensitive_info")
+  out <- suppressWarnings(hh_check_consent_skip(df, "consent", "sensitive_info"))
 
   expect_equal(length(out), 0)
 })

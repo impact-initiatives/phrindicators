@@ -6,12 +6,11 @@ test_that("add_sanitation_facility_shared() — numeric input works correctly", 
     num_households = c(1, 2, 3, 5)
   )
 
-  out <- add_sanitation_facility_shared(
+  out <- suppressMessages(add_sanitation_facility_shared(
     .dataset = df,
     num_households_col = "num_households",
     shared_threshold = 2
-  )
-
+  ))
   expect_equal(nrow(out), 4)
   expect_true("wash_sanitation_facility_shared_cat" %in% names(out))
   expect_equal(out$wash_sanitation_facility_shared_cat[1], "no")   # < 2
@@ -27,13 +26,12 @@ test_that("add_sanitation_facility_shared() — categorical input works correctl
     shared_response = c("shared", "not_shared", "shared")
   )
 
-  out <- add_sanitation_facility_shared(
+  out <- suppressMessages(add_sanitation_facility_shared(
     .dataset = df,
     shared_response_col = "shared_response",
     shared_values = c("shared"),
     not_shared_values = c("not_shared")
-  )
-
+  ))
   expect_equal(out$wash_sanitation_facility_shared_cat[1], "yes")
   expect_equal(out$wash_sanitation_facility_shared_cat[2], "no")
   expect_equal(out$wash_sanitation_facility_shared_cat[3], "yes")
@@ -47,15 +45,14 @@ test_that("add_sanitation_facility_shared() — numeric takes priority over cate
     shared_response = c("shared", "not_shared")
   )
 
-  out <- add_sanitation_facility_shared(
+  out <- suppressMessages(add_sanitation_facility_shared(
     .dataset = df,
     num_households_col = "num_households",
     shared_threshold = 2,
     shared_response_col = "shared_response",
     shared_values = c("shared"),
     not_shared_values = c("not_shared")
-  )
-
+  ))
   # Should use numeric values
   expect_equal(out$wash_sanitation_facility_shared_cat[1], "no")   # num=1
   expect_equal(out$wash_sanitation_facility_shared_cat[2], "yes")  # num=3
@@ -69,15 +66,14 @@ test_that("add_sanitation_facility_shared() — fallback to categorical when num
     shared_response = c(NA, "shared", "not_shared")
   )
 
-  out <- add_sanitation_facility_shared(
+  out <- suppressMessages(add_sanitation_facility_shared(
     .dataset = df,
     num_households_col = "num_households",
     shared_threshold = 2,
     shared_response_col = "shared_response",
     shared_values = c("shared"),
     not_shared_values = c("not_shared")
-  )
-
+  ))
   expect_equal(out$wash_sanitation_facility_shared_cat[1], "no")   # numeric
   expect_equal(out$wash_sanitation_facility_shared_cat[2], "yes")  # categorical fallback
   expect_equal(out$wash_sanitation_facility_shared_cat[3], "no")   # categorical fallback

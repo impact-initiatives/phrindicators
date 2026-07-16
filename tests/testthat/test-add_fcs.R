@@ -14,7 +14,7 @@ test_that("add_fcs() — valid dataset computes scores and categories", {
     fsl_fcs_oil     = sample(0:7, 30, replace = TRUE)
   )
 
-  out <- add_fcs(df_fcs_valid)
+  out <- suppressMessages(add_fcs(df_fcs_valid))
 
   expect_equal(nrow(out), 30)
   expect_true(all(!is.na(out$fsl_fcs_score)))
@@ -80,7 +80,7 @@ test_that("add_fcs() — works across 500 diverse FCS combinations", {
   # Mixed extreme: low staples, high protein
   df_fcs_expanded[5, ] <- list(2, 1, 1, 3, 4, 4, 0, 2)
 
-  out <- add_fcs(df_fcs_expanded)
+  out <- suppressMessages(add_fcs(df_fcs_expanded))
 
   # Basic structure checks
   expect_equal(nrow(out), 500)
@@ -122,7 +122,7 @@ test_that("add_fcs() — dataset with NA produces NA scores appropriately", {
     fsl_fcs_oil     = sample(c(0:7, NA), 30, replace = TRUE)
   )
 
-  out <- add_fcs(df_fcs_with_na)
+  out <- suppressMessages(add_fcs(df_fcs_with_na))
 
   expect_equal(nrow(out), 30)
   expect_true(any(is.na(out$fsl_fcs_score)))
@@ -171,7 +171,7 @@ test_that("add_fcs() — non-numeric values trigger phr_error", {
   df_nonnumeric$fsl_fcs_meat[18] <- "x"
   df_nonnumeric$fsl_fcs_cereal[20] <- "7a"
 
-  out <- add_fcs(df_nonnumeric)
+  out <- suppressMessages(add_fcs(df_nonnumeric))
 
   expect_warning(
     add_fcs(df_nonnumeric)
@@ -213,7 +213,7 @@ test_that("add_fcs() — alternative cutoffs applied correctly", {
     fsl_fcs_oil     = rep(1, 30)
   )
 
-  out <- add_fcs(df, cutoffs = "alternative")
+  out <- suppressMessages(add_fcs(df, cutoffs = "alternative"))
 
   expect_true(
     all(grepl("(Poor|Borderline|Acceptable)", out$fsl_fcs_cat))

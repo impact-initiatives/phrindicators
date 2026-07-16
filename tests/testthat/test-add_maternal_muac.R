@@ -7,12 +7,11 @@ test_that("add_maternal_muac() — valid dataset with cm values works", {
     muac = c(17, 25, 19, 26)
   )
 
-  out <- add_maternal_muac(
+  out <- suppressMessages(add_maternal_muac(
     .dataset = df,
     age_years_col = "age_years",
     muac_col = "muac"
-  )
-
+  ))
   expect_equal(nrow(out), 4)
   expect_true("woman_muac_cat" %in% names(out))
   expect_true("flag_woman_muac_extreme" %in% names(out))
@@ -27,14 +26,13 @@ test_that("add_maternal_muac() — categorization thresholds work correctly", {
     muac = c(20, 22, 24, 25)
   )
 
-  out <- add_maternal_muac(
+  out <- suppressMessages(add_maternal_muac(
     .dataset = df,
     age_years_col = "age_years",
     muac_col = "muac",
     severe_threshold_const = 21,
     moderate_threshold_const = 23
-  )
-
+  ))
   expect_equal(out$woman_muac_cat[1], "Severe")    # < 21
   expect_equal(out$woman_muac_cat[2], "Moderate")  # >= 21 & < 23
   expect_equal(out$woman_muac_cat[3], "Normal")    # >= 23
@@ -49,12 +47,11 @@ test_that("add_maternal_muac() — women outside 15-49 age range get NA", {
     muac = c(22, 22, 22, 22)
   )
 
-  out <- add_maternal_muac(
+  out <- suppressMessages(add_maternal_muac(
     .dataset = df,
     age_years_col = "age_years",
     muac_col = "muac"
-  )
-
+  ))
   expect_true(is.na(out$woman_muac_cat[1]))  # age 14
   expect_false(is.na(out$woman_muac_cat[2])) # age 20
   expect_true(is.na(out$woman_muac_cat[3]))  # age 50
@@ -69,12 +66,11 @@ test_that("add_maternal_muac() — detects cm and converts to mm", {
     muac = c(22, 24)  # in cm
   )
 
-  out <- add_maternal_muac(
+  out <- suppressMessages(add_maternal_muac(
     .dataset = df,
     age_years_col = "age_years",
     muac_col = "muac"
-  )
-
+  ))
   expect_true("woman_muac_mm" %in% names(out))
   expect_equal(out$woman_muac_mm[1], 220)
   expect_equal(out$woman_muac_mm[2], 240)
@@ -88,12 +84,11 @@ test_that("add_maternal_muac() — detects mm and converts to cm", {
     muac = c(220, 240)  # in mm
   )
 
-  out <- add_maternal_muac(
+  out <- suppressMessages(add_maternal_muac(
     .dataset = df,
     age_years_col = "age_years",
     muac_col = "muac"
-  )
-
+  ))
   expect_true("woman_muac_cm" %in% names(out))
   expect_equal(out$woman_muac_cm[1], 22)
   expect_equal(out$woman_muac_cm[2], 24)
@@ -107,12 +102,11 @@ test_that("add_maternal_muac() — flags extreme values correctly", {
     muac = c(9, 22, 70, 75)
   )
 
-  out <- add_maternal_muac(
+  out <- suppressMessages(add_maternal_muac(
     .dataset = df,
     age_years_col = "age_years",
     muac_col = "muac"
-  )
-
+  ))
   expect_equal(out$flag_woman_muac_extreme[1], 1)  # < 10
   expect_equal(out$flag_woman_muac_extreme[2], 0)  # normal
   expect_equal(out$flag_woman_muac_extreme[3], 1)  # >= 70
@@ -230,12 +224,11 @@ test_that("add_maternal_muac() handles mixed unit detection correctly", {
     muac = c(21, 24, 25)  # All < 100, should be detected as cm
   )
 
-  result_cm <- add_maternal_muac(
+  result_cm <- suppressMessages(add_maternal_muac(
     .dataset = df_cm,
     age_years_col = "age_years",
     muac_col = "muac"
-  )
-
+  ))
   # Should create woman_muac_mm column and use muac directly for classification
   expect_true("woman_muac_mm" %in% names(result_cm))
   expect_true("woman_muac_cat" %in% names(result_cm))

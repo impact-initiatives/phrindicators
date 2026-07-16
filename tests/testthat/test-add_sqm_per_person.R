@@ -11,7 +11,7 @@ test_that("add_sqm_per_person() — valid dataset creates all columns", {
     shelter_measured = c("yes", "yes")
   )
 
-  out <- add_sqm_per_person(
+  out <- suppressMessages(add_sqm_per_person(
     .dataset = df,
     shelter_shape_col = "shelter_shape",
     rectangle_val = "rectangle",
@@ -22,8 +22,7 @@ test_that("add_sqm_per_person() — valid dataset creates all columns", {
     household_size_col = "household_size",
     measure_confirm_col = "shelter_measured",
     measure_confirm_yes_val = "yes"
-  )
-
+  ))
   expect_equal(nrow(out), 2)
   expect_true("area_sqm" %in% names(out))
   expect_true("sqm_per_person" %in% names(out))
@@ -43,7 +42,7 @@ test_that("add_sqm_per_person() — rectangle area calculation is correct", {
     measured = "yes"
   )
 
-  out <- add_sqm_per_person(
+  out <- suppressMessages(add_sqm_per_person(
     .dataset = df,
     shelter_shape_col = "shape",
     rectangle_val = "rectangle",
@@ -54,8 +53,7 @@ test_that("add_sqm_per_person() — rectangle area calculation is correct", {
     household_size_col = "hh_size",
     measure_confirm_col = "measured",
     measure_confirm_yes_val = "yes"
-  )
-
+  ))
   # 10 * 5 = 50 sqm, 50 / 10 = 5 sqm per person
   expect_equal(out$area_sqm[1], 50)
   expect_equal(out$sqm_per_person[1], 5)
@@ -73,7 +71,7 @@ test_that("add_sqm_per_person() — circle area calculation is correct", {
     measured = "yes"
   )
 
-  out <- add_sqm_per_person(
+  out <- suppressMessages(add_sqm_per_person(
     .dataset = df,
     shelter_shape_col = "shape",
     rectangle_val = "rectangle",
@@ -84,8 +82,7 @@ test_that("add_sqm_per_person() — circle area calculation is correct", {
     household_size_col = "hh_size",
     measure_confirm_col = "measured",
     measure_confirm_yes_val = "yes"
-  )
-
+  ))
   # pi * (4/2)^2 = pi * 4 = ~12.6 sqm
   expect_true(out$area_sqm[1] > 12 & out$area_sqm[1] < 13)
   expect_true(out$sqm_per_person[1] > 2 & out$sqm_per_person[1] < 3)
@@ -103,7 +100,7 @@ test_that("add_sqm_per_person() — categorization works correctly", {
     measured = rep("yes", 4)
   )
 
-  out <- add_sqm_per_person(
+  out <- suppressMessages(add_sqm_per_person(
     .dataset = df,
     shelter_shape_col = "shape",
     rectangle_val = "rectangle",
@@ -114,8 +111,7 @@ test_that("add_sqm_per_person() — categorization works correctly", {
     household_size_col = "hh_size",
     measure_confirm_col = "measured",
     measure_confirm_yes_val = "yes"
-  )
-
+  ))
   # Row 1: 30/10 = 3 sqm per person (< 3.5)
   expect_true(grepl("<3.5", out$sqm_per_person_cat[1]))
   # Row 2: 60/10 = 6 sqm per person (>= 5.5)
@@ -134,7 +130,7 @@ test_that("add_sqm_per_person() — measurement not confirmed returns NA", {
     measured = "no"
   )
 
-  out <- add_sqm_per_person(
+  out <- suppressMessages(add_sqm_per_person(
     .dataset = df,
     shelter_shape_col = "shape",
     rectangle_val = "rectangle",
@@ -145,8 +141,7 @@ test_that("add_sqm_per_person() — measurement not confirmed returns NA", {
     household_size_col = "hh_size",
     measure_confirm_col = "measured",
     measure_confirm_yes_val = "yes"
-  )
-
+  ))
   expect_true(is.na(out$area_sqm[1]))
   expect_true(is.na(out$sqm_per_person[1]))
   expect_true(is.na(out$sqm_per_person_cat[1]))

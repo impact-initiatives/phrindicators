@@ -6,7 +6,7 @@ test_that("add_interview_time() computes duration correctly", {
     interview_end = as.POSIXct(c("2023-01-01 10:45:00", "2023-01-01 11:45:00"))
   )
 
-  out <- add_interview_time(df)
+  out <- suppressWarnings(add_interview_time(df))
 
   expect_equal(nrow(out), 2)
   expect_true("interview_duration_mins" %in% names(out))
@@ -19,7 +19,7 @@ test_that("add_interview_time() rounds to 2 decimal places", {
     interview_end = as.POSIXct("2023-01-01 10:02:33")
   )
 
-  out <- add_interview_time(df)
+  out <- suppressWarnings(add_interview_time(df))
 
   # 2 minutes 33 seconds = 2.55 minutes
   expect_equal(out$interview_duration_mins, 2.55)
@@ -31,7 +31,7 @@ test_that("add_interview_time() handles NA values correctly", {
     interview_end = as.POSIXct(c("2023-01-01 10:30:00", "2023-01-01 11:00:00"))
   )
 
-  out <- add_interview_time(df)
+  out <- suppressWarnings(add_interview_time(df))
 
   expect_equal(out$interview_duration_mins[1], 30)
   expect_true(is.na(out$interview_duration_mins[2]))
@@ -43,7 +43,7 @@ test_that("add_interview_time() handles custom column names", {
     end_time = as.POSIXct("2023-01-01 10:30:00")
   )
 
-  out <- add_interview_time(df, start_col = "start_time", end_col = "end_time", new_col = "duration")
+  out <- suppressWarnings(add_interview_time(df, start_col = "start_time", end_col = "end_time", new_col = "duration"))
 
   expect_true("duration" %in% names(out))
   expect_equal(out$duration, 30)
@@ -82,7 +82,7 @@ test_that("add_interview_time() handles character datetime input", {
     interview_end = "2023-01-01 10:45:00"
   )
 
-  out <- add_interview_time(df)
+  out <- suppressWarnings(add_interview_time(df))
 
   expect_equal(out$interview_duration_mins, 45)
 })

@@ -7,7 +7,7 @@ test_that("add_iycf_isssf() identifies solid or semi-solid food introduction at 
     iycf_7b = c("no", "yes", "no", "no", "no")
   )
 
-  out <- add_iycf_isssf(df)
+  out <- suppressMessages(add_iycf_isssf(df))
 
   expect_equal(out$iycf_isssf, c(1, 1, 0, NA, NA))
 })

@@ -8,13 +8,12 @@ test_that("add_liters_per_person_per_day() — valid dataset creates all columns
     wash_num_days_water_collection = c(1, 2, 3)
   )
 
-  out <- add_liters_per_person_per_day(
+  out <- suppressMessages(add_liters_per_person_per_day(
     .dataset = df,
     total_liters_col = "wash_total_liters",
     household_size_col = "hh_size",
     num_days_col = "wash_num_days_water_collection"
-  )
-
+  ))
   expect_equal(nrow(out), 3)
   expect_true("liters_pppd" %in% names(out))
   expect_true("liters_z_score" %in% names(out))
@@ -33,13 +32,12 @@ test_that("add_liters_per_person_per_day() — calculation is correct", {
     num_days = c(2)
   )
 
-  out <- add_liters_per_person_per_day(
+  out <- suppressMessages(add_liters_per_person_per_day(
     .dataset = df,
     total_liters_col = "total_liters",
     household_size_col = "hh_size",
     num_days_col = "num_days"
-  )
-
+  ))
   # 100 / (5 * 2) = 10 liters per person per day
   expect_equal(out$liters_pppd[1], 10)
 })
@@ -53,13 +51,12 @@ test_that("add_liters_per_person_per_day() — categorization works correctly", 
     num_days = c(1, 1, 1, 1)
   )
 
-  out <- add_liters_per_person_per_day(
+  out <- suppressMessages(add_liters_per_person_per_day(
     .dataset = df,
     total_liters_col = "total_liters",
     household_size_col = "hh_size",
     num_days_col = "num_days"
-  )
-
+  ))
   # Row 1: 10/5/1 = 2 LPPD (< 3)
   expect_true(grepl("Less than 3 LPPD", out$wash_lppd_cat[1]))
   # Row 2: 30/5/1 = 6 LPPD (3-7.5)

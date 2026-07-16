@@ -6,11 +6,10 @@ test_that("add_age_cat() — valid dataset creates age categories", {
     age_years = c(0, 3, 7, 10, 45, 87, 122)
   )
 
-  out <- add_age_cat(
+  out <- suppressMessages(add_age_cat(
     .dataset = df,
     age_years_col = "age_years"
-  )
-
+  ))
   expect_equal(nrow(out), 7)
   expect_true("age_cat" %in% names(out))
   expect_s3_class(out$age_cat, "factor")
@@ -28,11 +27,10 @@ test_that("add_age_cat() — NA values are handled correctly", {
     age_years = c(5, 10, NA, 25)
   )
 
-  out <- add_age_cat(
+  out <- suppressMessages(add_age_cat(
     .dataset = df,
     age_years_col = "age_years"
-  )
-
+  ))
   expect_equal(nrow(out), 4)
   expect_true(is.na(out$age_cat[3]))
   expect_false(is.na(out$age_cat[1]))

@@ -8,7 +8,7 @@ test_that("add_healthcare_access_one_hour() — numeric minutes works correctly"
     travel_range = c(NA, NA, NA)
   )
 
-  out <- add_healthcare_access_one_hour(
+  out <- suppressMessages(add_healthcare_access_one_hour(
     .dataset = df,
     health_care_travel_time_col = "travel_time_type",
     num_minutes_val = "num_minutes",
@@ -17,8 +17,7 @@ test_that("add_healthcare_access_one_hour() — numeric minutes works correctly"
     health_care_travel_time_range_col = "travel_range",
     less_than_one_hour_range_val = c("<1_hour"),
     one_hour_or_more_range_val = c(">=1_hour")
-  )
-
+  ))
   expect_equal(nrow(out), 3)
   expect_true("health_healthcare_access_one_hour" %in% names(out))
   expect_true(grepl("yes", out$health_healthcare_access_one_hour[1]))
@@ -35,7 +34,7 @@ test_that("add_healthcare_access_one_hour() — range-based classification works
     travel_range = c("<1_hour", ">=1_hour", "<1_hour")
   )
 
-  out <- add_healthcare_access_one_hour(
+  out <- suppressMessages(add_healthcare_access_one_hour(
     .dataset = df,
     health_care_travel_time_col = "travel_time_type",
     num_minutes_val = "num_minutes",
@@ -44,8 +43,7 @@ test_that("add_healthcare_access_one_hour() — range-based classification works
     health_care_travel_time_range_col = "travel_range",
     less_than_one_hour_range_val = c("<1_hour"),
     one_hour_or_more_range_val = c(">=1_hour")
-  )
-
+  ))
   expect_true(grepl("yes", out$health_healthcare_access_one_hour[1]))
   expect_true(grepl("no", out$health_healthcare_access_one_hour[2]))
   expect_true(grepl("yes", out$health_healthcare_access_one_hour[3]))
@@ -60,7 +58,7 @@ test_that("add_healthcare_access_one_hour() — numeric takes priority over rang
     travel_range = c(">=1_hour")  # conflicting but should be ignored
   )
 
-  out <- add_healthcare_access_one_hour(
+  out <- suppressMessages(add_healthcare_access_one_hour(
     .dataset = df,
     health_care_travel_time_col = "travel_time_type",
     num_minutes_val = "num_minutes",
@@ -69,8 +67,7 @@ test_that("add_healthcare_access_one_hour() — numeric takes priority over rang
     health_care_travel_time_range_col = "travel_range",
     less_than_one_hour_range_val = c("<1_hour"),
     one_hour_or_more_range_val = c(">=1_hour")
-  )
-
+  ))
   # Should use numeric (45 minutes) not range (>=1_hour)
   expect_true(grepl("yes", out$health_healthcare_access_one_hour[1]))
 })
@@ -84,7 +81,7 @@ test_that("add_healthcare_access_one_hour() — missing data returns dont_know",
     travel_range = c(NA)
   )
 
-  out <- add_healthcare_access_one_hour(
+  out <- suppressMessages(add_healthcare_access_one_hour(
     .dataset = df,
     health_care_travel_time_col = "travel_time_type",
     num_minutes_val = "num_minutes",
@@ -93,8 +90,7 @@ test_that("add_healthcare_access_one_hour() — missing data returns dont_know",
     health_care_travel_time_range_col = "travel_range",
     less_than_one_hour_range_val = c("<1_hour"),
     one_hour_or_more_range_val = c(">=1_hour")
-  )
-
+  ))
   expect_true(grepl("dont_know", out$health_healthcare_access_one_hour[1]))
 })
 
@@ -175,7 +171,7 @@ test_that("add_healthcare_access_one_hour() — boundary value at 60 minutes", {
     travel_range = c(NA, NA)
   )
 
-  out <- add_healthcare_access_one_hour(
+  out <- suppressMessages(add_healthcare_access_one_hour(
     .dataset = df,
     health_care_travel_time_col = "travel_time_type",
     num_minutes_val = "num_minutes",
@@ -184,8 +180,7 @@ test_that("add_healthcare_access_one_hour() — boundary value at 60 minutes", {
     health_care_travel_time_range_col = "travel_range",
     less_than_one_hour_range_val = c("<1_hour"),
     one_hour_or_more_range_val = c(">=1_hour")
-  )
-
+  ))
   expect_true(grepl("yes", out$health_healthcare_access_one_hour[1]))  # < 60
   expect_true(grepl("no", out$health_healthcare_access_one_hour[2]))   # >= 60
 })

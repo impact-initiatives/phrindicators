@@ -9,7 +9,7 @@ test_that("add_mfaz() — valid dataset creates MFAZ columns", {
     nut_edema_confirm = c("yes", NA, "no")
   )
 
-  out <- add_mfaz(
+  out <- suppressMessages(add_mfaz(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
@@ -18,8 +18,7 @@ test_that("add_mfaz() — valid dataset creates MFAZ columns", {
     male_sex_val = "m",
     female_sex_val = "f",
     edema_confirm_val = "yes"
-  )
-
+  ))
   expect_equal(nrow(out), 3)
   expect_true("mfaz" %in% names(out))
   expect_true("severe_mfaz" %in% names(out))
@@ -39,7 +38,7 @@ test_that("add_mfaz() — MFAZ thresholds work correctly", {
     nut_edema_confirm = c("no", "no", "no", "no")
   )
 
-  out <- add_mfaz(
+  out <- suppressMessages(add_mfaz(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
@@ -48,8 +47,7 @@ test_that("add_mfaz() — MFAZ thresholds work correctly", {
     male_sex_val = "m",
     female_sex_val = "f",
     edema_confirm_val = "yes"
-  )
-
+  ))
   # Check that mfaz column is created and contains numeric values
   expect_true(is.numeric(out$mfaz))
 
@@ -69,7 +67,7 @@ test_that("add_mfaz() — edema confirmation affects severe and global MFAZ", {
     nut_edema_confirm = c("yes", "no")
   )
 
-  out <- add_mfaz(
+  out <- suppressMessages(add_mfaz(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
@@ -78,8 +76,7 @@ test_that("add_mfaz() — edema confirmation affects severe and global MFAZ", {
     male_sex_val = "m",
     female_sex_val = "f",
     edema_confirm_val = "yes"
-  )
-
+  ))
   # With edema confirmed, should be classified as severe and global
   expect_equal(out$severe_mfaz[1], 1)
   expect_equal(out$global_mfaz[1], 1)
@@ -99,7 +96,7 @@ test_that("add_mfaz() — children outside 6-59 months get NA", {
     nut_edema_confirm = c("no", "no", "no")
   )
 
-  out <- add_mfaz(
+  out <- suppressMessages(add_mfaz(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
@@ -108,8 +105,7 @@ test_that("add_mfaz() — children outside 6-59 months get NA", {
     male_sex_val = "m",
     female_sex_val = "f",
     edema_confirm_val = "yes"
-  )
-
+  ))
   # Age 5 months (< 6) should be NA
   expect_true(is.na(out$severe_mfaz[1]))
   expect_true(is.na(out$moderate_mfaz[1]))
@@ -137,7 +133,7 @@ test_that("add_mfaz() — flag_sd_mfaz identifies extreme values", {
     nut_edema_confirm = rep("no", 5)
   )
 
-  out <- add_mfaz(
+  out <- suppressMessages(add_mfaz(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
@@ -146,8 +142,7 @@ test_that("add_mfaz() — flag_sd_mfaz identifies extreme values", {
     male_sex_val = "m",
     female_sex_val = "f",
     edema_confirm_val = "yes"
-  )
-
+  ))
   # flag_sd_mfaz should be 0 or 1
   expect_true(all(out$flag_sd_mfaz %in% c(0, 1)))
 
@@ -166,7 +161,7 @@ test_that("add_mfaz() — grouping parameter works", {
     cluster = c("A", "A", "B", "B")
   )
 
-  out <- add_mfaz(
+  out <- suppressMessages(add_mfaz(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
@@ -176,8 +171,7 @@ test_that("add_mfaz() — grouping parameter works", {
     female_sex_val = "f",
     edema_confirm_val = "yes",
     grouping = "cluster"
-  )
-
+  ))
   expect_equal(nrow(out), 4)
   expect_true("flag_sd_mfaz" %in% names(out))
   # Flags should be calculated within groups
@@ -194,7 +188,7 @@ test_that("add_mfaz() — temporary sex column is removed", {
     nut_edema_confirm = c("no", "no")
   )
 
-  out <- add_mfaz(
+  out <- suppressMessages(add_mfaz(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
@@ -203,8 +197,7 @@ test_that("add_mfaz() — temporary sex column is removed", {
     male_sex_val = "m",
     female_sex_val = "f",
     edema_confirm_val = "yes"
-  )
-
+  ))
   # Temporary column should not be in output
   expect_false("temp_sex_for_zscorer" %in% names(out))
 })
@@ -289,7 +282,7 @@ test_that("add_mfaz() — NA in mfaz results in NA for classifications", {
     nut_edema_confirm = c("no", "no")
   )
 
-  out <- add_mfaz(
+  out <- suppressMessages(add_mfaz(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
@@ -298,8 +291,7 @@ test_that("add_mfaz() — NA in mfaz results in NA for classifications", {
     male_sex_val = "m",
     female_sex_val = "f",
     edema_confirm_val = "yes"
-  )
-
+  ))
   # First row should have values
   expect_false(is.na(out$mfaz[1]))
 

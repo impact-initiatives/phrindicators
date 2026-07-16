@@ -5,11 +5,10 @@ test_that("add_standardized_age handles basic input with only age_years", {
     age_years = c(10, 20, 30)
   )
 
-  result <- add_standardized_age(
+  result <- suppressMessages(add_standardized_age(
     .dataset = df,
     age_years_col = "age_years"
-  )
-
+  ))
   expect_equal(result$calc_age_years, df$age_years)  # calc_age_years should match age_years_col
 
 })
@@ -21,12 +20,11 @@ test_that("add_standardized_age handles age_years with age_months_col", {
     age_months = c(120, 240, 360)
   )
 
-  result <- add_standardized_age(
+  result <- suppressMessages(add_standardized_age(
     .dataset = df,
     age_years_col = "age_years",
     age_months_col = "age_months"
-  )
-
+  ))
   expect_equal(result$calc_age_years, df$age_years)  # calc_age_years should match
   expect_equal(result$calc_age_months, df$age_months) # calc_age_months should match
   expect_true(all(abs(result$calc_age_days - df$age_months*30.44) < 1, na.rm = TRUE))
@@ -40,13 +38,12 @@ test_that("add_standardized_age computes calc_date_birth_final using exact birth
     date_birth_approx = as.Date(c(NA, "2003-06-01", "1993-01-01"))
   )
 
-  result <- add_standardized_age(
+  result <- suppressMessages(add_standardized_age(
     .dataset = df,
     age_years_col = "age_years",
     date_birth_exact_col = "date_birth_exact",
     date_birth_approx_col = "date_birth_approx"
-  )
-
+  ))
   expect_equal(result$calc_date_birth_final, as.Date(c("2013-01-01", "2003-01-01", "1993-01-01")))
 })
 
@@ -58,13 +55,12 @@ test_that("add_standardized_age computes calc_date_death_final using exact death
     date_death_approx = as.Date(c(NA, "2023-06-01", "2023-12-01"))
   )
 
-  result <- add_standardized_age(
+  result <- suppressMessages(add_standardized_age(
     .dataset = df,
     age_years_col = "age_years",
     date_death_exact_col = "date_death_exact",
     date_death_approx_col = "date_death_approx"
-  )
-
+  ))
   expect_equal(result$calc_date_death_final, as.Date(c("2023-01-01", "2023-06-01", "2023-01-01")))
 })
 
@@ -76,13 +72,12 @@ test_that("add_standardized_age calculates age correctly from survey date", {
     survey_date = as.Date("2023-01-01")
   )
 
-  result <- add_standardized_age(
+  result <- suppressMessages(add_standardized_age(
     .dataset = df,
     age_years_col = "age_years",
     date_birth_exact_col = "date_birth_exact",
     survey_date_col = "survey_date"
-  )
-
+  ))
   expect_equal(result$calc_age_years, c(10, 20, 30))
   expect_equal(result$calc_age_months, c(120, 240, 360))
   expect_equal(result$calc_age_days, c(3652, 7305, 10957))  # Approximate days in 10, 20, 30 years.
@@ -96,13 +91,12 @@ test_that("add_standardized_age does not calculate ages when no age_years values
     date_death_exact = as.Date(c("2023-01-01", "2023-01-01", "2023-01-01"))
   )
 
-  result <- add_standardized_age(
+  result <- suppressMessages(add_standardized_age(
     .dataset = df,
     age_years_col = "age_years",
     date_birth_exact_col = "date_birth_exact",
     date_death_exact_col = "date_death_exact"
-  )
-
+  ))
   expect_message(
     result <- add_standardized_age(
       .dataset = df,
@@ -136,11 +130,10 @@ test_that("add_standardized_age handles no date_of_birth or date_of_death inputs
     age_years = c(10, 15, 20)
   )
 
-  result <- add_standardized_age(
+  result <- suppressMessages(add_standardized_age(
     .dataset = df,
     age_years_col = "age_years"
-  )
-
+  ))
   expect_equal(result$calc_age_years, df$age_years)  # calc_age_years should match age_years_col
   # calc_date_birth_final and calc_date_death_final should not be created if no date columns provided
   expect_false("calc_date_birth_final" %in% names(result))
@@ -220,13 +213,12 @@ test_that("add_standardized_age handles non-existent date columns gracefully", {
 
   # Test with columns that don't exist in the dataset
   # This should not error even though columns don't exist
-  result <- add_standardized_age(
+  result <- suppressMessages(add_standardized_age(
     .dataset = df,
     age_years_col = "age_years",
     date_birth_exact_col = "nonexistent_col",
     date_death_exact_col = "another_nonexistent_col"
-  )
-
+  ))
   # The function should not create calc columns when columns don't exist
   expect_false("calc_date_birth_final" %in% names(result))
   expect_false("calc_date_death_final" %in% names(result))
@@ -241,14 +233,13 @@ test_that("add_standardized_age uses only existing date columns in coalesce", {
   )
 
   # Pass both existing and non-existing columns
-  result <- add_standardized_age(
+  result <- suppressMessages(add_standardized_age(
     .dataset = df,
     age_years_col = "age_years",
     date_birth_exact_col = "nonexistent_exact",  # doesn't exist
     date_birth_approx_col = "date_birth_approx", # exists
     date_birth_final_col = "nonexistent_final"   # doesn't exist
-  )
-
+  ))
   # Should use the only existing column (date_birth_approx)
   expect_equal(result$calc_date_birth_final, as.Date(c("2013-01-01", "2003-01-01", "1993-01-01")))
 })
@@ -265,15 +256,14 @@ test_that("add_standardized_age — calc_date_birth_final is NA when all birth d
     date_death_approx = as.Date(c(NA, "2023-02-15", NA))
   )
 
-  result <- add_standardized_age(
+  result <- suppressMessages(add_standardized_age(
     .dataset = df,
     age_years_col = "age_years",
     date_birth_exact_col = "dob_exact",
     date_birth_approx_col = "dob_approx",
     date_death_exact_col = "date_death_exact",
     date_death_approx_col = "date_death_approx"
-  )
-
+  ))
   # calc_date_birth_final should be NA for all rows — death dates must not bleed into birth dates
   expect_true("calc_date_birth_final" %in% names(result))
   expect_true(all(is.na(result$calc_date_birth_final)))
@@ -289,13 +279,12 @@ test_that("add_standardized_age — calc_date_death_final uses exact death date 
     date_death_approx = as.Date(c(NA, "2023-02-15", "2023-03-20"))
   )
 
-  result <- add_standardized_age(
+  result <- suppressMessages(add_standardized_age(
     .dataset = df,
     age_years_col = "age_years",
     date_death_exact_col = "date_death_exact",
     date_death_approx_col = "date_death_approx"
-  )
-
+  ))
   # Row 1: exact date available — use it
   expect_equal(result$calc_date_death_final[1], as.Date("2023-01-01"))
   # Row 2: only approx available — use approx

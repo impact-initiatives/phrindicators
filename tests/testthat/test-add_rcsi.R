@@ -11,7 +11,7 @@ test_that("add_rcsi() — normal functionality works", {
     fsl_rcsi_mealnb      = sample(0:7, 30, TRUE)
   )
 
-  out <- add_rcsi(df)
+  out <- suppressMessages(add_rcsi(df))
 
   # Column creation
   expect_true("fsl_rcsi_score" %in% names(out))
@@ -122,7 +122,7 @@ test_that("add_rcsi() — category assignment works correctly", {
     fsl_rcsi_mealnb      = c(0, 1, 7)
   )
 
-  out <- add_rcsi(df)
+  out <- suppressMessages(add_rcsi(df))
 
   # Extract character labels
   labs <- as.character(out$fsl_rcsi_cat)
