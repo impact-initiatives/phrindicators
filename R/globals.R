@@ -153,8 +153,8 @@ utils::globalVariables(c(
   ":=",
   "all_of",
   "c_across",
-  "sd"
-  "cluster_size"
+  "sd",
+  "cluster_size",
 
   # add_foregone_care
   "health_foregone_care_cat",
