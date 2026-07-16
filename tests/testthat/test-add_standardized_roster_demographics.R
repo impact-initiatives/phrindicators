@@ -8,14 +8,13 @@ test_that("add_standardized_roster_demographics creates canonical columns", {
     sex = c("M", "F", "M", "F", "F", "F")
   )
 
-  result <- add_standardized_roster_demographics(
+  result <- suppressMessages(add_standardized_roster_demographics(
     .dataset = df,
     age_years_col = "calc_age_years",
     sex_col = "sex",
     male_val = "M",
     female_val = "F"
-  )
-
+  ))
   # Check all canonical columns exist
   expect_true("roster_child_under2" %in% names(result))
   expect_true("roster_child_under5" %in% names(result))
@@ -75,14 +74,13 @@ test_that("add_standardized_roster_demographics handles NA values", {
     sex = c("M", "F", NA, "F")
   )
 
-  result <- add_standardized_roster_demographics(
+  result <- suppressMessages(add_standardized_roster_demographics(
     .dataset = df,
     age_years_col = "calc_age_years",
     sex_col = "sex",
     male_val = "M",
     female_val = "F"
-  )
-
+  ))
   # NA age should result in 0 for age-based indicators
   expect_equal(result$roster_child_under2, c(1, 0, 0, 0))
   expect_equal(result$roster_child_under5, c(1, 0, 0, 0))
@@ -104,11 +102,10 @@ test_that("add_standardized_roster_demographics roster_2to5 boundary values", {
     calc_age_years = c(1.9, 2, 4.9, 5, 6)
   )
 
-  result <- add_standardized_roster_demographics(
+  result <- suppressMessages(add_standardized_roster_demographics(
     .dataset = df,
     age_years_col = "calc_age_years"
-  )
-
+  ))
   expect_equal(result$roster_2to5, c(0, 1, 1, 0, 0))
   expect_equal(result$roster_5plus, c(0, 0, 0, 1, 1))
 })
@@ -121,11 +118,10 @@ test_that("add_standardized_roster_demographics roster_5_10 boundary values", {
     calc_age_years = c(4.9, 5, 7, 9.9, 10, 25)
   )
 
-  result <- add_standardized_roster_demographics(
+  result <- suppressMessages(add_standardized_roster_demographics(
     .dataset = df,
     age_years_col = "calc_age_years"
-  )
-
+  ))
   expect_equal(result$roster_5_10, c(0, 1, 1, 1, NA, NA))
 })
 

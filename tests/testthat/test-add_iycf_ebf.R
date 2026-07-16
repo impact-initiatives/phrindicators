@@ -7,7 +7,7 @@ test_that("add_iycf_ebf() requires breastfeeding with no other foods or liquids 
     iycf_6a = c("no", "yes", "no", "no")
   )
 
-  out <- add_iycf_ebf(df)
+  out <- suppressMessages(add_iycf_ebf(df))
 
   expect_equal(out$iycf_ebf, c(1, 0, 0, NA))
 })

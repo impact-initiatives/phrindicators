@@ -6,13 +6,12 @@ test_that("add_any_water_treatment() — valid dataset creates treatment indicat
     water_treatment = c("boiling", "none", "chlorine", "filter")
   )
 
-  out <- add_any_water_treatment(
+  out <- suppressMessages(add_any_water_treatment(
     .dataset = df,
     water_treatment_col = "water_treatment",
     yes_values = c("boiling", "chlorine", "filter"),
     no_values = c("none")
-  )
-
+  ))
   expect_equal(nrow(out), 4)
   expect_true("wash_any_water_treatment" %in% names(out))
 })
@@ -24,13 +23,12 @@ test_that("add_any_water_treatment() — categorization logic works", {
     treatment = c("boiling", "chlorine", "none", "filter", "other")
   )
 
-  out <- add_any_water_treatment(
+  out <- suppressMessages(add_any_water_treatment(
     .dataset = df,
     water_treatment_col = "treatment",
     yes_values = c("boiling", "chlorine", "filter"),
     no_values = c("none")
-  )
-
+  ))
   expect_equal(out$wash_any_water_treatment[1], "yes")
   expect_equal(out$wash_any_water_treatment[2], "yes")
   expect_equal(out$wash_any_water_treatment[3], "no")
@@ -45,13 +43,12 @@ test_that("add_any_water_treatment() — NA and unknown values return NA", {
     treatment = c(NA, "dnk", "pnta")
   )
 
-  out <- add_any_water_treatment(
+  out <- suppressMessages(add_any_water_treatment(
     .dataset = df,
     water_treatment_col = "treatment",
     yes_values = c("boiling"),
     no_values = c("none")
-  )
-
+  ))
   expect_true(all(is.na(out$wash_any_water_treatment)))
 })
 

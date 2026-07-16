@@ -10,7 +10,7 @@ test_that("loop_count_check() returns ok=TRUE when all counts match", {
     parent_uuid = c("A", "A", "B", "C", "C", "C")
   )
 
-  out <- loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count")
+  out <- suppressWarnings(loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count"))
 
   expect_true(out$ok)
   expect_equal(length(out$mismatches), 0)
@@ -26,7 +26,7 @@ test_that("loop_count_check() detects count mismatches", {
     parent_uuid = c("A", "A", "A")  # 3 records instead of 2
   )
 
-  out <- loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count")
+  out <- suppressWarnings(loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count"))
 
   expect_false(out$ok)
   expect_true("A" %in% out$mismatches)
@@ -42,7 +42,7 @@ test_that("loop_count_check() detects orphan loop records", {
     parent_uuid = c("A", "C")  # C is not in parent
   )
 
-  out <- loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count")
+  out <- suppressWarnings(loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count"))
 
   expect_false(out$ok)
   expect_true("C" %in% out$mismatches)
@@ -58,7 +58,7 @@ test_that("loop_count_check() handles zero counts", {
     parent_uuid = c("A", "C", "C")
   )
 
-  out <- loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count")
+  out <- suppressWarnings(loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count"))
 
   expect_true(out$ok)
 })
@@ -73,7 +73,7 @@ test_that("loop_count_check() handles NA expected counts with soft_missing_paren
     parent_uuid = c("B")
   )
 
-  out <- loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count", soft_missing_parent = TRUE)
+  out <- suppressWarnings(loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count", soft_missing_parent = TRUE))
 
   expect_true(out$ok)
 })
@@ -88,7 +88,7 @@ test_that("loop_count_check() flags NA expected counts with soft_missing_parent=
     parent_uuid = c("B")
   )
 
-  out <- loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count", soft_missing_parent = FALSE)
+  out <- suppressWarnings(loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count", soft_missing_parent = FALSE))
 
   expect_false(out$ok)
   expect_true("A" %in% out$mismatches)
@@ -125,7 +125,7 @@ test_that("loop_count_check() returns detailed comparison", {
     parent_uuid = c("A", "A", "B")
   )
 
-  out <- loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count")
+  out <- suppressWarnings(loop_count_check(parent_df, child_df, "uuid", "parent_uuid", "count"))
 
   expect_true("uuid" %in% names(out$details))
   expect_true("expected" %in% names(out$details))

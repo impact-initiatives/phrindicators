@@ -6,7 +6,7 @@ test_that("add_iycf_ebf2d() treats code 2 as exclusive breastfeeding in the firs
     iycf_3 = c(2, 1, 2, 2, 2)
   )
 
-  out <- add_iycf_ebf2d(df)
+  out <- suppressMessages(add_iycf_ebf2d(df))
 
   expect_equal(out$iycf_ebf2d, c(1, 0, 1, NA, NA))
 })

@@ -6,11 +6,10 @@ test_that("add_drinking_water_source_cat() — valid dataset creates water sourc
     wash_water_source = c("piped_dwelling", "unprotected_well", "surface_water", "dnk")
   )
 
-  out <- add_drinking_water_source_cat(
+  out <- suppressMessages(add_drinking_water_source_cat(
     .dataset = df,
     drinking_water_source_col = "wash_water_source"
-  )
-
+  ))
   expect_equal(nrow(out), 4)
   expect_true("wash_drinking_water_source_cat" %in% names(out))
 })
@@ -22,11 +21,10 @@ test_that("add_drinking_water_source_cat() — categorization works correctly", 
     source = c("piped_dwelling", "unprotected_well", "surface_water", "other")
   )
 
-  out <- add_drinking_water_source_cat(
+  out <- suppressMessages(add_drinking_water_source_cat(
     .dataset = df,
     drinking_water_source_col = "source"
-  )
-
+  ))
   expect_true(grepl("Improved", out$wash_drinking_water_source_cat[1]))
   expect_true(grepl("Unimproved", out$wash_drinking_water_source_cat[2]))
   expect_true(grepl("Surface Water", out$wash_drinking_water_source_cat[3]))

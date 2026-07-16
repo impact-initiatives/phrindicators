@@ -17,7 +17,7 @@ test_that("add_lcsi() — standard use case works", {
     fsl_lcsi_emergency3 = sample(c("yes","no_had_no_need","no_exhausted","not_applicable"), 30, TRUE)
   )
 
-  out <- add_lcsi(df)
+  out <- suppressMessages(add_lcsi(df))
 
   expect_equal(nrow(out), 30)
 
@@ -105,7 +105,7 @@ test_that("add_lcsi() — NA in any input forces NA in all derived fields", {
     fsl_lcsi_emergency3 = "no_had_no_need"
   )
 
-  out <- add_lcsi(df)
+  out <- suppressMessages(add_lcsi(df))
 
   # row with NA should have all derived fields NA
   derived_cols <- c(
@@ -140,7 +140,7 @@ test_that("add_lcsi() — correct category logic for controlled inputs", {
     fsl_lcsi_emergency3 = "no_had_no_need"
   )
 
-  out <- add_lcsi(df)
+  out <- suppressMessages(add_lcsi(df))
 
   expect_true(grepl("Stress",    out$fsl_lcsi_cat[1]))
   expect_true(grepl("Crisis",    out$fsl_lcsi_cat[2]))
@@ -166,7 +166,7 @@ test_that("add_lcsi() — exhausted values correctly classify categories", {
     fsl_lcsi_emergency3 = "no_had_no_need"
   )
 
-  out <- add_lcsi(df)
+  out <- suppressMessages(add_lcsi(df))
 
   expect_true(grepl("Stress", out$fsl_lcsi_cat))
   expect_true(grepl("Stress", out$fsl_lcsi_cat_exhaust))

@@ -11,7 +11,7 @@ test_that("add_hhs() — normal functionality works", {
     fsl_hhs_alldaynight_freq= sample(c("rarely","sometimes","often"), 30, TRUE)
   )
 
-  out <- add_hhs(df)
+  out <- suppressMessages(add_hhs(df))
 
   expect_s3_class(out, "data.frame")
   expect_true("fsl_hhs_score" %in% names(out))
@@ -57,7 +57,7 @@ test_that("add_hhs() — edge case of all zero indicators", {
     fsl_hhs_alldaynight_freq= rep("rarely", 10)
   )
 
-  out <- add_hhs(df)
+  out <- suppressMessages(add_hhs(df))
 
   # Score must be 0
   expect_equal(unique(out$fsl_hhs_score), 0)
@@ -84,7 +84,7 @@ test_that("add_hhs() — edge case of max severity", {
     fsl_hhs_alldaynight_freq= rep("often", 10)
   )
 
-  out <- add_hhs(df)
+  out <- suppressMessages(add_hhs(df))
 
   expect_equal(unique(out$fsl_hhs_score), 6)
   expect_true(
@@ -183,7 +183,7 @@ test_that("add_hhs() — mixed combinations produce valid output", {
     fsl_hhs_alldaynight_freq= sample(c("rarely","sometimes","often"), 25, TRUE)
   )
 
-  out <- add_hhs(df)
+  out <- suppressMessages(add_hhs(df))
 
   expect_equal(nrow(out), 25)
   expect_true(all(out$fsl_hhs_score >= 0 & out$fsl_hhs_score <= 6))

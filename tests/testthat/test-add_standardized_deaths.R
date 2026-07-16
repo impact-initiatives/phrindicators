@@ -11,7 +11,7 @@ test_that("add_standardized_deaths() — valid dataset creates death columns", {
     location_of_death = c("home", "road", "last residence")
   )
 
-  out <- add_standardized_deaths(
+  out <- suppressMessages(add_standardized_deaths(
     .dataset = df,
     age_years_col = "age_years",
     sex_col = "sex",
@@ -27,8 +27,7 @@ test_that("add_standardized_deaths() — valid dataset creates death columns", {
     current_location_residence_vals = c("home"),
     migration_vals = c("road"),
     last_location_residence_vals = c("last residence")
-  )
-
+  ))
   expect_equal(nrow(out), 3)
   expect_true("death" %in% names(out))
   expect_true("death_under5" %in% names(out))
@@ -46,7 +45,7 @@ test_that("add_standardized_deaths() — death column logic works correctly", {
     recall_date = as.Date(c("2022-01-01", "2023-02-15"))
   )
 
-  out <- add_standardized_deaths(
+  out <- suppressMessages(add_standardized_deaths(
     .dataset = df,
     age_years_col = "age_years",
     sex_col = "sex",
@@ -54,8 +53,7 @@ test_that("add_standardized_deaths() — death column logic works correctly", {
     female_val = "F",
     date_of_death_col = "date_of_death",
     recall_date_col = "recall_date"
-  )
-
+  ))
   expect_equal(out$death[1], 1)  # death after recall
   expect_equal(out$death[2], 0)  # death before recall
 })
@@ -70,7 +68,7 @@ test_that("add_standardized_deaths() — age-based categorization works", {
     recall_date = as.Date(c("2022-01-01", "2022-01-01", "2022-01-01"))
   )
 
-  out <- add_standardized_deaths(
+  out <- suppressMessages(add_standardized_deaths(
     .dataset = df,
     age_years_col = "age_years",
     sex_col = "sex",
@@ -78,8 +76,7 @@ test_that("add_standardized_deaths() — age-based categorization works", {
     female_val = "F",
     date_of_death_col = "date_of_death",
     recall_date_col = "recall_date"
-  )
-
+  ))
   expect_equal(out$death_under5[1], 1)  # age < 5
   expect_equal(out$death_under5[2], 0)  # age >= 5
   expect_equal(out$death_under5[3], 0)  # age >= 5
@@ -95,7 +92,7 @@ test_that("add_standardized_deaths() — sex-based categorization works", {
     recall_date = as.Date(c("2022-01-01", "2022-01-01"))
   )
 
-  out <- add_standardized_deaths(
+  out <- suppressMessages(add_standardized_deaths(
     .dataset = df,
     age_years_col = "age_years",
     sex_col = "sex",
@@ -103,8 +100,7 @@ test_that("add_standardized_deaths() — sex-based categorization works", {
     female_val = "F",
     date_of_death_col = "date_of_death",
     recall_date_col = "recall_date"
-  )
-
+  ))
   expect_equal(out$death_male[1], 1)
   expect_equal(out$death_male[2], 0)
   expect_equal(out$death_female[1], 0)
@@ -122,7 +118,7 @@ test_that("add_standardized_deaths() — cause of death categorization works", {
     cause_of_death = c("malaria", "trauma", "old age")
   )
 
-  out <- add_standardized_deaths(
+  out <- suppressMessages(add_standardized_deaths(
     .dataset = df,
     age_years_col = "age_years",
     sex_col = "sex",
@@ -134,8 +130,7 @@ test_that("add_standardized_deaths() — cause of death categorization works", {
     non_trauma_vals = c("malaria", "diarrhea"),
     trauma_vals = c("trauma", "accident"),
     other_vals = c("old age", "unknown")
-  )
-
+  ))
   expect_equal(out$death_non_trauma[1], 1)
   expect_equal(out$death_trauma[2], 1)
   expect_equal(out$death_other[3], 1)
@@ -152,7 +147,7 @@ test_that("add_standardized_deaths() — location categorization works", {
     location_of_death = c("home", "road", "last residence")
   )
 
-  out <- add_standardized_deaths(
+  out <- suppressMessages(add_standardized_deaths(
     .dataset = df,
     age_years_col = "age_years",
     sex_col = "sex",
@@ -164,8 +159,7 @@ test_that("add_standardized_deaths() — location categorization works", {
     current_location_residence_vals = c("home"),
     migration_vals = c("road"),
     last_location_residence_vals = c("last residence")
-  )
-
+  ))
   expect_equal(out$death_current_location[1], 1)
   expect_equal(out$death_migration[2], 1)
   expect_equal(out$death_last_location[3], 1)
@@ -262,12 +256,11 @@ test_that("add_standardized_deaths() — works with only date columns provided",
     recall_date = as.Date(c("2022-01-01", "2024-01-01", "2022-12-31"))
   )
 
-  out <- add_standardized_deaths(
+  out <- suppressMessages(add_standardized_deaths(
     .dataset = df,
     date_of_death_col = "date_of_death",
     recall_date_col = "recall_date"
-  )
-
+  ))
   expect_equal(nrow(out), 3)
   expect_true("death" %in% names(out))
   expect_equal(out$death[1], 1)  # death after recall
@@ -284,13 +277,12 @@ test_that("add_standardized_deaths() — death_birth column is created when date
     date_of_birth = as.Date(c("2022-12-01", "2023-02-01", "2023-01-01"))
   )
 
-  out <- add_standardized_deaths(
+  out <- suppressMessages(add_standardized_deaths(
     .dataset = df,
     date_of_death_col = "date_of_death",
     recall_date_col = "recall_date",
     date_of_birth_col = "date_of_birth"
-  )
-
+  ))
   expect_true("death_birth" %in% names(out))
   expect_equal(out$death_birth[1], 0)  # born before recall (2022-12-01 <= 2023-01-01)
   expect_equal(out$death_birth[2], 1)  # born after recall (2023-02-01 > 2023-01-01)
@@ -306,13 +298,12 @@ test_that("add_standardized_deaths() — death_birth handles NA values correctly
     date_of_birth = as.Date(c("2023-02-01", NA, "2023-02-01"))
   )
 
-  out <- add_standardized_deaths(
+  out <- suppressMessages(add_standardized_deaths(
     .dataset = df,
     date_of_death_col = "date_of_death",
     recall_date_col = "recall_date",
     date_of_birth_col = "date_of_birth"
-  )
-
+  ))
   expect_true("death_birth" %in% names(out))
   expect_equal(out$death_birth[1], 1)  # born after recall
   expect_true(is.na(out$death_birth[2]))  # NA date_of_birth
@@ -327,12 +318,11 @@ test_that("add_standardized_deaths() — death_birth is not created when date_of
     recall_date = as.Date(c("2023-01-01", "2023-01-01"))
   )
 
-  out <- add_standardized_deaths(
+  out <- suppressMessages(add_standardized_deaths(
     .dataset = df,
     date_of_death_col = "date_of_death",
     recall_date_col = "recall_date"
-  )
-
+  ))
   # death_birth should not be in the dataset when date_of_birth_col is not provided
   # But it will be in columns_to_create and may be present with all NA
   # Let's check if it's meaningful (not all NA)

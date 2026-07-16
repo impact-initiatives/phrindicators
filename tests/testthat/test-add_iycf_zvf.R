@@ -10,7 +10,7 @@ test_that("add_iycf_zvf() identifies zero fruit and vegetable consumption", {
     iycf_7h = c("no", "no", "no", "no")
   )
 
-  out <- add_iycf_zvf(df)
+  out <- suppressMessages(add_iycf_zvf(df))
 
   expect_equal(out$iycf_zvf, c(1, 0, NA, NA))
 })

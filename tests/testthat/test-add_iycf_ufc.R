@@ -7,7 +7,7 @@ test_that("add_iycf_ufc() flags unhealthy food consumption for children 6-23 mon
     iycf_7q = c("no", "yes", "no", "no")
   )
 
-  out <- add_iycf_ufc(df)
+  out <- suppressMessages(add_iycf_ufc(df))
 
   expect_equal(out$iycf_ufc, c(1, 1, 0, NA))
 })
@@ -15,7 +15,7 @@ test_that("add_iycf_ufc() flags unhealthy food consumption for children 6-23 mon
 test_that("add_iycf_ufc() returns NA when unhealthy food inputs are missing", {
   df <- make_iycf_data(age_months = 10, iycf_7p = NA, iycf_7q = "no")
 
-  out <- add_iycf_ufc(df)
+  out <- suppressMessages(add_iycf_ufc(df))
 
   expect_true(is.na(out$iycf_ufc))
 })

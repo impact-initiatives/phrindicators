@@ -12,7 +12,7 @@ test_that("add_health_barriers() — valid dataset creates barrier indicators", 
     )
   )
 
-  out <- add_health_barriers(
+  out <- suppressMessages(add_health_barriers(
     .dataset = df,
     health_barriers_col = "health_barriers",
     physical_access_barriers_val = c("long distance", "transport issues"),
@@ -24,8 +24,7 @@ test_that("add_health_barriers() — valid dataset creates barrier indicators", 
     other_barriers_val = c("other"),
     no_barriers_val = c("no barriers"),
     did_not_need_val = c("did not need")
-  )
-
+  ))
   expect_equal(nrow(out), 5)
   expect_true("health_barrier_any.physical" %in% names(out))
   expect_true("health_barrier_any.financial" %in% names(out))
@@ -48,7 +47,7 @@ test_that("add_health_barriers() — barrier detection works correctly", {
     )
   )
 
-  out <- add_health_barriers(
+  out <- suppressMessages(add_health_barriers(
     .dataset = df,
     health_barriers_col = "barriers",
     physical_access_barriers_val = c("long distance"),
@@ -60,8 +59,7 @@ test_that("add_health_barriers() — barrier detection works correctly", {
     other_barriers_val = c("other"),
     no_barriers_val = c("no barriers"),
     did_not_need_val = c("did not need")
-  )
-
+  ))
   expect_equal(out$health_barrier_any.physical[1], 1)
   expect_equal(out$health_barrier_any.financial[2], 1)
   expect_equal(out$health_barrier_any.safety[3], 1)
@@ -75,7 +73,7 @@ test_that("add_health_barriers() — multiple barriers detected in one response"
     barriers = c("long distance,cost,unsafe facilities")
   )
 
-  out <- add_health_barriers(
+  out <- suppressMessages(add_health_barriers(
     .dataset = df,
     health_barriers_col = "barriers",
     physical_access_barriers_val = c("long distance"),
@@ -87,8 +85,7 @@ test_that("add_health_barriers() — multiple barriers detected in one response"
     other_barriers_val = c("other"),
     no_barriers_val = c("no barriers"),
     did_not_need_val = c("did not need")
-  )
-
+  ))
   expect_equal(out$health_barrier_any.physical[1], 1)
   expect_equal(out$health_barrier_any.financial[1], 1)
   expect_equal(out$health_barrier_any.safety[1], 1)

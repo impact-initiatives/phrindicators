@@ -6,11 +6,10 @@ test_that("add_lppd_correction_factor() — valid dataset creates correction fac
     num_days_collected = c(0, 3, 7)
   )
 
-  out <- add_lppd_correction_factor(
+  out <- suppressMessages(add_lppd_correction_factor(
     .dataset = df,
     num_days_collect_col = "num_days_collected"
-  )
-
+  ))
   expect_equal(nrow(out), 3)
   expect_true("lppd_correction_factor" %in% names(out))
 })
@@ -22,11 +21,10 @@ test_that("add_lppd_correction_factor() — calculation is correct", {
     num_days = c(0, 7, 3, 5)
   )
 
-  out <- add_lppd_correction_factor(
+  out <- suppressMessages(add_lppd_correction_factor(
     .dataset = df,
     num_days_collect_col = "num_days"
-  )
-
+  ))
   # 0/7 = 0, 7/7 = 1, 3/7 = 0.429, 5/7 = 0.714
   expect_equal(out$lppd_correction_factor[1], 0)
   expect_equal(out$lppd_correction_factor[2], 1)
@@ -41,11 +39,10 @@ test_that("add_lppd_correction_factor() — values rounded to 3 decimal places",
     num_days = c(1, 2, 3, 4, 5, 6)
   )
 
-  out <- add_lppd_correction_factor(
+  out <- suppressMessages(add_lppd_correction_factor(
     .dataset = df,
     num_days_collect_col = "num_days"
-  )
-
+  ))
   # Check all values are rounded to 3 decimal places
   for (i in 1:6) {
     expect_equal(
@@ -62,11 +59,10 @@ test_that("add_lppd_correction_factor() — values outside 0-7 return NA", {
     num_days = c(-1, 0, 3, 7, 8, 10)
   )
 
-  out <- add_lppd_correction_factor(
+  out <- suppressMessages(add_lppd_correction_factor(
     .dataset = df,
     num_days_collect_col = "num_days"
-  )
-
+  ))
   expect_true(is.na(out$lppd_correction_factor[1]))   # -1
   expect_false(is.na(out$lppd_correction_factor[2]))  # 0
   expect_false(is.na(out$lppd_correction_factor[3]))  # 3
@@ -82,11 +78,10 @@ test_that("add_lppd_correction_factor() — NA values remain NA", {
     num_days = c(3, NA, 5)
   )
 
-  out <- add_lppd_correction_factor(
+  out <- suppressMessages(add_lppd_correction_factor(
     .dataset = df,
     num_days_collect_col = "num_days"
-  )
-
+  ))
   expect_false(is.na(out$lppd_correction_factor[1]))
   expect_true(is.na(out$lppd_correction_factor[2]))
   expect_false(is.na(out$lppd_correction_factor[3]))

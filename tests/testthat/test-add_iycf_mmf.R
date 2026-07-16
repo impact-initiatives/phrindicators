@@ -10,7 +10,7 @@ test_that("add_iycf_mmf() applies meal-frequency thresholds by age and breastfee
     iycf_8 = c(2, 1, 3, 1, 0, 2)
   )
 
-  out <- add_iycf_mmf(df)
+  out <- suppressMessages(add_iycf_mmf(df))
 
   expect_equal(out$iycf_mmf, c(1, 0, 1, 1, 0, NA))
 })
@@ -18,7 +18,7 @@ test_that("add_iycf_mmf() applies meal-frequency thresholds by age and breastfee
 test_that("add_iycf_mmf() returns NA when numeric feeding counts are missing", {
   df <- make_iycf_data(age_months = 12, iycf_4 = "no", iycf_6b_num = NA, iycf_8 = 2)
 
-  out <- add_iycf_mmf(df)
+  out <- suppressMessages(add_iycf_mmf(df))
 
   expect_true(is.na(out$iycf_mmf))
 })

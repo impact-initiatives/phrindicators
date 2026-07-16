@@ -8,7 +8,7 @@ test_that("add_iycf_mixmf() identifies mixed milk feeding among breastfed infant
     iycf_6c = c("no", "no", "no", "no", "no")
   )
 
-  out <- add_iycf_mixmf(df)
+  out <- suppressMessages(add_iycf_mixmf(df))
 
   expect_equal(out$iycf_mixmf, c(1, 0, 0, NA, NA))
 })

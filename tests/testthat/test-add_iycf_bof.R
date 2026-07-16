@@ -6,7 +6,7 @@ test_that("add_iycf_bof() flags bottle feeding for children under 24 months", {
     iycf_5 = c("yes", "no", "yes", "yes", "yes")
   )
 
-  out <- add_iycf_bof(df)
+  out <- suppressMessages(add_iycf_bof(df))
 
   expect_equal(out$iycf_bof, c(1, 0, 1, NA, NA))
 })

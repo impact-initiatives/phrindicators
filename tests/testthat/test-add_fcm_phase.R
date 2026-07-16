@@ -6,7 +6,7 @@ test_that("add_fcm_phase() — basic FCS + rCSI mapping works", {
     fsl_rcsi_cat = factor(rep(c("Low","Medium","High"), times = 3))
   )
 
-  out <- add_fcm_phase(df)
+  out <- suppressMessages(add_fcm_phase(df))
 
   # output structure
   expect_true("fsl_fc_cell" %in% names(out))
@@ -34,7 +34,7 @@ test_that("add_fcm_phase() — FCS + rCSI + HHS (3-indicator matrix) works", {
     fsl_hhs_cat_ipc  = c("None","Little","Moderate")
   )
 
-  out <- add_fcm_phase(df)
+  out <- suppressMessages(add_fcm_phase(df))
 
   expect_true("fsl_fc_cell" %in% names(out))
   expect_true("fsl_fc_phase"  %in% names(out))
@@ -52,7 +52,7 @@ test_that("add_fcm_phase() — HDDS + rCSI works when FCS/HHS absent", {
     fsl_rcsi_cat = c("Low","Medium","High")
   )
 
-  out <- add_fcm_phase(df)
+  out <- suppressMessages(add_fcm_phase(df))
   expect_true("fsl_fc_cell" %in% names(out))
   expect_true("fsl_fc_phase"  %in% names(out))
 
@@ -67,7 +67,7 @@ test_that("add_fcm_phase() — FCS + HHS works when rCSI absent", {
     fsl_hhs_cat_ipc = c("None","Little","Severe")
   )
 
-  out <- add_fcm_phase(df)
+  out <- suppressMessages(add_fcm_phase(df))
 
   expect_true(all(grepl("^P[1-5]$", out$fsl_fc_phase)))
 })
@@ -80,7 +80,7 @@ test_that("add_fcm_phase() — HDDS + HHS works when FCS & rCSI missing", {
     fsl_hhs_cat_ipc = c("None","Moderate","Severe")
   )
 
-  out <- add_fcm_phase(df)
+  out <- suppressMessages(add_fcm_phase(df))
 
   expect_true(all(grepl("^P[1-5]$", out$fsl_fc_cat)))
 })
@@ -137,7 +137,7 @@ test_that("add_fcm_phase() — output categories use P1–P5 patterns", {
     fsl_rcsi_cat = "Low"
   )
 
-  out <- add_fcm_phase(df)
+  out <- suppressMessages(add_fcm_phase(df))
 
   expect_true(grepl("^P[1-5]$", out$fsl_fc_phase))
 })
@@ -150,7 +150,7 @@ test_that("add_fcm_phase() — custom value parameters work correctly", {
     fsl_rcsi_cat = c("Bajo", "Medio", "Alto")
   )
 
-  out <- add_fcm_phase(
+  out <- suppressMessages(add_fcm_phase(
     df,
     fcs_acceptable_val = "Aceptable",
     fcs_borderline_val = "Límite",
@@ -158,8 +158,7 @@ test_that("add_fcm_phase() — custom value parameters work correctly", {
     rcsi_low_val = "Bajo",
     rcsi_medium_val = "Medio",
     rcsi_high_val = "Alto"
-  )
-
+  ))
   # output structure
   expect_true("fsl_fc_cell" %in% names(out))
   expect_true("fsl_fc_phase"  %in% names(out))
@@ -179,7 +178,7 @@ test_that("add_fcm_phase() — custom HHS and HDDS values work", {
     fsl_hhs_cat_ipc = c("Aucun", "Peu", "Modéré")
   )
 
-  out <- add_fcm_phase(
+  out <- suppressMessages(add_fcm_phase(
     df,
     hdds_low_val = "Faible",
     hdds_medium_val = "Moyen",
@@ -189,8 +188,7 @@ test_that("add_fcm_phase() — custom HHS and HDDS values work", {
     hhs_moderate_val = "Modéré",
     hhs_severe_val = "Grave",
     hhs_very_severe_val = "Très Grave"
-  )
-
+  ))
   expect_true("fsl_fc_cell" %in% names(out))
   expect_true("fsl_fc_phase"  %in% names(out))
   expect_equal(nrow(out), 3)
@@ -206,7 +204,7 @@ test_that("add_fcm_phase() — custom value validation works", {
   )
 
   # This should work with custom values
-  out <- add_fcm_phase(
+  out <- suppressMessages(add_fcm_phase(
     df,
     fcs_acceptable_val = "Good",
     fcs_borderline_val = "Okay",
@@ -214,8 +212,7 @@ test_that("add_fcm_phase() — custom value validation works", {
     rcsi_low_val = "Small",
     rcsi_medium_val = "Big",
     rcsi_high_val = "Huge"
-  )
-
+  ))
   expect_equal(nrow(out), 3)
   expect_false(any(is.na(out$fsl_fc_cell)))
 })
@@ -229,7 +226,7 @@ test_that("add_fcm_phase() — factor columns in dataset are preserved as factor
                           levels = c("Low", "Medium", "High"))
   )
 
-  out <- add_fcm_phase(df)
+  out <- suppressMessages(add_fcm_phase(df))
 
   expect_s3_class(out$fsl_fcs_cat, "factor")
   expect_s3_class(out$fsl_rcsi_cat, "factor")
@@ -248,7 +245,7 @@ test_that("add_fcm_phase() — factor levels are preserved when all three indica
                              levels = c("None", "Little", "Moderate", "Severe", "Very Severe"))
   )
 
-  out <- add_fcm_phase(df)
+  out <- suppressMessages(add_fcm_phase(df))
 
   expect_s3_class(out$fsl_fcs_cat, "factor")
   expect_s3_class(out$fsl_rcsi_cat, "factor")

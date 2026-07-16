@@ -3,7 +3,7 @@
 test_that("hh_check_roster_relationships() returns empty vector for valid relationships", {
   x <- c("head", "spouse", "child", "parent")
 
-  out <- hh_check_roster_relationships(x)
+  out <- suppressWarnings(hh_check_roster_relationships(x))
 
   expect_equal(length(out), 0)
 })
@@ -11,7 +11,7 @@ test_that("hh_check_roster_relationships() returns empty vector for valid relati
 test_that("hh_check_roster_relationships() detects invalid relationship codes", {
   x <- c("head", "spouse", "invalid", "child")
 
-  out <- hh_check_roster_relationships(x)
+  out <- suppressWarnings(hh_check_roster_relationships(x))
 
   expect_true("invalid" %in% out)
 })
@@ -19,7 +19,7 @@ test_that("hh_check_roster_relationships() detects invalid relationship codes", 
 test_that("hh_check_roster_relationships() returns unique invalid values", {
   x <- c("invalid1", "invalid1", "invalid2", "invalid2")
 
-  out <- hh_check_roster_relationships(x)
+  out <- suppressWarnings(hh_check_roster_relationships(x))
 
   expect_equal(length(out), 2)
   expect_true("invalid1" %in% out)
@@ -29,7 +29,7 @@ test_that("hh_check_roster_relationships() returns unique invalid values", {
 test_that("hh_check_roster_relationships() allows all valid codes", {
   x <- c("head", "spouse", "child", "parent", "relative", "other")
 
-  out <- hh_check_roster_relationships(x)
+  out <- suppressWarnings(hh_check_roster_relationships(x))
 
   expect_equal(length(out), 0)
 })
@@ -37,7 +37,7 @@ test_that("hh_check_roster_relationships() allows all valid codes", {
 test_that("hh_check_roster_relationships() handles NA values", {
   x <- c("head", NA, "spouse", "invalid")
 
-  out <- hh_check_roster_relationships(x)
+  out <- suppressWarnings(hh_check_roster_relationships(x))
 
   expect_true("invalid" %in% out)
   expect_false(NA %in% out)
@@ -46,7 +46,7 @@ test_that("hh_check_roster_relationships() handles NA values", {
 test_that("hh_check_roster_relationships() is case-sensitive", {
   x <- c("head", "Head", "HEAD", "spouse")
 
-  out <- hh_check_roster_relationships(x)
+  out <- suppressWarnings(hh_check_roster_relationships(x))
 
   expect_true("Head" %in% out)
   expect_true("HEAD" %in% out)
@@ -55,7 +55,7 @@ test_that("hh_check_roster_relationships() is case-sensitive", {
 test_that("hh_check_roster_relationships() handles whitespace", {
   x <- c("head", " head ", "spouse")
 
-  out <- hh_check_roster_relationships(x)
+  out <- suppressWarnings(hh_check_roster_relationships(x))
 
   expect_true(" head " %in% out)
 })
@@ -69,7 +69,7 @@ test_that("hh_check_roster_relationships() warns when invalid codes detected", {
 test_that("hh_check_roster_relationships() handles all NA values", {
   x <- c(NA, NA, NA)
 
-  out <- hh_check_roster_relationships(x)
+  out <- suppressWarnings(hh_check_roster_relationships(x))
 
   expect_equal(length(out), 0)
 })
