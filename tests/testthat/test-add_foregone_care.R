@@ -1,4 +1,4 @@
-# ADD_FOREGONE_CARE Testing ####
+# Tests for add_foregone_care
 
 test_that("add_foregone_care() — valid dataset creates foregone care category", {
 
@@ -22,6 +22,7 @@ test_that("add_foregone_care() — valid dataset creates foregone care category"
   expect_equal(nrow(out), 5)
   expect_true("health_foregone_care_cat" %in% names(out))
 })
+
 
 test_that("add_foregone_care() — correct categorization logic", {
 
@@ -48,6 +49,7 @@ test_that("add_foregone_care() — correct categorization logic", {
   expect_true(grepl("No need", out$health_foregone_care_cat[4]))
 })
 
+
 test_that("add_foregone_care() — dont know values return NA", {
 
   df <- tibble::tibble(
@@ -71,6 +73,7 @@ test_that("add_foregone_care() — dont know values return NA", {
   expect_true(is.na(out$health_foregone_care_cat[2]))
 })
 
+
 test_that("add_foregone_care() — error on empty dataset", {
 
   df_empty <- tibble::tibble(
@@ -93,6 +96,7 @@ test_that("add_foregone_care() — error on empty dataset", {
   )
 })
 
+
 test_that("add_foregone_care() — error on missing columns", {
 
   df <- tibble::tibble(
@@ -113,6 +117,7 @@ test_that("add_foregone_care() — error on missing columns", {
     )
   )
 })
+
 
 test_that("add_foregone_care() — warning when overwriting existing column", {
 
@@ -137,6 +142,7 @@ test_that("add_foregone_care() — warning when overwriting existing column", {
   )
 })
 
+
 test_that("add_foregone_care() — invalid values trigger message", {
 
   df <- tibble::tibble(
@@ -158,6 +164,7 @@ test_that("add_foregone_care() — invalid values trigger message", {
     )
   )
 })
+
 
 test_that("add_foregone_care() — NA values handled appropriately", {
 
@@ -182,4 +189,3 @@ test_that("add_foregone_care() — NA values handled appropriately", {
   expect_true(is.na(out$health_foregone_care_cat[2]))
   expect_true(!is.na(out$health_foregone_care_cat[3]))
 })
-

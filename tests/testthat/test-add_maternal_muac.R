@@ -1,4 +1,4 @@
-# ADD_MATERNAL_MUAC Testing ####
+# Tests for add_maternal_muac
 
 test_that("add_maternal_muac() — valid dataset with cm values works", {
 
@@ -18,6 +18,7 @@ test_that("add_maternal_muac() — valid dataset with cm values works", {
   expect_true("flag_woman_muac_extreme" %in% names(out))
   expect_true("woman_muac_mm" %in% names(out))
 })
+
 
 test_that("add_maternal_muac() — categorization thresholds work correctly", {
 
@@ -40,6 +41,7 @@ test_that("add_maternal_muac() — categorization thresholds work correctly", {
   expect_equal(out$woman_muac_cat[4], "Normal")    # >= 23
 })
 
+
 test_that("add_maternal_muac() — women outside 15-49 age range get NA", {
 
   df <- tibble::tibble(
@@ -59,6 +61,7 @@ test_that("add_maternal_muac() — women outside 15-49 age range get NA", {
   expect_true(is.na(out$woman_muac_cat[4]))  # age 55
 })
 
+
 test_that("add_maternal_muac() — detects cm and converts to mm", {
 
   df <- tibble::tibble(
@@ -77,6 +80,7 @@ test_that("add_maternal_muac() — detects cm and converts to mm", {
   expect_equal(out$woman_muac_mm[2], 240)
 })
 
+
 test_that("add_maternal_muac() — detects mm and converts to cm", {
 
   df <- tibble::tibble(
@@ -94,6 +98,7 @@ test_that("add_maternal_muac() — detects mm and converts to cm", {
   expect_equal(out$woman_muac_cm[1], 22)
   expect_equal(out$woman_muac_cm[2], 24)
 })
+
 
 test_that("add_maternal_muac() — flags extreme values correctly", {
 
@@ -114,6 +119,7 @@ test_that("add_maternal_muac() — flags extreme values correctly", {
   expect_equal(out$flag_woman_muac_extreme[4], 1)  # >= 70
 })
 
+
 test_that("add_maternal_muac() — error on empty dataset", {
 
   df_empty <- tibble::tibble(
@@ -130,6 +136,7 @@ test_that("add_maternal_muac() — error on empty dataset", {
   )
 })
 
+
 test_that("add_maternal_muac() — error on missing columns", {
 
   df <- tibble::tibble(
@@ -144,6 +151,7 @@ test_that("add_maternal_muac() — error on missing columns", {
     )
   )
 })
+
 
 test_that("add_maternal_muac() — warning when overwriting existing columns", {
 
@@ -161,6 +169,7 @@ test_that("add_maternal_muac() — warning when overwriting existing columns", {
     )
   )
 })
+
 
 test_that("add_maternal_muac() — NA values in input columns", {
 
@@ -180,6 +189,7 @@ test_that("add_maternal_muac() — NA values in input columns", {
   expect_true(is.na(out$woman_muac_cat[3]))
 })
 
+
 test_that("add_maternal_muac() — non-numeric values trigger warning", {
 
   df <- tibble::tibble(
@@ -196,7 +206,7 @@ test_that("add_maternal_muac() — non-numeric values trigger warning", {
   )
 })
 
-# Defensive coding test for conditional variable reference
+
 test_that("add_maternal_muac() handles mixed unit detection correctly", {
   # Test with millimeter values
   df_mm <- tibble::tibble(
@@ -230,6 +240,7 @@ test_that("add_maternal_muac() handles mixed unit detection correctly", {
   expect_true("woman_muac_mm" %in% names(result_cm))
   expect_true("woman_muac_cat" %in% names(result_cm))
 })
+
 
 test_that("add_maternal_muac() handles pre-existing converted columns", {
   # Test with pre-existing woman_muac_cm column
