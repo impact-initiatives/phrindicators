@@ -81,12 +81,12 @@ add_iycf_mmf <- function(.dataset,
           ),
           # Combined MMF indicator
           iycf_mmf = dplyr::case_when(
-            .data$mmf_bf_6to8months == 1 | .data$mmf_nonbf_6to23months == 1 | .data$mmf_bf_9to23months == 1 ~ 1,
-            .data$mmf_bf_6to8months != 1 & .data$mmf_nonbf_6to23months != 1 & .data$mmf_bf_9to23months != 1 ~ 0,
             .data[[age_months]] < 6 | .data[[age_months]] >= 24 |
               is.na(.data[[age_months]]) | is.na(.data[[iycf_4]]) |
               is.na(.data[[iycf_6b_num]]) | is.na(.data[[iycf_6c_num]]) |
-              is.na(.data[[iycf_6d_num]]) | is.na(.data[[iycf_8]]) ~ NA_real_
+              is.na(.data[[iycf_6d_num]]) | is.na(.data[[iycf_8]]) ~ NA_real_,
+            .data$mmf_bf_6to8months == 1 | .data$mmf_nonbf_6to23months == 1 | .data$mmf_bf_9to23months == 1 ~ 1,
+            .data$mmf_bf_6to8months != 1 & .data$mmf_nonbf_6to23months != 1 & .data$mmf_bf_9to23months != 1 ~ 0
           )
         ) |>
         dplyr::select(-"mmf_bf_6to8months", -"mmf_bf_9to23months",

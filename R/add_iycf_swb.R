@@ -57,7 +57,8 @@ add_iycf_swb <- function(.dataset,
             .data[[age_months]] < 6 | .data[[age_months]] >= 24 |
               is.na(.data[[age_months]]) | is.na(.data[[iycf_6c_swt]]) |
               is.na(.data[[iycf_6d_swt]]) | is.na(.data[[iycf_6e]]) |
-              is.na(.data[[iycf_6f]]) | is.na(.data[[iycf_6g]]) ~ NA_real_,
+              is.na(.data[[iycf_6f]]) | is.na(.data[[iycf_6g]]) |
+              is.na(.data[[iycf_6h_swt]]) | is.na(.data[[iycf_6j_swt]]) ~ NA_real_,
             .data[[iycf_6c_swt]] == 1 | .data[[iycf_6d_swt]] == 1 |
               .data[[iycf_6e]] == 1 | .data[[iycf_6f]] == 1 |
               .data[[iycf_6g]] == 1 | .data[[iycf_6h_swt]] == 1 |
