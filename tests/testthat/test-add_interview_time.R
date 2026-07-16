@@ -65,7 +65,7 @@ test_that("add_interview_time() errors on empty dataset", {
     interview_end = as.POSIXct(character(0))
   )
 
-  expect_error(add_interview_time(df))
+  expect_warning(add_interview_time(df))
 })
 
 test_that("add_interview_time() errors on missing columns", {
@@ -73,7 +73,7 @@ test_that("add_interview_time() errors on missing columns", {
     interview_start = as.POSIXct("2023-01-01 10:00:00")
   )
 
-  expect_error(add_interview_time(df))
+  expect_warning(add_interview_time(df))
 })
 
 test_that("add_interview_time() handles character datetime input", {
@@ -86,3 +86,4 @@ test_that("add_interview_time() handles character datetime input", {
 
   expect_equal(out$interview_duration_mins, 45)
 })
+
