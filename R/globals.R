@@ -153,12 +153,25 @@ utils::globalVariables(c(
   ":=",
   "all_of",
   "c_across",
-  "sd"
-  "cluster_size"
+  "sd",
+  "cluster_size",
 
   # add_foregone_care
   "health_foregone_care_cat",
 
   # hh_check_roster_1_to_many (internal helper)
-  "hh_roster_link_check"
+  "hh_roster_link_check",
+
+ # add_iycf_* indicators
+  "count_foods",
+  "count_foods_isssf",
+  "count_liquids",
+  "count_no_foods",
+  "count_no_liquids",
+  "count_6b_6c_6d_8",
+  "count_dairy",
+  "iycf_mdd_score",
+  "mdd1", "mdd2", "mdd3", "mdd4", "mdd5", "mdd6", "mdd7", "mdd8",
+  "mmf_bf_6to8months", "mmf_bf_9to23months", "mmf_nonbf_6to23months",
+  "zvf1", "zvf2", "zvf3", "zvf4", "zvf5", "zvf_sum"
 ))
