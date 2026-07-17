@@ -58,8 +58,8 @@ test_that("add_rcsi() — out-of-range values cause phr_error", {
   )
 
   expect_message(
-    add_rcsi(df_bad)
-  )
+    suppressWarnings(add_rcsi(df_bad)
+  ))
 })
 
 
@@ -72,9 +72,9 @@ test_that("add_rcsi() — non-numeric values trigger phr_error", {
     fsl_rcsi_mealnb      = 0:4
   )
 
-  expect_warning(
-    out <- add_rcsi(df_nonum)
-  )
+  suppressWarnings(expect_warning(
+    out <- suppressMessages(add_rcsi(df_nonum)
+  )))
 })
 
 
@@ -105,9 +105,9 @@ test_that("add_rcsi() — warns when overwriting existing output columns", {
     fsl_rcsi_cat         = rep("OLD", 5)  # existing column
   )
 
-  expect_warning(
-    add_rcsi(df)
-  )
+  suppressWarnings(expect_warning(
+    suppressMessages(add_rcsi(df)
+  )))
 })
 
 
@@ -132,3 +132,4 @@ test_that("add_rcsi() — category assignment works correctly", {
   expect_true(grepl("Medium",    labs[2]))
   expect_true(grepl("High",      labs[3]))
 })
+

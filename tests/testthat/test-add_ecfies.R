@@ -154,7 +154,7 @@ test_that("add_ecfies() — warning when overwriting existing columns", {
   )
 
   expect_warning(
-    add_ecfies(
+    suppressMessages(add_ecfies(
       .dataset = df,
       nut_ecfies_so1_col = "so1", nut_ecfies_so2_col = "so2",
       nut_ecfies_so3_col = "so3", nut_ecfies_so4_col = "so4",
@@ -162,6 +162,7 @@ test_that("add_ecfies() — warning when overwriting existing columns", {
       nut_ecfies_so7_col = "so7", nut_ecfies_so8_col = "so8",
       yes_val = "yes", no_val = "no",
       dont_know_val = "dont_know", prefer_not_to_answer_val = "prefer_not_to_answer"
-    )
+    ))
   )
 })
+

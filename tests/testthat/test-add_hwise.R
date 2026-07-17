@@ -123,12 +123,12 @@ test_that("add_hwise() — warning when overwriting existing columns", {
   )
 
   expect_warning(
-    add_hwise(
+    suppressMessages(add_hwise(
       .dataset = df,
       wash_hwise_worry_col = "wash_hwise_worry",
       wash_hwise_plans_col = "wash_hwise_plans",
       wash_hwise_hands_col = "wash_hwise_hands",
       wash_hwise_drink_col = "wash_hwise_drink"
     )
-  )
+  ))
 })

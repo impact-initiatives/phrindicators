@@ -171,11 +171,9 @@ test_that("add_fcs() — non-numeric values trigger phr_error", {
   df_nonnumeric$fsl_fcs_meat[18] <- "x"
   df_nonnumeric$fsl_fcs_cereal[20] <- "7a"
 
-  out <- suppressMessages(add_fcs(df_nonnumeric))
-
-  expect_warning(
-    add_fcs(df_nonnumeric)
-  )
+  suppressWarnings(expect_warning(
+    suppressMessages( add_fcs(df_nonnumeric))
+  ))
 })
 
 
@@ -194,9 +192,9 @@ test_that("add_fcs() — warns when overwriting existing score/category columns"
     fsl_fcs_cat     = rep("Old", 30)
   )
 
-  expect_warning(
-    add_fcs(df_overwrite)
-  )
+  suppressWarnings(expect_warning(
+    suppressMessages( add_fcs(df_overwrite))
+  ))
 })
 
 
@@ -236,7 +234,7 @@ test_that("add_fcs() — invalid cutoff gives warning and defaults to normal", {
   )
 
   expect_warning(
-    out <- add_fcs(df, cutoffs = "INVALID")
+    suppressMessages(out <- add_fcs(df, cutoffs = "INVALID"))
   )
 
   expect_true("fsl_fcs_score" %in% names(out))
@@ -273,3 +271,4 @@ test_that("add_fcs() — empty dataframe rejected", {
 
   expect_error(add_fcs(df_empty))
 })
+

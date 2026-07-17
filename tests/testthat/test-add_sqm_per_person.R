@@ -42,7 +42,7 @@ test_that("add_sqm_per_person() — rectangle area calculation is correct", {
     measured = "yes"
   )
 
-  out <- suppressMessages(add_sqm_per_person(
+  suppressWarnings(out <- suppressMessages(add_sqm_per_person(
     .dataset = df,
     shelter_shape_col = "shape",
     rectangle_val = "rectangle",
@@ -53,7 +53,7 @@ test_that("add_sqm_per_person() — rectangle area calculation is correct", {
     household_size_col = "hh_size",
     measure_confirm_col = "measured",
     measure_confirm_yes_val = "yes"
-  ))
+  )))
   # 10 * 5 = 50 sqm, 50 / 10 = 5 sqm per person
   expect_equal(out$area_sqm[1], 50)
   expect_equal(out$sqm_per_person[1], 5)
@@ -71,7 +71,7 @@ test_that("add_sqm_per_person() — circle area calculation is correct", {
     measured = "yes"
   )
 
-  out <- suppressMessages(add_sqm_per_person(
+  suppressWarnings(out <- suppressMessages(add_sqm_per_person(
     .dataset = df,
     shelter_shape_col = "shape",
     rectangle_val = "rectangle",
@@ -82,7 +82,7 @@ test_that("add_sqm_per_person() — circle area calculation is correct", {
     household_size_col = "hh_size",
     measure_confirm_col = "measured",
     measure_confirm_yes_val = "yes"
-  ))
+  )))
   # pi * (4/2)^2 = pi * 4 = ~12.6 sqm
   expect_true(out$area_sqm[1] > 12 & out$area_sqm[1] < 13)
   expect_true(out$sqm_per_person[1] > 2 & out$sqm_per_person[1] < 3)
@@ -130,7 +130,7 @@ test_that("add_sqm_per_person() — measurement not confirmed returns NA", {
     measured = "no"
   )
 
-  out <- suppressMessages(add_sqm_per_person(
+  suppressWarnings(out <- suppressMessages(add_sqm_per_person(
     .dataset = df,
     shelter_shape_col = "shape",
     rectangle_val = "rectangle",
@@ -141,7 +141,7 @@ test_that("add_sqm_per_person() — measurement not confirmed returns NA", {
     household_size_col = "hh_size",
     measure_confirm_col = "measured",
     measure_confirm_yes_val = "yes"
-  ))
+  )))
   expect_true(is.na(out$area_sqm[1]))
   expect_true(is.na(out$sqm_per_person[1]))
   expect_true(is.na(out$sqm_per_person_cat[1]))
@@ -209,8 +209,8 @@ test_that("add_sqm_per_person() — warning when overwriting existing columns", 
     area_sqm = 99
   )
 
-  expect_warning(
-    add_sqm_per_person(
+  suppressWarnings(expect_warning(
+    suppressMessages(add_sqm_per_person(
       .dataset = df,
       shelter_shape_col = "shape",
       rectangle_val = "rectangle",
@@ -220,6 +220,7 @@ test_that("add_sqm_per_person() — warning when overwriting existing columns", 
       shelter_diameter_col = "diameter",
       household_size_col = "hh_size",
       measure_confirm_col = "measured"
-    )
-  )
+    ))
+  ))
 })
+

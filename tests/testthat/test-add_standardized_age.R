@@ -91,20 +91,20 @@ test_that("add_standardized_age does not calculate ages when no age_years values
     date_death_exact = as.Date(c("2023-01-01", "2023-01-01", "2023-01-01"))
   )
 
-  result <- suppressMessages(add_standardized_age(
-    .dataset = df,
-    age_years_col = "age_years",
-    date_birth_exact_col = "date_birth_exact",
-    date_death_exact_col = "date_death_exact"
-  ))
-  expect_message(
+  # result <- suppressMessages(add_standardized_age(
+  #   .dataset = df,
+  #   age_years_col = "age_years",
+  #   date_birth_exact_col = "date_birth_exact",
+  #   date_death_exact_col = "date_death_exact"
+  # ))
+  suppressMessages(expect_message(
     result <- add_standardized_age(
       .dataset = df,
       age_years_col = "age_years",
       date_birth_exact_col = "date_birth_exact",
       date_death_exact_col = "date_death_exact"
     )
-  )
+  ))
 
 })
 
@@ -114,14 +114,15 @@ test_that("add_standardized_age handles missing age_months_col gracefully", {
     age_years = c(10, 20, 30)
   )
 
-  result <- add_standardized_age(
+  result <- suppressMessages(suppressWarnings(add_standardized_age(
     .dataset = df,
     age_years_col = "age_years"
-  )
+  )))
 
-  expect_equal(result$calc_age_years, df$age_years)  # calc_age_years should match age_years_col
-  expect_true(all(is.na(result$calc_age_months)))    # calc_age_months should default to NA
-  expect_true(all(is.na(result$calc_age_days)))      # calc_age_days should default to NA
+  suppressWarnings(expect_equal(result$calc_age_years, df$age_years))  # calc_age_years should match age_years_col
+  suppressWarnings(expect_true(all(is.na(result$calc_age_months))))    # calc_age_months should default to NA
+  suppressWarnings(expect_true(all(is.na(result$calc_age_days))))      # calc_age_days should default to NA
+
 })
 
 
@@ -192,13 +193,13 @@ test_that("add_standardized_age handles NULL date columns without error", {
   )
 
   # Test with NULL date_birth columns
-  result <- add_standardized_age(
+  result <- suppressMessages(add_standardized_age(
     .dataset = df,
     age_years_col = "age_years",
     date_birth_exact_col = NULL,
     date_birth_approx_col = NULL,
     date_birth_final_col = NULL
-  )
+  ))
 
   # Columns should not be created if no date columns are provided
   expect_false("calc_date_birth_final" %in% names(result))
@@ -292,3 +293,4 @@ test_that("add_standardized_age — calc_date_death_final uses exact death date 
   # Row 3: both available — prefer exact
   expect_equal(result$calc_date_death_final[3], as.Date("2023-03-01"))
 })
+

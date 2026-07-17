@@ -82,7 +82,7 @@ test_that("add_fcm_phase() — HDDS + HHS works when FCS & rCSI missing", {
 
   out <- suppressMessages(add_fcm_phase(df))
 
-  expect_true(all(grepl("^P[1-5]$", out$fsl_fc_cat)))
+  expect_true(all(grepl("^P[1-5]$", out$fsl_fc_phase)))
 })
 
 
@@ -124,7 +124,7 @@ test_that("add_fcm_phase() — no valid combination throws phr_error", {
   )
 
   expect_error(
-    add_fcm_phase(df),
+    suppressMessages(add_fcm_phase(df)),
     class = "phr_error"
   )
 })
@@ -254,3 +254,4 @@ test_that("add_fcm_phase() — factor levels are preserved when all three indica
   expect_equal(levels(out$fsl_rcsi_cat), levels(df$fsl_rcsi_cat))
   expect_equal(levels(out$fsl_hhs_cat_ipc), levels(df$fsl_hhs_cat_ipc))
 })
+

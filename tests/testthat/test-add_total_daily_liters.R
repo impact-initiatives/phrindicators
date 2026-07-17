@@ -173,11 +173,11 @@ test_that("add_total_daily_liters() — warning when overwriting existing column
   )
 
   expect_warning(
-    add_total_daily_liters(
+    suppressMessages(add_total_daily_liters(
       .dataset = df,
       wash_container_size_liters_col = "size",
       wash_container_num_journeys_col = "journeys"
-    )
+    ))
   )
 })
 
@@ -190,11 +190,11 @@ test_that("add_total_daily_liters() — non-numeric values trigger warning", {
   )
 
   expect_error(
-    add_total_daily_liters(
+    suppressWarnings(add_total_daily_liters(
       .dataset = df,
       wash_container_size_liters_col = "size",
       wash_container_num_journeys_col = "journeys"
-    )
+    ))
   )
 })
 
@@ -206,11 +206,11 @@ test_that("add_total_daily_liters() — zero values handled correctly", {
     journeys = c(0, 5, 2)
   )
 
-  out <- add_total_daily_liters(
+  suppressMessages(out <- add_total_daily_liters(
     .dataset = df,
     wash_container_size_liters_col = "size",
     wash_container_num_journeys_col = "journeys"
-  )
+  ))
 
   # 10*0=0, 0*5=0, 20*2=40
   expect_equal(out$wash_container_total_litres[1], 0)

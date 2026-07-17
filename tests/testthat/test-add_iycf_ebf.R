@@ -16,7 +16,7 @@ test_that("add_iycf_ebf() warns when only partial food and liquid histories are 
   df <- make_iycf_data(age_months = 2, iycf_4 = "yes", iycf_6a = "no", iycf_7a = "no") |>
     dplyr::select(age_months, iycf_4, iycf_6a, iycf_7a)
 
-  expect_warning(out <- add_iycf_ebf(df))
+  suppressWarnings(expect_warning(out <- suppressMessages(add_iycf_ebf(df))))
   expect_equal(out$iycf_ebf, 1)
 })
 

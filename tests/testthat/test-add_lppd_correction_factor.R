@@ -125,11 +125,11 @@ test_that("add_lppd_correction_factor() — warning when overwriting existing co
     lppd_correction_factor = c(99, 99)
   )
 
-  expect_warning(
+  suppressMessages(expect_warning(
     add_lppd_correction_factor(
       .dataset = df,
       num_days_collect_col = "num_days"
-    )
+    ))
   )
 })
 
@@ -141,10 +141,10 @@ test_that("add_lppd_correction_factor() — non-numeric values trigger warning",
   )
 
   expect_error(
-    add_lppd_correction_factor(
+    suppressWarnings(add_lppd_correction_factor(
       .dataset = df,
       num_days_collect_col = "num_days"
-    )
+    ))
   )
 })
 
@@ -155,10 +155,10 @@ test_that("add_lppd_correction_factor() — boundary values at 0 and 7", {
     num_days = c(0, 7)
   )
 
-  out <- add_lppd_correction_factor(
+  suppressMessages(out <- add_lppd_correction_factor(
     .dataset = df,
     num_days_collect_col = "num_days"
-  )
+  ))
 
   expect_equal(out$lppd_correction_factor[1], 0)
   expect_equal(out$lppd_correction_factor[2], 1)

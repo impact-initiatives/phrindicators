@@ -102,10 +102,10 @@ test_that("add_standardized_roster_demographics roster_2to5 boundary values", {
     calc_age_years = c(1.9, 2, 4.9, 5, 6)
   )
 
-  result <- suppressMessages(add_standardized_roster_demographics(
+  suppressWarnings(result <- suppressMessages(add_standardized_roster_demographics(
     .dataset = df,
     age_years_col = "calc_age_years"
-  ))
+  )))
   expect_equal(result$roster_2to5, c(0, 1, 1, 0, 0))
   expect_equal(result$roster_5plus, c(0, 0, 0, 1, 1))
 })
@@ -118,10 +118,10 @@ test_that("add_standardized_roster_demographics roster_5_10 boundary values", {
     calc_age_years = c(4.9, 5, 7, 9.9, 10, 25)
   )
 
-  result <- suppressMessages(add_standardized_roster_demographics(
+  result <- suppressMessages(suppressWarnings(add_standardized_roster_demographics(
     .dataset = df,
     age_years_col = "calc_age_years"
-  ))
+  )))
   expect_equal(result$roster_5_10, c(0, 1, 1, 1, NA, NA))
 })
 

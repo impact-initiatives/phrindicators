@@ -150,8 +150,8 @@ test_that("add_hhs() — invalid Y/N categories produce error", {
   )
 
   expect_message(
-   add_hhs(df)
-  )
+   suppressWarnings(add_hhs(df)
+  ))
 })
 
 
@@ -166,9 +166,9 @@ test_that("add_hhs() — invalid frequency categories produce error", {
     fsl_hhs_alldaynight_freq= rep("often", 5)
   )
 
-  expect_message(
+  suppressWarnings( expect_message(
     add_hhs(df)
-  )
+  ))
 })
 
 
@@ -188,3 +188,4 @@ test_that("add_hhs() — mixed combinations produce valid output", {
   expect_equal(nrow(out), 25)
   expect_true(all(out$fsl_hhs_score >= 0 & out$fsl_hhs_score <= 6))
 })
+

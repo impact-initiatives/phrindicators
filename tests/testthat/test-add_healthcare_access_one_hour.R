@@ -81,7 +81,7 @@ test_that("add_healthcare_access_one_hour() — missing data returns dont_know",
     travel_range = c(NA)
   )
 
-  out <- suppressMessages(add_healthcare_access_one_hour(
+  out <- suppressMessages(suppressWarnings(add_healthcare_access_one_hour(
     .dataset = df,
     health_care_travel_time_col = "travel_time_type",
     num_minutes_val = "num_minutes",
@@ -90,7 +90,7 @@ test_that("add_healthcare_access_one_hour() — missing data returns dont_know",
     health_care_travel_time_range_col = "travel_range",
     less_than_one_hour_range_val = c("<1_hour"),
     one_hour_or_more_range_val = c(">=1_hour")
-  ))
+  )))
   expect_true(grepl("dont_know", out$health_healthcare_access_one_hour[1]))
 })
 
@@ -148,7 +148,7 @@ test_that("add_healthcare_access_one_hour() — warning when overwriting existin
     health_healthcare_access_one_hour = "old"
   )
 
-  expect_warning(
+  suppressWarnings(expect_warning(
     add_healthcare_access_one_hour(
       .dataset = df,
       health_care_travel_time_col = "travel_time_type",
@@ -159,7 +159,7 @@ test_that("add_healthcare_access_one_hour() — warning when overwriting existin
       less_than_one_hour_range_val = c("<1_hour"),
       one_hour_or_more_range_val = c(">=1_hour")
     )
-  )
+  ))
 })
 
 
@@ -184,3 +184,4 @@ test_that("add_healthcare_access_one_hour() — boundary value at 60 minutes", {
   expect_true(grepl("yes", out$health_healthcare_access_one_hour[1]))  # < 60
   expect_true(grepl("no", out$health_healthcare_access_one_hour[2]))   # >= 60
 })
+

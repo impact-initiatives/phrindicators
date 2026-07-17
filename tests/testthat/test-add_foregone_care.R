@@ -125,7 +125,7 @@ test_that("add_foregone_care() — warning when overwriting existing column", {
   )
 
   expect_warning(
-    add_foregone_care(
+    suppressMessages(add_foregone_care(
       .dataset = df,
       ind_illness_col = "illness",
       ind_received_care_col = "care",
@@ -135,7 +135,7 @@ test_that("add_foregone_care() — warning when overwriting existing column", {
       care_yes_val = "yes",
       care_no_val = "no",
       care_dontknow_val = "dont know"
-    )
+    ))
   )
 })
 
@@ -148,7 +148,7 @@ test_that("add_foregone_care() — invalid values trigger message", {
   )
 
   expect_message(
-    add_foregone_care(
+    suppressWarnings(add_foregone_care(
       .dataset = df,
       ind_illness_col = "illness",
       ind_received_care_col = "care",
@@ -158,7 +158,7 @@ test_that("add_foregone_care() — invalid values trigger message", {
       care_yes_val = "yes",
       care_no_val = "no",
       care_dontknow_val = "dont know"
-    )
+    ))
   )
 })
 
@@ -185,3 +185,4 @@ test_that("add_foregone_care() — NA values handled appropriately", {
   expect_true(is.na(out$health_foregone_care_cat[2]))
   expect_true(!is.na(out$health_foregone_care_cat[3]))
 })
+

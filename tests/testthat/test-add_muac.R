@@ -125,13 +125,13 @@ test_that("add_muac() — detects mm and converts to cm", {
     nut_edema_confirm = c("no", "no", "no")
   )
 
-  out <- suppressMessages(add_muac(
+  out <- suppressMessages(suppressWarnings(add_muac(
     .dataset = df,
     nut_muac_cm_col = "nut_muac_cm",
     edema_confirm_col = "nut_edema_confirm",
     child_age_months_col = "child_age_months",
     edema_confirm_val = "yes"
-  ))
+  )))
   expect_true("nut_muac_cm" %in% names(out))
   expect_equal(out$nut_muac_cm[1], 12.5)
 })
@@ -157,7 +157,6 @@ test_that("add_muac() — error on empty dataset", {
   )
 })
 
-
 test_that("add_muac() — error on missing columns", {
 
   df <- tibble::tibble(
@@ -174,3 +173,4 @@ test_that("add_muac() — error on missing columns", {
     )
   )
 })
+

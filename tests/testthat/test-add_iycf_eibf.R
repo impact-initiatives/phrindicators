@@ -14,7 +14,7 @@ test_that("add_iycf_eibf() marks codes 1 and 2 as early initiation", {
 test_that("add_iycf_eibf() coerces non-numeric ages to NA outputs", {
   df <- make_iycf_data(age_months = c("4", "unknown"), iycf_2 = c(1, 1))
 
-  out <- suppressMessages(add_iycf_eibf(df))
+  suppressWarnings(out <- suppressMessages(add_iycf_eibf(df)))
 
   expect_equal(out$iycf_eibf, c(1, NA))
 })
