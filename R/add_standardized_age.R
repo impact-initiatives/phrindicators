@@ -33,6 +33,8 @@
 #' - `calc_age_months`: The calculated age in months.
 #' - `calc_age_days`: The calculated age in days.
 #' - `roster_birth`: A binary column (`1` or `0`) indicating whether the date of birth is on or after the recall date. If either the birth date or recall date is missing, this column is not calculated.
+#' - `calc_month_birth`: The month-year of birth as a character string in "YYYY-MM-01" format (only if `calc_date_birth_final` exists).
+#' - `calc_month_death`: The month-year of death as a character string in "YYYY-MM-01" format (only if `calc_date_death_final` exists).
 #'
 #' @examples
 #' # Example input data
@@ -181,7 +183,7 @@ add_standardized_age <- function(
     }
 
     # Add overwrite warnings for the calculated output columns
-    output_cols <- c("calc_date_birth_final", "calc_date_death_final", "calc_age_years", "calc_age_months", "calc_age_days", "roster_birth")
+    output_cols <- c("calc_date_birth_final", "calc_date_death_final", "calc_age_years", "calc_age_months", "calc_age_days", "roster_birth", "calc_month_birth", "calc_month_death")
     for (col in output_cols) {
       if (col %in% names(.dataset)) {
         phrutils::phr_warning(
@@ -351,6 +353,30 @@ add_standardized_age <- function(
               calc_date_birth_final >= .data[[date_recall_col]] ~ 1,
             !is.na(calc_date_birth_final) & !is.na(.data[[date_recall_col]]) ~ 0,
             TRUE ~ NA_real_
+          )
+        )
+    }
+
+    # Add calc_month_birth column if calc_date_birth_final exists
+    if ("calc_date_birth_final" %in% names(.dataset)) {
+      .dataset <- .dataset |>
+        dplyr::mutate(
+          calc_month_birth = dplyr::if_else(
+            !is.na(calc_date_birth_final),
+            format(calc_date_birth_final, "%Y-%m-01"),
+            NA_character_
+          )
+        )
+    }
+
+    # Add calc_month_death column if calc_date_death_final exists
+    if ("calc_date_death_final" %in% names(.dataset)) {
+      .dataset <- .dataset |>
+        dplyr::mutate(
+          calc_month_death = dplyr::if_else(
+            !is.na(calc_date_death_final),
+            format(calc_date_death_final, "%Y-%m-01"),
+            NA_character_
           )
         )
     }
