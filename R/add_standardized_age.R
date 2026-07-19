@@ -270,16 +270,16 @@ add_standardized_age <- function(
             dplyr::mutate(
               calc_age_years = dplyr::case_when(
                 !is.na(calc_date_birth_final) & !is.na(calc_date_death_final) ~
-                  ceiling(as.numeric(difftime(calc_date_death_final, calc_date_birth_final, units = "days")) / 365.25),
+                  floor(as.numeric(difftime(calc_date_death_final, calc_date_birth_final, units = "days")) / 365.25),
                 !is.na(calc_date_birth_final) ~
-                  ceiling(as.numeric(difftime(.data[[survey_date_col]], calc_date_birth_final, units = "days")) / 365.25),
+                  floor(as.numeric(difftime(.data[[survey_date_col]], calc_date_birth_final, units = "days")) / 365.25),
                 TRUE ~ .data[[age_years_col]]
               ),
               calc_age_months = dplyr::case_when(
                 !is.na(calc_date_birth_final) & !is.na(calc_date_death_final) ~
-                  ceiling(as.numeric(difftime(calc_date_death_final, calc_date_birth_final, units = "days")) / 30.44),
+                  floor(as.numeric(difftime(calc_date_death_final, calc_date_birth_final, units = "days")) / 30.44),
                 !is.na(calc_date_birth_final) ~
-                  ceiling(as.numeric(difftime(.data[[survey_date_col]], calc_date_birth_final, units = "days")) / 30.44),
+                  floor(as.numeric(difftime(.data[[survey_date_col]], calc_date_birth_final, units = "days")) / 30.44),
                 TRUE ~ NA_real_
               ),
               calc_age_days = dplyr::case_when(
@@ -293,7 +293,7 @@ add_standardized_age <- function(
           if (!is.null(age_months_col)) {
             .dataset <- .dataset |>
               dplyr::mutate(
-                calc_age_months = dplyr::coalesce(calc_age_months, ceiling(.data[[age_months_col]])),
+                calc_age_months = dplyr::coalesce(calc_age_months, floor(.data[[age_months_col]])),
                 calc_age_days = dplyr::coalesce(calc_age_days, floor(as.numeric(.data[[age_months_col]] * 30.44)))
               )
           }
@@ -302,12 +302,12 @@ add_standardized_age <- function(
             dplyr::mutate(
               calc_age_years = dplyr::case_when(
                 !is.na(calc_date_birth_final) ~
-                  ceiling(as.numeric(difftime(.data[[survey_date_col]], calc_date_birth_final, units = "days")) / 365.25),
+                  floor(as.numeric(difftime(.data[[survey_date_col]], calc_date_birth_final, units = "days")) / 365.25),
                 TRUE ~ .data[[age_years_col]]
               ),
               calc_age_months = dplyr::case_when(
                 !is.na(calc_date_birth_final) ~
-                  ceiling(as.numeric(difftime(.data[[survey_date_col]], calc_date_birth_final, units = "days")) / 30.44),
+                  floor(as.numeric(difftime(.data[[survey_date_col]], calc_date_birth_final, units = "days")) / 30.44),
                 TRUE ~ NA_real_
               ),
               calc_age_days = dplyr::case_when(
@@ -319,7 +319,7 @@ add_standardized_age <- function(
           if (!is.null(age_months_col)) {
             .dataset <- .dataset |>
               dplyr::mutate(
-                calc_age_months = dplyr::coalesce(calc_age_months, ceiling(.data[[age_months_col]])),
+                calc_age_months = dplyr::coalesce(calc_age_months, floor(.data[[age_months_col]])),
                 calc_age_days = dplyr::coalesce(calc_age_days, floor(as.numeric(.data[[age_months_col]] * 30.44)))
               )
           }
@@ -333,7 +333,7 @@ add_standardized_age <- function(
       if (!is.null(age_months_col)) {
         .dataset <- .dataset |>
           dplyr::mutate(
-            calc_age_months = ceiling(.data[[age_months_col]]),
+            calc_age_months = floor(.data[[age_months_col]]),
             calc_age_days = floor(as.numeric(.data[[age_months_col]] * 30.44))
           )
       }

@@ -49,6 +49,8 @@ A data frame or tibble with the following additional columns:
 - `calc_age_months`: The calculated age in months.
 - `calc_age_days`: The calculated age in days.
 - `roster_birth`: A binary column (`1` or `0`) indicating whether the date of birth is on or after the recall date. If either the birth date or recall date is missing, this column is not calculated.
+- `calc_month_birth`: The month-year of birth as a character string in "YYYY-MM-01" format (only if `calc_date_birth_final` exists).
+- `calc_month_death`: The month-year of death as a character string in "YYYY-MM-01" format (only if `calc_date_death_final` exists).
 }
 \description{
 This function adds standardized age calculations to a dataset. It creates new columns for calculated age in years, months, and days (`calc_age_years`, `calc_age_months`, `calc_age_days`), consolidates exact and approximate dates of birth and death into final columns (`calc_date_birth_final`, `calc_date_death_final`), and optionally calculates a `roster_birth` column based on a recall date.
