@@ -294,3 +294,91 @@ test_that("add_standardized_age — calc_date_death_final uses exact death date 
   expect_equal(result$calc_date_death_final[3], as.Date("2023-03-01"))
 })
 
+
+test_that("add_standardized_age creates calc_month_birth when calc_date_birth_final exists", {
+  df <- tibble::tibble(
+    age_years = c(10, 20, 30),
+    date_birth_exact = as.Date(c("2013-05-15", "2003-08-22", NA)),
+    date_birth_approx = as.Date(c(NA, NA, "1993-12-10"))
+  )
+
+  result <- suppressMessages(add_standardized_age(
+    .dataset = df,
+    age_years_col = "age_years",
+    date_birth_exact_col = "date_birth_exact",
+    date_birth_approx_col = "date_birth_approx"
+  ))
+  
+  # Check that calc_month_birth column exists
+  expect_true("calc_month_birth" %in% names(result))
+  
+  # Check that month-year values are formatted correctly
+  expect_equal(result$calc_month_birth, c("2013-05-01", "2003-08-01", "1993-12-01"))
+  
+  # Check that values can be converted back to dates
+  expect_equal(as.Date(result$calc_month_birth[1]), as.Date("2013-05-01"))
+})
+
+
+test_that("add_standardized_age creates calc_month_death when calc_date_death_final exists", {
+  df <- tibble::tibble(
+    age_years = c(10, 20, 30),
+    date_death_exact = as.Date(c("2023-03-15", NA, "2023-11-22")),
+    date_death_approx = as.Date(c(NA, "2023-07-10", NA))
+  )
+
+  result <- suppressMessages(add_standardized_age(
+    .dataset = df,
+    age_years_col = "age_years",
+    date_death_exact_col = "date_death_exact",
+    date_death_approx_col = "date_death_approx"
+  ))
+  
+  # Check that calc_month_death column exists
+  expect_true("calc_month_death" %in% names(result))
+  
+  # Check that month-year values are formatted correctly
+  expect_equal(result$calc_month_death, c("2023-03-01", "2023-07-01", "2023-11-01"))
+  
+  # Check that values can be converted back to dates
+  expect_equal(as.Date(result$calc_month_death[1]), as.Date("2023-03-01"))
+})
+
+
+test_that("add_standardized_age handles NA values in calc_month_birth and calc_month_death", {
+  df <- tibble::tibble(
+    age_years = c(10, 20, 30),
+    date_birth_exact = as.Date(c("2013-05-15", NA, "1993-12-10")),
+    date_death_exact = as.Date(c(NA, "2023-07-10", NA))
+  )
+
+  result <- suppressMessages(add_standardized_age(
+    .dataset = df,
+    age_years_col = "age_years",
+    date_birth_exact_col = "date_birth_exact",
+    date_death_exact_col = "date_death_exact"
+  ))
+  
+  # Check that calc_month_birth has NA where birth date is NA
+  expect_equal(result$calc_month_birth, c("2013-05-01", NA_character_, "1993-12-01"))
+  
+  # Check that calc_month_death has NA where death date is NA
+  expect_equal(result$calc_month_death, c(NA_character_, "2023-07-01", NA_character_))
+})
+
+
+test_that("add_standardized_age does not create month columns when date_final columns don't exist", {
+  df <- tibble::tibble(
+    age_years = c(10, 20, 30)
+  )
+
+  result <- suppressMessages(add_standardized_age(
+    .dataset = df,
+    age_years_col = "age_years"
+  ))
+  
+  # Check that month columns are not created when date_final columns don't exist
+  expect_false("calc_month_birth" %in% names(result))
+  expect_false("calc_month_death" %in% names(result))
+})
+
