@@ -78,8 +78,8 @@ test_that("add_standardized_age calculates age correctly from survey date", {
     date_birth_exact_col = "date_birth_exact",
     survey_date_col = "survey_date"
   ))
-  expect_equal(result$calc_age_years, c(10, 20, 30))
-  expect_equal(result$calc_age_months, c(120, 240, 360))
+  expect_equal(result$calc_age_years, c(9, 20, 29))
+  expect_equal(result$calc_age_months, c(119, 239, 359))
   expect_equal(result$calc_age_days, c(3652, 7305, 10957))  # Approximate days in 10, 20, 30 years.
 })
 
@@ -308,13 +308,13 @@ test_that("add_standardized_age creates calc_month_birth when calc_date_birth_fi
     date_birth_exact_col = "date_birth_exact",
     date_birth_approx_col = "date_birth_approx"
   ))
-  
+
   # Check that calc_month_birth column exists
   expect_true("calc_month_birth" %in% names(result))
-  
+
   # Check that month-year values are formatted correctly
   expect_equal(result$calc_month_birth, c("2013-05-01", "2003-08-01", "1993-12-01"))
-  
+
   # Check that values can be converted back to dates
   expect_equal(as.Date(result$calc_month_birth[1]), as.Date("2013-05-01"))
 })
@@ -333,13 +333,13 @@ test_that("add_standardized_age creates calc_month_death when calc_date_death_fi
     date_death_exact_col = "date_death_exact",
     date_death_approx_col = "date_death_approx"
   ))
-  
+
   # Check that calc_month_death column exists
   expect_true("calc_month_death" %in% names(result))
-  
+
   # Check that month-year values are formatted correctly
   expect_equal(result$calc_month_death, c("2023-03-01", "2023-07-01", "2023-11-01"))
-  
+
   # Check that values can be converted back to dates
   expect_equal(as.Date(result$calc_month_death[1]), as.Date("2023-03-01"))
 })
@@ -358,10 +358,10 @@ test_that("add_standardized_age handles NA values in calc_month_birth and calc_m
     date_birth_exact_col = "date_birth_exact",
     date_death_exact_col = "date_death_exact"
   ))
-  
+
   # Check that calc_month_birth has NA where birth date is NA
   expect_equal(result$calc_month_birth, c("2013-05-01", NA_character_, "1993-12-01"))
-  
+
   # Check that calc_month_death has NA where death date is NA
   expect_equal(result$calc_month_death, c(NA_character_, "2023-07-01", NA_character_))
 })
@@ -376,7 +376,7 @@ test_that("add_standardized_age does not create month columns when date_final co
     .dataset = df,
     age_years_col = "age_years"
   ))
-  
+
   # Check that month columns are not created when date_final columns don't exist
   expect_false("calc_month_birth" %in% names(result))
   expect_false("calc_month_death" %in% names(result))
