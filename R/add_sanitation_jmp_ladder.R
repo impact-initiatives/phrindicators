@@ -4,9 +4,9 @@
 #'
 #' @param .dataset A data frame or tibble containing the required columns.
 #' @param sanitation_facility_cat_col Column name (as a string) for the sanitation facility category.
-#' @param sanitation_facility_improved_val Character value for improved sanitation facilities (default: "improved").
-#' @param sanitation_facility_unimproved_val Character value for unimproved sanitation facilities (default: "unimproved").
-#' @param sanitation_facility_open_defecation_val Character value for open defecation (default: "open_defecation").
+#' @param sanitation_facility_improved_val Character value for improved sanitation facilities (default: "Improved", matching add_sanitation_facility_cat()'s hardcoded output).
+#' @param sanitation_facility_unimproved_val Character value for unimproved sanitation facilities (default: "Unimproved", matching add_sanitation_facility_cat()'s hardcoded output).
+#' @param sanitation_facility_open_defecation_val Character value for open defecation (default: "Open Defecation", matching add_sanitation_facility_cat()'s hardcoded output).
 #' @param shared_sanitation_col Column name (as a string) for shared sanitation facilities.
 #' @param shared_sanitation_yes_val Character value for indicating shared sanitation (default: "yes").
 #' @param shared_sanitation_no_val Character value for indicating non-shared sanitation (default: "no").
@@ -19,9 +19,9 @@
 add_sanitation_jmp_ladder <- function(
     .dataset,
     sanitation_facility_cat_col,
-    sanitation_facility_improved_val = "improved",
-    sanitation_facility_unimproved_val = "unimproved",
-    sanitation_facility_open_defecation_val = "open_defecation",
+    sanitation_facility_improved_val = "Improved",
+    sanitation_facility_unimproved_val = "Unimproved",
+    sanitation_facility_open_defecation_val = "Open Defecation",
     shared_sanitation_col,
     shared_sanitation_yes_val = "yes",
     shared_sanitation_no_val = "no"
@@ -86,9 +86,9 @@ add_sanitation_jmp_ladder <- function(
     }
 
     # Use ensure_value to provide defaults
-    sanitation_facility_improved_val <- phrutils::ensure_value(sanitation_facility_improved_val, "improved")
-    sanitation_facility_unimproved_val <- phrutils::ensure_value(sanitation_facility_unimproved_val, "unimproved")
-    sanitation_facility_open_defecation_val <- phrutils::ensure_value(sanitation_facility_open_defecation_val, "open_defecation")
+    sanitation_facility_improved_val <- phrutils::ensure_value(sanitation_facility_improved_val, "Improved")
+    sanitation_facility_unimproved_val <- phrutils::ensure_value(sanitation_facility_unimproved_val, "Unimproved")
+    sanitation_facility_open_defecation_val <- phrutils::ensure_value(sanitation_facility_open_defecation_val, "Open Defecation")
     shared_sanitation_yes_val <- phrutils::ensure_value(shared_sanitation_yes_val, "yes")
     shared_sanitation_no_val <- phrutils::ensure_value(shared_sanitation_no_val, "no")
 
