@@ -6,55 +6,155 @@
 \usage{
 add_drinking_water_time_cat(
   .dataset,
-  number_minutes_col = "number_minutes",
-  categorical_time_col = "categorical_time",
-  under_30min_val = "under_30min",
-  more_than_30min_val = "more_than_30min",
-  undefined_val = c("dnk", "pnta"),
-  premises_val = "on_premises"
+  drinking_water_time_yn = "wash_drinking_water_time_yn",
+  water_on_premises = c("water_in_dwelling", "water_in_plot"),
+  number_minutes = "number_minutes",
+  dnk = "dnk",
+  undefined = "pnta",
+  drinking_water_time_int = "wash_drinking_water_time_int",
+  max = 600,
+  drinking_water_time_sl = "wash_drinking_water_time_sl",
+  sl_under_30_min = c("5min_or_less", "5min_15min", "15min_30min"),
+  sl_30min_1hr = "30min_1hr",
+  sl_more_than_1hr = "more_than_1hr",
+  sl_undefined = c("dnk", "pnta"),
+  drinking_water_source = "wash_drinking_water_source",
+  skipped_drinking_water_source_premises = "piped_dwelling",
+  skipped_drinking_water_source_undefined = c("dnk", "pnta"),
+  drinking_water_time_under_30min_val = "1",
+  drinking_water_time_over_30min_val = "0"
 )
 }
 \arguments{
 \item{.dataset}{Input data frame or tibble.}
 
-\item{number_minutes_col}{Column name for the reported number of minutes. Defaults to `"number_minutes"`.}
+\item{drinking_water_time_yn}{Column name (as a string) indicating how
+the respondent answered the time-to-fetch-water question. Defaults to
+`"wash_drinking_water_time_yn"`.}
 
-\item{categorical_time_col}{Column name for categorical responses indicating time in categories (e.g., "under_30min_val", "more_than_30min_val"). Defaults to `"categorical_time"`.}
+\item{water_on_premises}{Value(s) in `drinking_water_time_yn` indicating
+water is collected on premises. Defaults to
+`c("water_in_dwelling", "water_in_plot")`.}
 
-\item{under_30min_val}{Value in `categorical_time_col` indicating less than 30 minutes. Defaults to `"under_30min"`.}
+\item{number_minutes}{Value in `drinking_water_time_yn` indicating the
+respondent reported an exact number of minutes (found in
+`drinking_water_time_int`). Defaults to `"number_minutes"`.}
 
-\item{more_than_30min_val}{Value in `categorical_time_col` indicating more than 30 minutes. Defaults to `"more_than_30min"`.}
+\item{dnk}{Value in `drinking_water_time_yn` indicating "don't know" (a
+fallback bucket may still be available via `drinking_water_time_sl`).
+Defaults to `"dnk"`.}
 
-\item{undefined_val}{Values in either column indicating undefined responses. Defaults to `c("dnk", "pnta")`.}
+\item{undefined}{Value in `drinking_water_time_yn` indicating an
+undefined/"prefer not to answer" response. Defaults to `"pnta"`.}
 
-\item{premises_val}{Value in `categorical_time_col` indicating water is fetched on premises. Defaults to `"on_premises"`.}
+\item{drinking_water_time_int}{Column name (as a string) for the number
+of minutes it takes to fetch water, used when `drinking_water_time_yn`
+equals `number_minutes`. Must be numeric and strictly positive; if it
+isn't already numeric, it is coerced to integer via
+`phrutils::is_safely_coercible()`/`as.integer()`, erroring if the
+coercion wouldn't be safe. Defaults to `"wash_drinking_water_time_int"`.}
+
+\item{max}{Maximum plausible number of minutes for
+`drinking_water_time_int`; values above this are treated as `NA`.
+Defaults to `600`.}
+
+\item{drinking_water_time_sl}{Column name (as a string) for the
+categorical skip-logic time bucket, used as a fallback when
+`drinking_water_time_yn` equals `dnk`. Defaults to
+`"wash_drinking_water_time_sl"`.}
+
+\item{sl_under_30_min}{Value(s) in `drinking_water_time_sl` representing
+under 30 minutes - a vector, since some tools use several distinct
+range codes for the same bucket (e.g.
+`c("5min_or_less", "5min_15min", "15min_30min")`, the default). The
+*first* element doubles as the single canonical label written to the
+output column for this bucket, whether reached via
+`drinking_water_time_sl` or via the numeric `drinking_water_time_int`
+path.}
+
+\item{sl_30min_1hr}{Value(s) in `drinking_water_time_sl` representing 30
+minutes to 1 hour (vector; first element is the output label). Defaults
+to `"30min_1hr"`.}
+
+\item{sl_more_than_1hr}{Value(s) in `drinking_water_time_sl` representing
+more than 1 hour (vector; first element is the output label). Defaults
+to `"more_than_1hr"`.}
+
+\item{sl_undefined}{Value(s) in `drinking_water_time_sl` indicating an
+undefined/don't-know skip-logic response. Defaults to
+`c("dnk", "pnta")`.}
+
+\item{drinking_water_source}{Column name (as a string) for the
+household's drinking water source, used to short-circuit the time
+calculation (e.g. piped-to-dwelling implies `"premises"` regardless of
+the time question). Defaults to `"wash_drinking_water_source"`.}
+
+\item{skipped_drinking_water_source_premises}{Value(s) in
+`drinking_water_source` implying water is collected on premises.
+Defaults to `"piped_dwelling"`.}
+
+\item{skipped_drinking_water_source_undefined}{Value(s) in
+`drinking_water_source` implying an undefined water source. Defaults
+to `c("dnk", "pnta")`.}
+
+\item{drinking_water_time_under_30min_val}{Value written to the binary
+`wash_drinking_water_time` output column when time is `"premises"` or
+under 30 minutes - matches
+`add_drinking_water_jmp_ladder()`'s `drinking_water_time_under_30min_val`
+default. Defaults to `"1"`.}
+
+\item{drinking_water_time_over_30min_val}{Value written to the binary
+`wash_drinking_water_time` output column when time is 30 minutes or
+more - matches
+`add_drinking_water_jmp_ladder()`'s `drinking_water_time_over_30min_val`
+default. Defaults to `"0"`.}
 }
 \value{
-A modified dataset with an additional column `wash_drinking_water_time_cat`.
+`.dataset` with two added columns: `wash_drinking_water_time_cat`
+  (the detailed category) and `wash_drinking_water_time` (the binary
+  under/over-30-minutes value used by `add_drinking_water_jmp_ladder()`).
 }
 \description{
-Categorizes households based on the time taken to fetch drinking water. Produces a numeric output column
-(`wash_drinking_water_time_cat`) with the following codes:
-- `1`: Less than or equal to 30 minutes (on premises or quick access).
-- `0`: More than 30 minutes.
-- `NA`: Undefined or missing information.
+Categorizes households by how long it takes to collect drinking water,
+reconciling three possible sources of information from the survey:
+a response-type column (`drinking_water_time_yn`) indicating whether the
+respondent reported water as on-premises, an exact number of minutes, or
+"don't know"/"prefer not to answer"; a numeric minutes column
+(`drinking_water_time_int`) used when an exact number was given; and a
+categorical skip-logic column (`drinking_water_time_sl`) used as a
+fallback bucket when the respondent answered "don't know". The
+household's drinking water source (`drinking_water_source`) can also
+short-circuit the calculation straight to `"premises"` or `"undefined"`.
 }
 \details{
-The function works flexibly based on the arguments provided:
-- If a numeric column for minutes (`number_minutes_col`) is provided, it is preferred for categorization.
-- If a categorical column (`categorical_time_col`) is provided, it is used when numeric minutes are not available.
+Values are resolved in priority order:
+1. `drinking_water_source` in `skipped_drinking_water_source_premises` -> `"premises"`.
+2. `drinking_water_source` in `skipped_drinking_water_source_undefined` -> `"undefined"`.
+3. `drinking_water_time_yn` in `water_on_premises` -> `"premises"`.
+4. `drinking_water_time_yn` equal to `number_minutes` -> bucketed from
+   `drinking_water_time_int` (< 30 min, 30-60 min, 1hr-`max`); above `max`
+   yields `NA`.
+5. `drinking_water_time_yn` in `undefined` -> `"undefined"`.
+6. `drinking_water_time_yn` equal to `dnk` and `drinking_water_time_sl` in
+   `sl_undefined` -> `"undefined"`.
+7. `drinking_water_time_yn` equal to `dnk` and `drinking_water_time_sl` in
+   `sl_under_30_min`/`sl_30min_1hr`/`sl_more_than_1hr` -> that bucket's
+   canonical label (its first element).
+8. Anything else -> `NA`.
 
-
-If both `number_minutes_col` and `categorical_time_col` are provided, the function prioritizes `number_minutes_col` for calculations.
-The function creates a new column `wash_drinking_water_time_cat` coded as:
-- `1`: Fetching water takes less than or equal to 30 minutes (or is on premises).
-- `0`: Fetching water takes more than 30 minutes.
-- `NA`: Undefined or missing information.
+The resulting `wash_drinking_water_time_cat` is then collapsed into a
+second, binary `wash_drinking_water_time` column (`"premises"`/under-30-min
+label -> `drinking_water_time_under_30min_val`; the 30min-1hr/more-than-1hr
+labels -> `drinking_water_time_over_30min_val`; `"undefined"`/`NA` -> `NA`)
+so `add_drinking_water_jmp_ladder()` can consume it directly via its own
+`drinking_water_time_col` default (`"wash_drinking_water_time"`).
 }
 \examples{
 example_data <- data.frame(
-  number_minutes = c(15, 45, NA, 25),
-  categorical_time = c("under_30min", "more_than_30min", "pnta", "under_30min")
+  wash_drinking_water_source = c("borehole", "piped_dwelling", "borehole", "borehole"),
+  wash_drinking_water_time_yn = c("number_minutes", "number_minutes", "water_in_dwelling", "dnk"),
+  wash_drinking_water_time_int = c(15, 45, NA, NA),
+  wash_drinking_water_time_sl = c(NA, NA, NA, "30min_1hr")
 )
 add_drinking_water_time_cat(example_data)
 

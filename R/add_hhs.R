@@ -154,7 +154,22 @@ add_hhs <- function(
       ) |>
       dplyr::ungroup() |>
       dplyr::mutate(
-        fsl_hhs_score = fsl_hhs_comp1 + fsl_hhs_comp2 + fsl_hhs_comp3
+        fsl_hhs_score = fsl_hhs_comp1 + fsl_hhs_comp2 + fsl_hhs_comp3,
+        fsl_hhs_score = dplyr::case_when(
+          .data[[fsl_hhs_nofoodhh]] == yes_answer & is.na(.data[[fsl_hhs_nofoodhh_freq]]) ~ NA_real_,
+          .data[[fsl_hhs_sleephungry]] == yes_answer & is.na(.data[[fsl_hhs_sleephungry_freq]]) ~ NA_real_,
+          .data[[fsl_hhs_alldaynight]] == yes_answer & is.na(.data[[fsl_hhs_alldaynight_freq]]) ~ NA_real_,
+          .data[[fsl_hhs_nofoodhh]] == no_answer & !is.na(.data[[fsl_hhs_nofoodhh_freq]]) ~ NA_real_,
+          .data[[fsl_hhs_sleephungry]] == no_answer & !is.na(.data[[fsl_hhs_sleephungry_freq]]) ~ NA_real_,
+          .data[[fsl_hhs_alldaynight]] == no_answer & !is.na(.data[[fsl_hhs_alldaynight_freq]]) ~ NA_real_,
+          is.na(.data[[fsl_hhs_nofoodhh]]) & !is.na(.data[[fsl_hhs_nofoodhh_freq]]) ~ NA_real_,
+          is.na(.data[[fsl_hhs_sleephungry]]) & !is.na(.data[[fsl_hhs_sleephungry_freq]]) ~ NA_real_,
+          is.na(.data[[fsl_hhs_alldaynight]]) & !is.na(.data[[fsl_hhs_alldaynight_freq]]) ~ NA_real_,
+          is.na(.data[[fsl_hhs_nofoodhh]]) & is.na(.data[[fsl_hhs_nofoodhh_freq]]) ~ NA_real_,
+          is.na(.data[[fsl_hhs_sleephungry]]) & is.na(.data[[fsl_hhs_sleephungry_freq]]) ~ NA_real_,
+          is.na(.data[[fsl_hhs_alldaynight]]) & is.na(.data[[fsl_hhs_alldaynight_freq]]) ~ NA_real_,
+          TRUE ~ fsl_hhs_score
+        )
       ) |>
       # Remove temporary numeric columns (list explicitly to avoid capturing user columns)
       dplyr::select(
