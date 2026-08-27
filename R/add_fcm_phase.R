@@ -283,10 +283,7 @@ add_fcm_phase <- function(
 
     # Overwrite warnings for existing output columns (consistent)
 
-    overwrite_vars <- c(
-      "fsl_fc_cell",
-      "fsl_fc_cat"
-    )
+    overwrite_vars <- c("fsl_fc_cell", "fsl_fc_phase")
 
     for (var in overwrite_vars) {
       if (var %in% names(.dataset)) {
@@ -419,15 +416,12 @@ add_fcm_phase <- function(
 
     # 7. OUTPUT COLUMNS
 
-
     out <- out |>
-      dplyr::rename(
-        fsl_fc_cell = cell,
-        fsl_fc_phase  = cat
-      ) |>
       dplyr::mutate(
-        fsl_fc_phase = factor(fsl_fc_phase, levels = c("P5", "P4", "P3", "P2", "P1"), ordered = TRUE)
-      )
+        fsl_fc_cell  = .data$cell,
+        fsl_fc_phase = factor(.data$cat, levels = c("P5", "P4", "P3", "P2", "P1"), ordered = TRUE)
+      ) |>
+      dplyr::select(-dplyr::any_of(c("cell", "cat")))
 
     # Restore factor attributes lost during dplyr::left_join type coercion
     for (fi in factor_attrs) {

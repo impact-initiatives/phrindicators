@@ -3,13 +3,19 @@
 test_that("add_hhs() — normal functionality works", {
 
   df <- tibble::tibble(
-    fsl_hhs_nofoodhh        = sample(c("yes","no"), 30, TRUE),
-    fsl_hhs_nofoodhh_freq   = sample(c("rarely","sometimes","often"), 30, TRUE),
-    fsl_hhs_sleephungry     = sample(c("yes","no"), 30, TRUE),
-    fsl_hhs_sleephungry_freq= sample(c("rarely","sometimes","often"), 30, TRUE),
-    fsl_hhs_alldaynight     = sample(c("yes","no"), 30, TRUE),
-    fsl_hhs_alldaynight_freq= sample(c("rarely","sometimes","often"), 30, TRUE)
-  )
+    fsl_hhs_nofoodhh         = sample(c("yes","no"), 30, TRUE),
+    fsl_hhs_nofoodhh_freq    = sample(c("rarely","sometimes","often"), 30, TRUE),
+    fsl_hhs_sleephungry      = sample(c("yes","no"), 30, TRUE),
+    fsl_hhs_sleephungry_freq = sample(c("rarely","sometimes","often"), 30, TRUE),
+    fsl_hhs_alldaynight      = sample(c("yes","no"), 30, TRUE),
+    fsl_hhs_alldaynight_freq = sample(c("rarely","sometimes","often"), 30, TRUE)
+  ) |>
+    dplyr::mutate(
+      fsl_hhs_nofoodhh_freq    = ifelse(fsl_hhs_nofoodhh == "no", NA_character_, fsl_hhs_nofoodhh_freq),
+      fsl_hhs_sleephungry_freq = ifelse(fsl_hhs_sleephungry == "no", NA_character_, fsl_hhs_sleephungry_freq),
+      fsl_hhs_alldaynight_freq = ifelse(fsl_hhs_alldaynight == "no", NA_character_, fsl_hhs_alldaynight_freq)
+    )
+
 
   out <- suppressMessages(add_hhs(df))
 
@@ -49,12 +55,12 @@ test_that("add_hhs() — normal functionality works", {
 test_that("add_hhs() — edge case of all zero indicators", {
 
   df <- tibble::tibble(
-    fsl_hhs_nofoodhh        = rep("no", 10),
-    fsl_hhs_nofoodhh_freq   = rep("rarely", 10),
-    fsl_hhs_sleephungry     = rep("no", 10),
-    fsl_hhs_sleephungry_freq= rep("rarely", 10),
-    fsl_hhs_alldaynight     = rep("no", 10),
-    fsl_hhs_alldaynight_freq= rep("rarely", 10)
+    fsl_hhs_nofoodhh         = rep("no", 10),
+    fsl_hhs_nofoodhh_freq    = rep(NA_character_, 10),
+    fsl_hhs_sleephungry      = rep("no", 10),
+    fsl_hhs_sleephungry_freq = rep(NA_character_, 10),
+    fsl_hhs_alldaynight      = rep("no", 10),
+    fsl_hhs_alldaynight_freq = rep(NA_character_, 10)
   )
 
   out <- suppressMessages(add_hhs(df))
@@ -71,6 +77,7 @@ test_that("add_hhs() — edge case of all zero indicators", {
     all(grepl("Little to No", unique(as.character(out$fsl_hhs_cat))))
   )
 })
+
 
 
 test_that("add_hhs() — edge case of max severity", {
@@ -175,17 +182,23 @@ test_that("add_hhs() — invalid frequency categories produce error", {
 test_that("add_hhs() — mixed combinations produce valid output", {
 
   df <- tibble::tibble(
-    fsl_hhs_nofoodhh        = sample(c("yes","no"), 25, TRUE),
-    fsl_hhs_nofoodhh_freq   = sample(c("rarely","sometimes","often"), 25, TRUE),
-    fsl_hhs_sleephungry     = sample(c("yes","no"), 25, TRUE),
-    fsl_hhs_sleephungry_freq= sample(c("rarely","sometimes","often"), 25, TRUE),
-    fsl_hhs_alldaynight     = sample(c("yes","no"), 25, TRUE),
-    fsl_hhs_alldaynight_freq= sample(c("rarely","sometimes","often"), 25, TRUE)
-  )
+    fsl_hhs_nofoodhh         = sample(c("yes","no"), 25, TRUE),
+    fsl_hhs_nofoodhh_freq    = sample(c("rarely","sometimes","often"), 25, TRUE),
+    fsl_hhs_sleephungry      = sample(c("yes","no"), 25, TRUE),
+    fsl_hhs_sleephungry_freq = sample(c("rarely","sometimes","often"), 25, TRUE),
+    fsl_hhs_alldaynight      = sample(c("yes","no"), 25, TRUE),
+    fsl_hhs_alldaynight_freq = sample(c("rarely","sometimes","often"), 25, TRUE)
+  ) |>
+    dplyr::mutate(
+      fsl_hhs_nofoodhh_freq    = ifelse(fsl_hhs_nofoodhh == "no", NA_character_, fsl_hhs_nofoodhh_freq),
+      fsl_hhs_sleephungry_freq = ifelse(fsl_hhs_sleephungry == "no", NA_character_, fsl_hhs_sleephungry_freq),
+      fsl_hhs_alldaynight_freq = ifelse(fsl_hhs_alldaynight == "no", NA_character_, fsl_hhs_alldaynight_freq)
+    )
 
   out <- suppressMessages(add_hhs(df))
 
   expect_equal(nrow(out), 25)
   expect_true(all(out$fsl_hhs_score >= 0 & out$fsl_hhs_score <= 6))
 })
+
 

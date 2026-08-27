@@ -7,9 +7,9 @@
 add_sanitation_jmp_ladder(
   .dataset,
   sanitation_facility_cat_col,
-  sanitation_facility_improved_val = "improved",
-  sanitation_facility_unimproved_val = "unimproved",
-  sanitation_facility_open_defecation_val = "open_defecation",
+  sanitation_facility_improved_val = "Improved",
+  sanitation_facility_unimproved_val = "Unimproved",
+  sanitation_facility_open_defecation_val = "Open Defecation",
   shared_sanitation_col,
   shared_sanitation_yes_val = "yes",
   shared_sanitation_no_val = "no"
@@ -20,11 +20,11 @@ add_sanitation_jmp_ladder(
 
 \item{sanitation_facility_cat_col}{Column name (as a string) for the sanitation facility category.}
 
-\item{sanitation_facility_improved_val}{Character value for improved sanitation facilities (default: "improved").}
+\item{sanitation_facility_improved_val}{Character value for improved sanitation facilities (default: "Improved", matching add_sanitation_facility_cat()'s hardcoded output).}
 
-\item{sanitation_facility_unimproved_val}{Character value for unimproved sanitation facilities (default: "unimproved").}
+\item{sanitation_facility_unimproved_val}{Character value for unimproved sanitation facilities (default: "Unimproved", matching add_sanitation_facility_cat()'s hardcoded output).}
 
-\item{sanitation_facility_open_defecation_val}{Character value for open defecation (default: "open_defecation").}
+\item{sanitation_facility_open_defecation_val}{Character value for open defecation (default: "Open Defecation", matching add_sanitation_facility_cat()'s hardcoded output).}
 
 \item{shared_sanitation_col}{Column name (as a string) for shared sanitation facilities.}
 
