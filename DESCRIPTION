@@ -19,6 +19,7 @@ Imports:
     phrutils,
     purrr,
     rlang,
+    stats,
     tibble,
     zscorer
 Suggests:
