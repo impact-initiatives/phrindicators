@@ -232,20 +232,25 @@ add_drinking_water_time_cat <- function(
       )
 
 
-      # Validate categorical inputs
+      # Validate categorical inputs. `phr_validate_choice()` only warns (even with
+      # soft = FALSE) and its phr_validate_not_null() step aborts on a length-1
+      # all-NA column, so a valid single-row dataset would wrongly error. Assert
+      # directly instead: NA is always allowed, any other unlisted value aborts.
 
-      phrutils::phr_validate_choice(
-        .dataset[[drinking_water_time_yn]],
-        choices = c(water_on_premises, number_minutes, dnk, undefined, NA_character_),
+      time_yn_choices <- c(water_on_premises, number_minutes, dnk, undefined)
+      time_yn_bad <- setdiff(stats::na.omit(.dataset[[drinking_water_time_yn]]), time_yn_choices)
+      phrutils::phr_assert(
+        length(time_yn_bad) == 0,
         origin = origin,
-        soft = FALSE
+        (glue::glue("Column {drinking_water_time_yn} contains values outside the allowed set: {paste(time_yn_bad, collapse = ', ')}."))
       )
 
-      phrutils::phr_validate_choice(
-        .dataset[[drinking_water_time_sl]],
-        choices = c(sl_under_30_min, sl_30min_1hr, sl_more_than_1hr, sl_undefined, NA_character_),
+      time_sl_choices <- c(sl_under_30_min, sl_30min_1hr, sl_more_than_1hr, sl_undefined)
+      time_sl_bad <- setdiff(stats::na.omit(.dataset[[drinking_water_time_sl]]), time_sl_choices)
+      phrutils::phr_assert(
+        length(time_sl_bad) == 0,
         origin = origin,
-        soft = FALSE
+        (glue::glue("Column {drinking_water_time_sl} contains values outside the allowed set: {paste(time_sl_bad, collapse = ', ')}."))
       )
 
 
