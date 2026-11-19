@@ -53,6 +53,14 @@ add_sanitation_jmp_ladder <- function(
       soft = FALSE
     )
 
+    # Use ensure_value to provide defaults (before validation, so empty
+    # schema-resolved values fall back to defaults instead of leaving NA-only choices)
+    sanitation_facility_improved_val <- phrutils::ensure_value(sanitation_facility_improved_val, "Improved")
+    sanitation_facility_unimproved_val <- phrutils::ensure_value(sanitation_facility_unimproved_val, "Unimproved")
+    sanitation_facility_open_defecation_val <- phrutils::ensure_value(sanitation_facility_open_defecation_val, "Open Defecation")
+    shared_sanitation_yes_val <- phrutils::ensure_value(shared_sanitation_yes_val, "yes")
+    shared_sanitation_no_val <- phrutils::ensure_value(shared_sanitation_no_val, "no")
+
     # Validate categories in sanitation facility column
     valid_sanitation_categories <- c(
       sanitation_facility_improved_val,
@@ -84,13 +92,6 @@ add_sanitation_jmp_ladder <- function(
         message = (glue::glue("Variable {output_column} already exists and will be overwritten."))
       )
     }
-
-    # Use ensure_value to provide defaults
-    sanitation_facility_improved_val <- phrutils::ensure_value(sanitation_facility_improved_val, "Improved")
-    sanitation_facility_unimproved_val <- phrutils::ensure_value(sanitation_facility_unimproved_val, "Unimproved")
-    sanitation_facility_open_defecation_val <- phrutils::ensure_value(sanitation_facility_open_defecation_val, "Open Defecation")
-    shared_sanitation_yes_val <- phrutils::ensure_value(shared_sanitation_yes_val, "yes")
-    shared_sanitation_no_val <- phrutils::ensure_value(shared_sanitation_no_val, "no")
 
     # Recoding to JMP ladder categories
     .dataset <- .dataset |>

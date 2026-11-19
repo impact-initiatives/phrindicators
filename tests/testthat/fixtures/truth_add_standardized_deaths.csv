@@ -1,0 +1,16 @@
+﻿id,age_years,sex,date_birth,date_death,recall_date,cause_death,location_death,truth_death,truth_death_under5,truth_death_male,truth_death_female,truth_death_non_trauma,truth_death_trauma,truth_death_other,truth_death_current_location,truth_death_migration,truth_death_last_location,truth_death_birth
+1,2,male,1/1/2024,6/1/2025,5/1/2025,malaria,current,1,1,1,0,1,0,0,1,0,0,0
+2,30,female,1/1/1995,7/1/2025,5/1/2025,injury,migration,1,0,0,1,0,1,0,0,1,0,0
+3,70,male,1/1/1955,8/1/2025,5/1/2025,old_age,last,1,0,1,0,0,0,1,0,0,1,0
+4,1,female,6/1/2025,7/15/2025,5/1/2025,measles,current,1,1,0,1,1,0,0,1,0,0,1
+5,12,male,1/1/2013,3/1/2025,5/1/2025,accident,migration,0,0,1,0,0,1,0,0,1,0,0
+6,4,female,1/1/2021,,5/1/2025,diarrhea,current,1,1,0,1,1,0,0,1,0,0,0
+7,40,male,1/1/1985,10/1/2025,,conflict,last,1,0,1,0,0,1,0,0,0,1,
+8,20,unknown,1/1/2005,9/1/2025,5/1/2025,unknown,other,1,0,, ,0,0,1,0,0,0,0
+9,,female,1/1/1990,6/15/2025,5/1/2025,malaria,current,1,,0,1,1,0,0,1,0,0,0
+10,0,male,8/1/2025,8/20/2025,5/1/2025,unknown,current,1,1,1,0,0,0,1,1,0,0,1
+11,5,female,1/1/2020,5/2/2025,5/1/2025,injury,last,1,0,0,1,0,1,0,0,0,1,0
+12,4,male,5/1/2021,5/1/2025,5/1/2025,malaria,current,0,1,1,0,1,0,0,1,0,0,0
+13,25,female,,6/1/2025,5/1/2025,old_age,last,1,0,0,1,0,0,1,0,0,1,
+14,3,male,7/1/2025,,5/1/2025,diarrhea,migration,1,1,1,0,1,0,0,0,1,0,1
+15,60,female,1/1/1965,12/1/2025,5/1/2025,cancer,current,1,0,0,1,0,0,0,1,0,0,0
